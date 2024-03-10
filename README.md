@@ -12,6 +12,8 @@ _✨ 自用工具集 ✨_
   <img src="https://wakatime.com/badge/user/b61b0f9a-f40b-4c82-bc51-0a75c67bfccf/project/018e2a1e-94fe-4cd2-941c-8a606b671263.svg" alt="wakatime">
 </a>
 
+<br />
+
 <a href="https://pydantic.dev">
   <img src="https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/lgc-NB2Dev/readme/main/template/pyd-v1-or-v2.json" alt="Pydantic Version 1 Or 2" >
 </a>
