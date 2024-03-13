@@ -3,7 +3,10 @@ name = "cookit"
 dynamic = ["version"]
 description = "A toolkit for self use."
 authors = [{ name = "student_2333", email = "lgc2333@126.com" }]
-dependencies = []
+dependencies = [
+    "pydantic>=1.10.0,<3.0.0,!=2.5.0,!=2.5.1",
+    "typing-extensions>=4.10.0",
+]
 requires-python = ">=3.9,<4.0"
 readme = "README.md"
 license = { text = "MIT" }
