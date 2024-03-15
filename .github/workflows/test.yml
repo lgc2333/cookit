@@ -32,12 +32,9 @@ jobs:
       - name: Install prerequisites
         run: pdm install -G:all
 
-      - name: Install Specific Version Pydantic (Bash)
+      - name: Install Specific Version Pydantic
         if: runner.os != 'Windows'
-        run: pdm add "pydantic$PYDANTIC_VERSION"
-      - name: Install Specific Version Pydantic (CMD)
-        if: runner.os == 'Windows'
-        run: pdm add pydantic%PYDANTIC_VERSION%
+        run: python -c "import os; os.system(f'pdm add \"pydantic{os.environ[\"PYDANTIC_VERSION\"]}\"')"
 
       - name: Run Pytest
         run: pdm run pytest
