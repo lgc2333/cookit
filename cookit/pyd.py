@@ -79,7 +79,11 @@ else:  # pragma: pydantic-v1
 
     def model_config(model: Type[BaseModel]) -> Any:
         """Get config of a model."""
-        return model.__config__
+        return (
+            model.__config__
+            if isinstance(model.__config__, dict)
+            else model_config.__dict__
+        )
 
     def model_dump(
         model: BaseModel,
