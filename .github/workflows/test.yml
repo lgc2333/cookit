@@ -19,6 +19,7 @@ jobs:
     env:
       OS: ${{ matrix.os }}
       PYTHON_VERSION: ${{ matrix.python-version }}
+      PYDANTIC_VERSION: ${{ matrix.pydantic-version }}
 
     steps:
       - uses: actions/checkout@v3
