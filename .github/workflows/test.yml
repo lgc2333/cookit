@@ -34,7 +34,7 @@ jobs:
 
       - name: Install Specific Version Pydantic (Bash)
         if: runner.os != 'Windows'
-        run: pdm add \"pydantic$PYDANTIC_VERSION\"
+        run: pdm add "pydantic$PYDANTIC_VERSION"
       - name: Install Specific Version Pydantic (CMD)
         if: runner.os == 'Windows'
         run: pdm add "pydantic%PYDANTIC_VERSION%"
