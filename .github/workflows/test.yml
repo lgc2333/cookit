@@ -1,0 +1,38 @@
+name: Test
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  test:
+    name: Test
+
+    strategy:
+      matrix:
+        python-version: ['3.8', '3.9', '3.10', '3.11']
+        os: [ubuntu-latest, windows-latest, macos-latest]
+        pydantic-version: ['<=1.10', '>=2.6']
+      fail-fast: false
+
+    runs-on: ${{ matrix.os }}
+    env:
+      OS: ${{ matrix.os }}
+      PYTHON_VERSION: ${{ matrix.python-version }}
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Setup PDM
+        uses: pdm-project/setup-pdm@v3
+        with:
+          python-version: ${{ matrix.python-version }}
+
+      - name: Install prerequisites
+        run: pdm install -G:all
+
+      - name: Install Specific Version Pydantic
+        run: pdm add pydantic$PYDANTIC_VERSION
+
+      - name: Run Pytest
+        run: pdm run pytest

@@ -1,33 +1,113 @@
-from typing import TYPE_CHECKING, Callable, Literal, Optional, Type, overload
+from typing import (
+    TYPE_CHECKING,
+    Any,
+    Callable,
+    Dict,
+    Literal,
+    Optional,
+    Set,
+    Type,
+    TypeVar,
+    Union,
+    overload,
+)
 from typing_extensions import TypeAlias
 
-from pydantic import VERSION, BaseModel
+from pydantic import VERSION, BaseModel, ConfigDict, parse_obj_as
 
 from .text import camel_case
 
 PYDANTIC_V2 = int(VERSION.split(".", 1)[0]) == 2
 
+T = TypeVar("T")
 AliasFuncType: TypeAlias = Callable[[str], str]
 
-if PYDANTIC_V2:
+if PYDANTIC_V2:  # pragma: pydantic-v2
     from pydantic import (
-        ConfigDict,
+        TypeAdapter,
         field_validator as field_validator,
         model_validator as model_validator,
     )
 
-    def get_alias_model(alias_func: AliasFuncType) -> Type[BaseModel]:
+    # region from nonebot2
+
+    def model_config(model: Type[BaseModel]) -> Any:
+        """Get config of a model."""
+        return model.model_config
+
+    def model_dump(
+        model: BaseModel,
+        include: Optional[Set[str]] = None,
+        exclude: Optional[Set[str]] = None,
+        by_alias: bool = False,
+        exclude_unset: bool = False,
+        exclude_defaults: bool = False,
+        exclude_none: bool = False,
+    ) -> Dict[str, Any]:
+        return model.model_dump(
+            include=include,
+            exclude=exclude,
+            by_alias=by_alias,
+            exclude_unset=exclude_unset,
+            exclude_defaults=exclude_defaults,
+            exclude_none=exclude_none,
+        )
+
+    def type_validate_python(type_: Type[T], data: Any) -> T:
+        """Validate data with given type."""
+        return TypeAdapter(type_).validate_python(data)
+
+    def type_validate_json(type_: Type[T], data: Union[str, bytes]) -> T:
+        """Validate JSON with given type."""
+        return TypeAdapter(type_).validate_json(data)
+
+    # endregion
+
+    def get_model_with_config(config: ConfigDict) -> Type[BaseModel]:
         class Model(BaseModel):
-            model_config = ConfigDict(alias_generator=alias_func)
+            model_config = config
 
         return Model
 
-
-else:
-    from pydantic import root_validator, validator
+else:  # pragma: pydantic-v1
+    from pydantic import parse_raw_as, root_validator, validator
 
     if TYPE_CHECKING:
         from pydantic import _V2BeforeAfterOrPlainValidatorType, _V2WrapValidatorType
+
+    # region from nonebot2
+
+    def model_config(model: Type[BaseModel]) -> Any:
+        """Get config of a model."""
+        return model.__config__
+
+    def model_dump(
+        model: BaseModel,
+        include: Optional[Set[str]] = None,
+        exclude: Optional[Set[str]] = None,
+        by_alias: bool = False,
+        exclude_unset: bool = False,
+        exclude_defaults: bool = False,
+        exclude_none: bool = False,
+    ) -> Dict[str, Any]:
+        return model.dict(
+            include=include,
+            exclude=exclude,
+            by_alias=by_alias,
+            exclude_unset=exclude_unset,
+            exclude_defaults=exclude_defaults,
+            exclude_none=exclude_none,
+        )
+
+    def type_validate_python(type_: Type[T], data: Any) -> T:
+        """Validate data with given type."""
+        return parse_obj_as(type_, data)
+
+    def type_validate_json(type_: Type[T], data: Union[str, bytes]) -> T:
+        """Validate JSON with given type."""
+        return parse_raw_as(type_, data)
+
+    # endregion
 
     @overload
     def model_validator(*, mode: Literal["before"]): ...
@@ -68,12 +148,15 @@ else:
     ):
         return validator(__field, *fields, pre=(mode == "before"), allow_reuse=True)
 
-    def get_alias_model(alias_func: AliasFuncType) -> Type[BaseModel]:
-        class Model(BaseModel):
-            class Config:
-                alias_generator = alias_func
+    def get_model_with_config(config: ConfigDict) -> Type[BaseModel]:
+        class Model(BaseModel, **config):
+            pass
 
         return Model
+
+
+def get_alias_model(alias_func: AliasFuncType) -> Type[BaseModel]:
+    return get_model_with_config(ConfigDict(alias_generator=alias_func))
 
 
 CamelAliasModel = get_alias_model(camel_case)

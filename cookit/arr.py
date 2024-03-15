@@ -71,5 +71,5 @@ def chunks(lst: Sequence[T], n: int) -> Iterator[Sequence[T]]:
         yield lst[i : i + n]
 
 
-def flatten(li: Iterable[Iterable[str]]) -> List[str]:
+def flatten(li: Iterable[Iterable[T]]) -> List[T]:
     return [x for y in li for x in y]

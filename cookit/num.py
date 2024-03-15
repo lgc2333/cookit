@@ -11,6 +11,7 @@ def auto_convert_unit(
     value: float,
     round_n: int = 2,
     suffix: str = "",
+    with_space: bool = True,
     unit_index: int = 0,
     unit_threshold: Optional[int] = None,
 ) -> str:
@@ -26,7 +27,12 @@ def auto_convert_unit(
             unit = x
             break
         value /= multiplier
-    return f"{value:.{round_n}f} {unit or units[-1]}{suffix}"
+    return (
+        f"{value:.{round_n}f}"
+        f"{' ' if with_space else ''}"
+        f"{unit or units[-1]}"
+        f"{suffix}"
+    )
 
 
 auto_convert_byte = partial(

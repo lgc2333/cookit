@@ -10,4 +10,4 @@ def full_to_half(text: str) -> str:
     return "".join(
         chr(ord(char) - 0xFEE0) if "\uff01" <= char <= "\uff5e" else char
         for char in text
-    )
+    ).replace("\u3000", " ")
