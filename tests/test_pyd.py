@@ -54,7 +54,8 @@ async def test_get_model_with_config():
     config = ConfigDict(arbitrary_types_allowed=True)
     Model = get_model_with_config(config)  # noqa: N806
     assert isinstance(Model(), Model)
-    assert model_config(Model) == config
+    for k in config:
+        assert model_config(Model)[k] == config[k]
 
 
 async def test_camel_alias_model():

@@ -31,7 +31,7 @@ if PYDANTIC_V2:  # pragma: pydantic-v2
 
     # region from nonebot2
 
-    def model_config(model: Type[BaseModel]) -> Any:
+    def model_config(model: Type[BaseModel]) -> ConfigDict:
         """Get config of a model."""
         return model.model_config
 
@@ -77,12 +77,18 @@ else:  # pragma: pydantic-v1
 
     # region from nonebot2
 
-    def model_config(model: Type[BaseModel]) -> Any:
+    def model_config(model: Type[BaseModel]) -> ConfigDict:
         """Get config of a model."""
         return (
             model.__config__
             if isinstance(model.__config__, dict)
-            else model_config.__dict__
+            else ConfigDict(
+                {
+                    k: v
+                    for k, v in model.__config__.__dict__.items()
+                    if not (k.startswith("__") and k.endswith("__"))
+                },
+            )
         )
 
     def model_dump(

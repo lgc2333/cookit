@@ -27,10 +27,6 @@ includes = []
 source = "file"
 path = "cookit/__init__.py"
 
-[tool.pyright]
-defineConstant = { PYDANTIC_V2 = true }
-reportShadowedImports = false
-
 [build-system]
 requires = ["pdm-backend"]
 build-backend = "pdm.backend"
