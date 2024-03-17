@@ -11,15 +11,19 @@ from typing import (
     Protocol,
     TypedDict,
     TypeVar,
+    Union,
 )
 from typing_extensions import NotRequired, ParamSpec, Unpack
 
-from pydantic import BaseModel
-
 T = TypeVar("T")
-TM = TypeVar("TM", bound=BaseModel)
 R = TypeVar("R")
 P = ParamSpec("P")
+TA = TypeVar("TA")
+TB = TypeVar("TB")
+
+
+def qor(a: Optional[TA], b: Union[TB, Callable[[], TB]]) -> Union[TA, TB]:
+    return a if (a is not None) else (b() if isinstance(b, Callable) else b)
 
 
 def with_semaphore(semaphore: Semaphore):

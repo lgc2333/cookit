@@ -3,8 +3,7 @@
 import json
 from typing import Optional
 
-from cookit.pyd import (
-    CamelAliasModel,
+from cookit.pyd.compat import (
     get_model_with_config,
     model_config,
     model_dump,
@@ -56,15 +55,3 @@ async def test_get_model_with_config():
     assert isinstance(Model(), Model)
     for k in config:
         assert model_config(Model)[k] == config[k]
-
-
-async def test_camel_alias_model():
-    assert isinstance(CamelAliasModel(), CamelAliasModel)
-
-    class TestModel(CamelAliasModel):
-        test_field1: int
-        test2: str
-
-    data = {"testField1": 1, "test2": "2"}
-    model = type_validate_python(TestModel, data)
-    assert model_dump(model, by_alias=True) == data

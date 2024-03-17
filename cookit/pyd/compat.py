@@ -11,16 +11,12 @@ from typing import (
     Union,
     overload,
 )
-from typing_extensions import TypeAlias
 
-from pydantic import VERSION, BaseModel, ConfigDict, parse_obj_as
-
-from .text import camel_case
+from pydantic import VERSION, BaseModel, ConfigDict
 
 PYDANTIC_V2 = int(VERSION.split(".", 1)[0]) == 2
 
 T = TypeVar("T")
-AliasFuncType: TypeAlias = Callable[[str], str]
 
 if PYDANTIC_V2:  # pragma: pydantic-v2
     from pydantic import (
@@ -70,7 +66,7 @@ if PYDANTIC_V2:  # pragma: pydantic-v2
         return Model
 
 else:  # pragma: pydantic-v1
-    from pydantic import parse_raw_as, root_validator, validator
+    from pydantic import parse_obj_as, parse_raw_as, root_validator, validator
 
     if TYPE_CHECKING:
         from pydantic import _V2BeforeAfterOrPlainValidatorType, _V2WrapValidatorType
@@ -163,10 +159,3 @@ else:  # pragma: pydantic-v1
             pass
 
         return Model
-
-
-def get_alias_model(alias_func: AliasFuncType) -> Type[BaseModel]:
-    return get_model_with_config(ConfigDict(alias_generator=alias_func))
-
-
-CamelAliasModel = get_alias_model(camel_case)

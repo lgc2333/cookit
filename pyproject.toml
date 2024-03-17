@@ -3,16 +3,18 @@ name = "cookit"
 dynamic = ["version"]
 description = "A toolkit for self use."
 authors = [{ name = "student_2333", email = "lgc2333@126.com" }]
-dependencies = [
-    "pydantic>=1.10.0,<3.0.0,!=2.5.0,!=2.5.1",
-    "typing-extensions>=4.10.0",
-]
+dependencies = ["typing-extensions>=4.10.0"]
 requires-python = ">=3.9,<4.0"
 readme = "README.md"
 license = { text = "MIT" }
 
 [project.urls]
 homepage = "https://github.com/lgc2333/cookit"
+
+[project.optional-dependencies]
+pydantic = ["pydantic>=1.10.0,<3.0.0,!=2.5.0,!=2.5.1"]
+nonebot-alconna = ["nonebot2>=2.2.0", "nonebot-plugin-alconna>=0.40.1"]
+all = ["cookit[pydantic]", "cookit[nonebot-alconna]"]
 
 [tool.pdm.dev-dependencies]
 dev = ["pytest>=8.1.1", "pytest-asyncio>=0.23.5.post1"]
