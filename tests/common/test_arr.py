@@ -4,9 +4,15 @@ from cookit.common.arr import SizedList, chunks, flatten
 
 
 def test_sized_list_init():
-    lst = SizedList([1, 2, 3], size=5)
-    assert len(lst) == 3
+    lst = SizedList([1, 2, 3, 4], size=5)
+    assert tuple(lst) == (1, 2, 3, 4)
+    assert len(lst) == 4
     assert lst.size == 5
+
+    lst = SizedList([1, 2, 3, 4], size=2)
+    assert tuple(lst) == (3, 4)
+    assert len(lst) == 2
+    assert lst.size == 2
 
 
 def test_sized_list_append():
