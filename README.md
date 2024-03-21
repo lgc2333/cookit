@@ -39,8 +39,10 @@ _✨ 自用工具集 ✨_
 
 ## 💿 安装
 
+_可选依赖请自行查看 `pyproject.toml`_
+
 ```bash
-pip install cookit-nonebot
+pip install cookit[all]
 ```
 
 ## 📞 联系
