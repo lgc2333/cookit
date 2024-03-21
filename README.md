@@ -1,5 +1,9 @@
 <!-- markdownlint-disable MD033 MD036 -->
 
+<div align="center">
+
+_Logo征集中_
+
 # Cookit
 
 _✨ 自用工具集 ✨_
@@ -18,14 +22,16 @@ _✨ 自用工具集 ✨_
   <img src="https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/lgc-NB2Dev/readme/main/template/pyd-v1-or-v2.json" alt="Pydantic Version 1 Or 2" >
 </a>
 <a href="./LICENSE">
-  <img src="https://img.shields.io/github/license/lgc-NB2Dev/cookit-nonebot.svg" alt="license">
+  <img src="https://img.shields.io/github/license/lgc2333/cookit.svg" alt="license">
 </a>
-<a href="https://pypi.python.org/pypi/cookit-nonebot">
-  <img src="https://img.shields.io/pypi/v/cookit-nonebot.svg" alt="pypi">
+<a href="https://pypi.python.org/pypi/cookit">
+  <img src="https://img.shields.io/pypi/v/cookit.svg" alt="pypi">
 </a>
-<a href="https://pypi.python.org/pypi/cookit-nonebot">
-  <img src="https://img.shields.io/pypi/dm/cookit-nonebot" alt="pypi download">
+<a href="https://pypi.python.org/pypi/cookit">
+  <img src="https://img.shields.io/pypi/dm/cookit" alt="pypi download">
 </a>
+
+</div>
 
 ## 📖 介绍
 
