@@ -5,6 +5,7 @@ from typing import (
     List,
     Optional,
     Sequence,
+    SupportsIndex,
     TypeVar,
     Union,
     overload,
@@ -48,7 +49,7 @@ class SizedList(Generic[T], List[T]):
         super().extend(items)
         self._handle_overflow()
 
-    def insert(self, index: int, item: T) -> None:
+    def insert(self, index: SupportsIndex, item: T) -> None:
         super().insert(index, item)
         self._handle_overflow()
 
