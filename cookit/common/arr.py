@@ -10,12 +10,13 @@ from typing import (
     Union,
     overload,
 )
-from typing_extensions import Self
+from typing_extensions import Self, deprecated
 
 T = TypeVar("T")
 T2 = TypeVar("T2")
 
 
+@deprecated("Use `collections.deque` instead")
 class SizedList(Generic[T], List[T]):
     def __init__(
         self,

@@ -35,22 +35,28 @@ def test_auto_convert_unit():
         )
         == "1.0hr(s)/it"
     )
-    assert auto_convert_unit(
-        ["b", "k", "m", "g"],
-        multiplier=1024,
-        value=1000,
-        round_n=2,
-        with_space=False,
-        unit_threshold=1000,
+    assert (
+        auto_convert_unit(
+            ["b", "k", "m", "g"],
+            multiplier=1024,
+            value=1000,
+            round_n=2,
+            with_space=False,
+            unit_threshold=1000,
+        )
+        == "0.98k"
     )
-    assert auto_convert_unit(
-        ["b", "k", "m", "g"],
-        multiplier=1024,
-        value=1024,
-        round_n=1,
-        suffix="/s",
-        with_space=True,
-        unit_threshold=1000,
+    assert (
+        auto_convert_unit(
+            ["b", "k", "m", "g"],
+            multiplier=1024,
+            value=1024,
+            round_n=1,
+            suffix="/s",
+            with_space=True,
+            unit_threshold=1000,
+        )
+        == "1.0 k/s"
     )
 
 
