@@ -1,8 +1,8 @@
-<!-- markdownlint-disable MD033 MD036 -->
+<!-- markdownlint-disable MD033 MD036 MD041 -->
 
 <div align="center">
 
-_Logo征集中_
+_Logo 征集中_
 
 # Cookit
 

@@ -13,13 +13,22 @@ homepage = "https://github.com/lgc2333/cookit"
 
 [project.optional-dependencies]
 pydantic = ["pydantic>=1.10.0,<3.0.0,!=2.5.0,!=2.5.1"]
+
 nonebot-base = ["nonebot2>=2.2.0"]
 nonebot-alconna = ["cookit[nonebot-base]", "nonebot-plugin-alconna>=0.40.1"]
 nonebot = ["cookit[nonebot-alconna]"]
+
 all = ["cookit[pydantic]", "cookit[nonebot]"]
 
+
 [tool.pdm.dev-dependencies]
-dev = ["pytest>=8.1.1", "pytest-asyncio>=0.23.5.post1"]
+dev = [
+    "pytest>=8.1.1",
+    "pytest-asyncio>=0.23.5.post1",
+    "nonebot2[all]>=2.2.1",
+    "nonebug>=0.3.6",
+    "nonebot-adapter-satori>=0.10.2", # for alconna recall test
+]
 
 [tool.pytest.ini_options]
 asyncio_mode = "auto"
