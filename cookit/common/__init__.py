@@ -1,6 +1,7 @@
 # ruff: noqa: F403
 
-from .arr import *
+from .data import *
+from .deprecated import *
 from .math import *
 from .other import *
 from .text import *

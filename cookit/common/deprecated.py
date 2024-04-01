@@ -1,10 +1,8 @@
 from typing import (
     Generic,
     Iterable,
-    Iterator,
     List,
     Optional,
-    Sequence,
     SupportsIndex,
     TypeVar,
     Union,
@@ -13,7 +11,7 @@ from typing import (
 from typing_extensions import Self, deprecated
 
 T = TypeVar("T")
-T2 = TypeVar("T2")
+TB = TypeVar("TB")
 
 
 @deprecated("Use `collections.deque` instead")
@@ -58,7 +56,7 @@ class SizedList(Generic[T], List[T]):
     def __add__(self, items: Iterable[T]) -> "SizedList[T]": ...
 
     @overload
-    def __add__(self, items: Iterable[T2]) -> "SizedList[Union[T, T2]]": ...
+    def __add__(self, items: Iterable[TB]) -> "SizedList[Union[T, TB]]": ...
 
     def __add__(self, items):
         return SizedList((*self, *items), size=self.size)
@@ -66,12 +64,3 @@ class SizedList(Generic[T], List[T]):
     def __iadd__(self, items: Iterable[T]) -> Self:
         self.extend(items)
         return self
-
-
-def chunks(lst: Sequence[T], n: int) -> Iterator[Sequence[T]]:
-    for i in range(0, len(lst), n):
-        yield lst[i : i + n]
-
-
-def flatten(li: Iterable[Iterable[T]]) -> List[T]:
-    return [x for y in li for x in y]

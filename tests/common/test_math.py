@@ -1,17 +1,9 @@
 from datetime import timedelta
 
-from cookit.common.math import (
-    TimeUnit,
-    auto_convert_unit,
-    format_timedelta,
-    format_timedelta_human_en,
-    format_timedelta_human_en_spc,
-    format_timedelta_human_zh,
-    format_timedelta_human_zh_spc,
-)
-
 
 def test_auto_convert_unit():
+    from cookit.common.math import auto_convert_unit
+
     assert auto_convert_unit(["m", "km"], multiplier=1000, value=5000) == "5.00 km"
     assert (
         auto_convert_unit(
@@ -66,6 +58,15 @@ td_zero = timedelta()
 
 
 def test_format_timedelta():
+    from cookit.common.math import (
+        TimeUnit,
+        format_timedelta,
+        format_timedelta_human_en,
+        format_timedelta_human_en_spc,
+        format_timedelta_human_zh,
+        format_timedelta_human_zh_spc,
+    )
+
     # normal
     assert format_timedelta(td_full) == "1:02:03:04"
     assert format_timedelta(td_full, with_ms=True) == "1:02:03:04.005"
