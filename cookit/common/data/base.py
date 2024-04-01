@@ -1,4 +1,17 @@
-from typing import Callable, Dict, Iterable, Iterator, List, Sequence, TypeVar, Union
+from typing import (
+    Any,
+    Callable,
+    Dict,
+    Iterable,
+    Iterator,
+    List,
+    Literal,
+    Optional,
+    Sequence,
+    TypeVar,
+    Union,
+    overload,
+)
 from typing_extensions import TypeGuard
 
 T = TypeVar("T")
@@ -38,3 +51,24 @@ def set_default(target: Dict[K, V], key: K, default: Union[V, Callable[[], V]]) 
         default = default()
     target[key] = default
     return default
+
+
+@overload
+def auto_delete(target: Dict[K, V], transform: Literal[None] = None) -> Dict[K, V]: ...
+@overload
+def auto_delete(
+    target: Dict[K, V],
+    transform: Callable[[V], Optional[T]],
+) -> Dict[K, T]: ...
+def auto_delete(  # noqa: E302
+    target: Dict[K, V],
+    transform: Optional[Callable[[V], Optional[T]]] = None,
+) -> Dict[K, Any]:
+    data: Dict[K, Union[V, T]] = {}
+    for k, v in tuple(target.items()):
+        vt = transform(v) if transform else v
+        if vt:
+            data[k] = vt
+        else:  # expected behavior, bool(vt) == False will be removed
+            del target[k]
+    return data

@@ -77,3 +77,32 @@ def test_set_default_with_callable_default():
     assert result == default()
     assert target[key] == default()
     assert len(target) == 3
+
+
+def test_auto_delete():
+    from cookit.common.data.base import auto_delete
+
+    # Test case 1: No transformation function provided
+    target1 = {"a": 1, "b": 2, "c": None, "d": 0}
+    expected_result1 = {"a": 1, "b": 2}
+    result1 = auto_delete(target1)
+    assert result1 == expected_result1
+    assert target1 == expected_result1
+
+    # Test case 2: Transformation function provided
+    def transform_func(value: int):
+        return value * 2 if value % 2 == 0 else None
+
+    target2 = {"a": 1, "b": 2, "c": 3, "d": 4}
+    expected_result2 = {"b": 2, "d": 4}
+    expected_result2_transformed = {"b": 4, "d": 8}
+    result2 = auto_delete(target2, transform=transform_func)
+    assert result2 == expected_result2_transformed
+    assert target2 == expected_result2
+
+    # Test case 3: Empty target dictionary
+    target3 = {}
+    expected_result3 = {}
+    result3 = auto_delete(target3)
+    assert result3 == expected_result3
+    assert target3 == expected_result3
