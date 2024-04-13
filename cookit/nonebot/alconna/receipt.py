@@ -5,8 +5,6 @@ from typing import List, Optional, Tuple, Union
 from nonebot import logger, require
 from nonebot.adapters import Bot as BaseBot, Event as BaseEvent
 
-require("nonebot_plugin_alconna")
-
 from nonebot_plugin_alconna.uniseg import (  # noqa: E402
     Receipt,
     Reply,
