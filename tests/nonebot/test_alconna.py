@@ -22,8 +22,7 @@ def create_fake_satori_adapter(ctx: "MatcherContext") -> "SatoriAdapter":
 
 
 async def test_captured_recall(app: "App"):
-    from cookit.nonebot.alconna import RecallContext
-    from nonebot import on_message
+    from nonebot import on_message, require
     from nonebot.adapters.satori import Bot as SatoriBot
     from nonebot.adapters.satori.config import ClientInfo
     from nonebot.adapters.satori.event import MessageCreatedEvent
@@ -32,6 +31,10 @@ async def test_captured_recall(app: "App"):
         InnerMessage as SatoriMessage,
     )
     from nonebot.compat import type_validate_python
+
+    require("nonebot_plugin_alconna")
+
+    from cookit.nonebot.alconna import RecallContext
     from nonebot_plugin_alconna.uniseg import UniMessage
 
     matcher = on_message()
