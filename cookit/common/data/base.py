@@ -34,7 +34,7 @@ LazyGetterType = Union[T, Callable[P, T]]
 
 
 def lazy_get(
-    val: LazyGetterType[T, P],
+    val: "LazyGetterType[T, P]",
     *args: P.args,
     **kwargs: P.kwargs,
 ) -> T:

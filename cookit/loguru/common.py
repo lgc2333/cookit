@@ -7,7 +7,7 @@ from cookit.common import LazyGetterType, lazy_get
 
 
 @contextmanager
-def logged_suppress(msg: LazyGetterType[str, [Exception]], *t: Type[Exception]):
+def logged_suppress(msg: "LazyGetterType[str, [Exception]]", *t: Type[Exception]):
     try:
         yield
     except Exception as e:
