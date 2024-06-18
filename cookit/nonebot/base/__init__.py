@@ -1,3 +1,3 @@
-# ruff: noqa: F403
-
-from .plugin import *
+from .plugin import (
+    assert_plugin_loaded as assert_plugin_loaded,
+)

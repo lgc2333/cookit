@@ -129,7 +129,7 @@ else:  # pragma: pydantic-v1
 
     @overload
     def field_validator(
-        __field: str,
+        __field: str,  # noqa: PYI063
         *fields: str,
         mode: Literal["before", "after", "plain"] = ...,
         check_fields: Optional[bool] = ...,
@@ -140,14 +140,14 @@ else:  # pragma: pydantic-v1
 
     @overload
     def field_validator(
-        __field: str,
+        __field: str,  # noqa: PYI063
         *fields: str,
         mode: Literal["wrap"],
         check_fields: Optional[bool] = ...,
     ) -> Callable[["_V2WrapValidatorType"], "_V2WrapValidatorType"]: ...
 
     def field_validator(
-        __field: str,
+        __field: str,  # noqa: PYI063
         *fields: str,
         mode: Literal["before", "after", "wrap", "plain"] = "after",
         check_fields: Optional[bool] = None,  # noqa: ARG001

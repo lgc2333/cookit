@@ -1,5 +1,3 @@
-# ruff: noqa: F403
-
 """Install `cookit[nonebot-base]` before import this module."""
 
-from .base import *
+from .base import *  # noqa: F403

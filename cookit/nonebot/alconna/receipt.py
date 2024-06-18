@@ -2,9 +2,8 @@ import asyncio as aio
 import random
 from typing import List, Optional, Tuple, Union
 
-from nonebot import logger, require
+from nonebot import logger
 from nonebot.adapters import Bot as BaseBot, Event as BaseEvent
-
 from nonebot_plugin_alconna.uniseg import (  # noqa: E402
     Receipt,
     Reply,

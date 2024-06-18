@@ -15,7 +15,7 @@ from typing import (
     cast,
     overload,
 )
-from typing_extensions import TypeGuard
+from typing_extensions import ParamSpec, TypeGuard
 
 import fleep
 
@@ -28,16 +28,28 @@ N = TypeVar("N")
 K = TypeVar("K")
 V = TypeVar("V")
 
+P = ParamSpec("P")
+
+LazyGetterType = Union[T, Callable[P, T]]
+
+
+def lazy_get(
+    val: LazyGetterType[T, P],
+    *args: P.args,
+    **kwargs: P.kwargs,
+) -> T:
+    return val(*args, **kwargs) if callable(val) else val
+
 
 def qor(
     a: Union[TA, N],
-    b: Union[TB, Callable[[], TB]],
+    b: LazyGetterType[TB, []],
     none_val: N = None,
 ) -> Union[TA, TB]:
     def guard(x: Union[TA, N]) -> TypeGuard[TA]:
         return x is not none_val
 
-    return a if guard(a) else (b() if isinstance(b, Callable) else b)
+    return a if guard(a) else lazy_get(b)
 
 
 def chunks(lst: Sequence[T], n: int) -> Iterator[Sequence[T]]:
@@ -49,11 +61,10 @@ def flatten(li: Iterable[Iterable[T]]) -> List[T]:
     return [x for y in li for x in y]
 
 
-def set_default(target: Dict[K, V], key: K, default: Union[V, Callable[[], V]]) -> V:
+def set_default(target: Dict[K, V], key: K, default: LazyGetterType[V, []]) -> V:
     if key in target:
         return target[key]
-    if callable(default):
-        default = default()
+    default = lazy_get(default)
     target[key] = default
     return default
 

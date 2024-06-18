@@ -18,7 +18,9 @@ nonebot-base = ["nonebot2>=2.2.0"]
 nonebot-alconna = ["cookit[nonebot-base]", "nonebot-plugin-alconna>=0.40.1"]
 nonebot = ["cookit[nonebot-alconna]"]
 
-all = ["cookit[pydantic]", "cookit[nonebot]"]
+loguru = ["loguru>=0.7.2"]
+
+all = ["cookit[pydantic,nonebot,loguru]"]
 
 
 [tool.pdm.dev-dependencies]

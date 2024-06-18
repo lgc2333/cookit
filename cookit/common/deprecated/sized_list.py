@@ -15,7 +15,7 @@ TB = TypeVar("TB")
 
 
 @deprecated("Use `collections.deque` instead")
-class SizedList(Generic[T], List[T]):
+class SizedList(List[T], Generic[T]):
     def __init__(
         self,
         iterable: Optional[Iterable[T]] = None,
