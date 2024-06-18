@@ -1,3 +1,5 @@
+import base64
+from contextlib import suppress
 from typing import (
     Any,
     Callable,
@@ -10,9 +12,12 @@ from typing import (
     Sequence,
     TypeVar,
     Union,
+    cast,
     overload,
 )
 from typing_extensions import TypeGuard
+
+import fleep
 
 T = TypeVar("T")
 
@@ -72,3 +77,10 @@ def auto_delete(  # noqa: E302
         else:  # expected behavior, bool(vt) == False will be removed
             del target[k]
     return data
+
+
+def to_b64_url(data: bytes, mime: Optional[str] = None) -> str:
+    if mime is None:
+        with suppress(IndexError):
+            mime = cast(List[str], fleep.get(data[:128]).mime)[0]
+    return f"data:{mime};base64,{base64.b64encode(data).decode()}"
