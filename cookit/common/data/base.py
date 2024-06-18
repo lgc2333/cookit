@@ -15,7 +15,7 @@ from typing import (
     cast,
     overload,
 )
-from typing_extensions import ParamSpec, TypeAlias, TypeGuard
+from typing_extensions import ParamSpec, TypeGuard
 
 import fleep
 
@@ -30,7 +30,7 @@ V = TypeVar("V")
 
 P = ParamSpec("P")
 
-LazyGetterType: TypeAlias = "Union[T, Callable[P, T]]"
+LazyGetterType = Union[T, Callable[P, T]]
 
 
 def lazy_get(
@@ -43,7 +43,7 @@ def lazy_get(
 
 def qor(
     a: Union[TA, N],
-    b: LazyGetterType[TB, []],
+    b: "LazyGetterType[TB, []]",
     none_val: N = None,
 ) -> Union[TA, TB]:
     def guard(x: Union[TA, N]) -> TypeGuard[TA]:
@@ -61,7 +61,7 @@ def flatten(li: Iterable[Iterable[T]]) -> List[T]:
     return [x for y in li for x in y]
 
 
-def set_default(target: Dict[K, V], key: K, default: LazyGetterType[V, []]) -> V:
+def set_default(target: Dict[K, V], key: K, default: "LazyGetterType[V, []]") -> V:
     if key in target:
         return target[key]
     default = lazy_get(default)

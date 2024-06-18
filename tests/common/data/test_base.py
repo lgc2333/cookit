@@ -7,7 +7,7 @@ from typing import Callable, cast
 def test_lazy_get():
     from cookit.common.data.base import LazyGetterType, lazy_get
 
-    a = cast(LazyGetterType[int, []], 5)
+    a = cast("LazyGetterType[int, []]", 5)
     result = lazy_get(a)
     assert result == a
 
