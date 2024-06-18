@@ -3,7 +3,7 @@
 import json
 from typing import Optional
 
-from cookit.pyd.compat import (
+from cookit.pyd import (
     get_model_with_config,
     model_config,
     model_dump,

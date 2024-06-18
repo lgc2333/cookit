@@ -5,7 +5,7 @@ from typing import Callable, cast
 
 
 def test_lazy_get():
-    from cookit.common.data.base import LazyGetterType, lazy_get
+    from cookit import LazyGetterType, lazy_get
 
     a = cast("LazyGetterType[int, []]", 5)
     result = lazy_get(a)
@@ -21,7 +21,7 @@ def test_lazy_get():
 
 
 def test_qor_with_a_not_none():
-    from cookit.common.data.base import qor
+    from cookit import qor
 
     a = 5
     b = 10
@@ -30,7 +30,7 @@ def test_qor_with_a_not_none():
 
 
 def test_qor_with_a_none_and_b_not_callable():
-    from cookit.common.data.base import qor
+    from cookit import qor
 
     a = None
     b = 10
@@ -39,7 +39,7 @@ def test_qor_with_a_none_and_b_not_callable():
 
 
 def test_qor_with_a_none_and_b_callable():
-    from cookit.common.data.base import qor
+    from cookit import qor
 
     a = None
     b = lambda: 10  # noqa: E731
@@ -48,7 +48,7 @@ def test_qor_with_a_none_and_b_callable():
 
 
 def test_chunks():
-    from cookit.common.data.base import chunks
+    from cookit import chunks
 
     lst = [1, 2, 3, 4, 5, 6, 7, 8, 9]
     assert list(chunks(lst, 3)) == [[1, 2, 3], [4, 5, 6], [7, 8, 9]]
@@ -57,14 +57,14 @@ def test_chunks():
 
 
 def test_flatten():
-    from cookit.common.data.base import flatten
+    from cookit import flatten
 
     lst = [[1, 2, 3], [4, 5, 6], [7, 8, 9]]
     assert flatten(lst) == [1, 2, 3, 4, 5, 6, 7, 8, 9]
 
 
 def test_set_default_with_existing_key():
-    from cookit.common.data.base import set_default
+    from cookit import set_default
 
     target = {"a": 1, "b": 2}
     key = "a"
@@ -75,7 +75,7 @@ def test_set_default_with_existing_key():
 
 
 def test_set_default_with_new_key():
-    from cookit.common.data.base import set_default
+    from cookit import set_default
 
     target = {"a": 1, "b": 2}
     key = "c"
@@ -87,7 +87,7 @@ def test_set_default_with_new_key():
 
 
 def test_set_default_with_callable_default():
-    from cookit.common.data.base import set_default
+    from cookit import set_default
 
     target = {"a": 1, "b": 2}
     key = "c"
@@ -99,7 +99,7 @@ def test_set_default_with_callable_default():
 
 
 def test_auto_delete():
-    from cookit.common.data.base import auto_delete
+    from cookit import auto_delete
 
     # Test case 1: No transformation function provided
     target1 = {"a": 1, "b": 2, "c": None, "d": 0}

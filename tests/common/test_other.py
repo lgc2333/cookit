@@ -2,7 +2,7 @@ import asyncio as aio
 
 
 async def test_with_semaphore():
-    from cookit.common.other import with_semaphore
+    from cookit import with_semaphore
 
     ret = "Hello, World!"
     semaphore = aio.Semaphore(1)

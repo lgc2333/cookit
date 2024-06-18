@@ -11,7 +11,7 @@ def get_mock_pagination_func(max_size: int):
 
 
 async def test_iter_pagination_func():
-    from cookit.common.data.pagination import iter_pagination_func
+    from cookit import iter_pagination_func
 
     func = iter_pagination_func(page_size=3, offset=0)(get_mock_pagination_func(9))
     lst = [x async for x in func()]
@@ -19,7 +19,7 @@ async def test_iter_pagination_func():
 
 
 async def test_iter_pagination_func_with_offset():
-    from cookit.common.data.pagination import iter_pagination_func
+    from cookit import iter_pagination_func
 
     func = iter_pagination_func(page_size=3, offset=2)(get_mock_pagination_func(9))
     lst = [x async for x in func()]
@@ -27,7 +27,7 @@ async def test_iter_pagination_func_with_offset():
 
 
 async def test_iter_pagination_func_with_max_size():
-    from cookit.common.data.pagination import iter_pagination_func
+    from cookit import iter_pagination_func
 
     func = iter_pagination_func(page_size=3, offset=0, max_size=5)(
         get_mock_pagination_func(9),
