@@ -1,5 +1,4 @@
 import base64
-import typing_extensions as te
 from contextlib import suppress
 from typing import (
     Any,
@@ -16,7 +15,7 @@ from typing import (
     cast,
     overload,
 )
-from typing_extensions import ParamSpec, TypeGuard
+from typing_extensions import ParamSpec, TypeAlias, TypeGuard
 
 import fleep
 
@@ -31,7 +30,7 @@ V = TypeVar("V")
 
 P = ParamSpec("P")
 
-LazyGetterType = te.Union[T, Callable[P, T]]
+LazyGetterType: TypeAlias = "Union[T, Callable[P, T]]"
 
 
 def lazy_get(
