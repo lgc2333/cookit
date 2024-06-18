@@ -2,6 +2,8 @@ import time
 from typing import TYPE_CHECKING, Any
 from typing_extensions import override
 
+from nonebot.adapters.satori.models import LoginStatus
+
 if TYPE_CHECKING:
     from nonebot.adapters.satori import Adapter as SatoriAdapter
     from nonebug import App
@@ -26,10 +28,7 @@ async def test_captured_recall(app: "App"):
     from nonebot.adapters.satori import Bot as SatoriBot
     from nonebot.adapters.satori.config import ClientInfo
     from nonebot.adapters.satori.event import MessageCreatedEvent
-    from nonebot.adapters.satori.models import (
-        ChannelType,
-        InnerMessage as SatoriMessage,
-    )
+    from nonebot.adapters.satori.models import ChannelType, Login, MessageObject, User
     from nonebot.compat import type_validate_python
 
     require("nonebot_plugin_alconna")
@@ -51,7 +50,12 @@ async def test_captured_recall(app: "App"):
             base=SatoriBot,
             adapter=adapter,
             self_id="fake_bot",
-            platform="fake",
+            login=Login(
+                user=User(id="fake_user"),
+                platform="fake",
+                self_id="fake_bot",
+                status=LoginStatus.ONLINE,
+            ),
             info=ClientInfo(port=14514),
         )
         event = type_validate_python(
@@ -72,12 +76,12 @@ async def test_captured_recall(app: "App"):
         ctx.should_call_api(
             "message_create",
             {"channel_id": "fake_channel", "content": "world!"},
-            [SatoriMessage(id="114515", content="world!")],
+            [MessageObject(id="114515", content="world!")],
         )
         ctx.should_call_api(
             "message_create",
             {"channel_id": "fake_channel", "content": "world!"},
-            [SatoriMessage(id="114516", content="world!")],
+            [MessageObject(id="114516", content="world!")],
         )
         ctx.should_call_api(
             "message_delete",
