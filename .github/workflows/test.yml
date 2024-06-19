@@ -30,6 +30,7 @@ jobs:
         uses: pdm-project/setup-pdm@v3
         with:
           python-version: ${{ matrix.python-version }}
+          cache: true
 
       - name: Install prerequisites
         run: pdm install -G:all
