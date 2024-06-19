@@ -40,7 +40,7 @@ class RecallContext:
 
     async def send(
         self,
-        message: UniMessage,
+        message: Union[UniMessage, str],
         target: Union[BaseEvent, Target, None] = None,
         bot: Optional[BaseBot] = None,
         fallback: bool = True,
@@ -48,7 +48,9 @@ class RecallContext:
         reply_to: Union[str, bool, Reply, None] = False,
     ) -> None:
         self.append(
-            await message.send(
+            await (
+                UniMessage.text(message) if isinstance(message, str) else message
+            ).send(
                 target=target,
                 bot=bot,
                 fallback=fallback,
