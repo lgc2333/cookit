@@ -25,5 +25,8 @@ from .other import (
 )
 from .text import (
     camel_case as camel_case,
+    escape_backticks as escape_backticks,
+    escape_double_quotes as escape_double_quotes,
+    escape_single_quotes as escape_single_quotes,
     full_to_half as full_to_half,
 )

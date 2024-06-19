@@ -1,5 +1,6 @@
 import base64
 from contextlib import suppress
+from functools import partial
 from typing import (
     Any,
     Callable,
@@ -29,6 +30,7 @@ K = TypeVar("K")
 V = TypeVar("V")
 
 P = ParamSpec("P")
+R = TypeVar("R")
 
 LazyGetterType = Union[T, Callable[P, T]]
 
@@ -95,3 +97,32 @@ def to_b64_url(data: bytes, mime: Optional[str] = None) -> str:
         with suppress(IndexError):
             mime = cast(List[str], fleep.get(data[:128]).mime)[0]
     return f"data:{mime};base64,{base64.b64encode(data).decode()}"
+
+
+@overload
+def append_func_to_dict_deco(
+    name_dict: Dict[str, Callable],
+    func_or_name: Callable[P, R],
+) -> Callable[P, R]: ...
+@overload
+def append_func_to_dict_deco(
+    name_dict: Dict[str, Callable],
+    func_or_name: str,
+) -> Callable[[Callable[P, R]], Callable[P, R]]: ...
+def append_func_to_dict_deco(
+    name_dict: Dict[str, Callable],
+    func_or_name: Union[Callable[P, R], str],
+):
+    if callable(func_or_name):
+        name_dict[func_or_name.__name__] = func_or_name
+        return func_or_name
+
+    def inner_deco(func: Callable[P, R], /):
+        name_dict[func_or_name] = func
+        return func
+
+    return inner_deco
+
+
+def make_append_func_to_dict_deco(name_dict: Dict[str, Callable]):
+    return partial(append_func_to_dict_deco, name_dict)

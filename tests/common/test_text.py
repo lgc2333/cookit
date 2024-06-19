@@ -44,3 +44,33 @@ def test_full_to_half():
         )
         == "1234567890!@#$%^&*()_+{}[]:\";'<>,./?"
     )
+
+
+def test_escape_single_quotes():
+    from cookit import escape_single_quotes
+
+    assert escape_single_quotes("Hello, 'World'!") == "Hello, \\'World\\'!"
+
+    assert escape_single_quotes("Hello, World!") == "Hello, World!"
+    assert escape_single_quotes('Hello, "World"!') == 'Hello, "World"!'
+    assert escape_single_quotes("Hello, `World`!") == "Hello, `World`!"
+
+
+def test_escape_double_quotes():
+    from cookit import escape_double_quotes
+
+    assert escape_double_quotes('Hello, "World"!') == 'Hello, \\"World\\"!'
+
+    assert escape_double_quotes("Hello, World!") == "Hello, World!"
+    assert escape_double_quotes("Hello, 'World'!") == "Hello, 'World'!"
+    assert escape_double_quotes("Hello, `World`!") == "Hello, `World`!"
+
+
+def test_escape_backticks():
+    from cookit import escape_backticks
+
+    assert escape_backticks("Hello, `World`!") == "Hello, \\`World\\`!"
+
+    assert escape_backticks("Hello, World!") == "Hello, World!"
+    assert escape_backticks("Hello, 'World'!") == "Hello, 'World'!"
+    assert escape_backticks('Hello, "World"!') == 'Hello, "World"!'

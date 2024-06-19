@@ -11,3 +11,15 @@ def full_to_half(text: str) -> str:
         chr(ord(char) - 0xFEE0) if "\uff01" <= char <= "\uff5e" else char
         for char in text
     ).replace("\u3000", " ")
+
+
+def escape_single_quotes(value: str) -> str:
+    return value.replace("'", "\\'")
+
+
+def escape_double_quotes(value: str) -> str:
+    return value.replace('"', '\\"')
+
+
+def escape_backticks(value: str) -> str:
+    return value.replace("`", "\\`")

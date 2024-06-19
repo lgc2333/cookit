@@ -13,15 +13,12 @@ homepage = "https://github.com/lgc2333/cookit"
 
 [project.optional-dependencies]
 pydantic = ["pydantic>=1.10.0,<3.0.0,!=2.5.0,!=2.5.1"]
-
 nonebot-base = ["nonebot2>=2.2.0"]
 nonebot-alconna = ["cookit[nonebot-base]", "nonebot-plugin-alconna>=0.40.1"]
 nonebot = ["cookit[nonebot-alconna]"]
-
 loguru = ["loguru>=0.7.2"]
-
-all = ["cookit[pydantic,nonebot,loguru]"]
-
+jinja = ["jinja2>=3.1.4"]
+all = ["cookit[pydantic,nonebot,loguru,jinja]"]
 
 [tool.pdm.dev-dependencies]
 dev = [

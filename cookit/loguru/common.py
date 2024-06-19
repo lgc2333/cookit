@@ -3,7 +3,7 @@ from typing import Type
 
 from loguru import logger
 
-from cookit.common import LazyGetterType, lazy_get
+from ..common import LazyGetterType, lazy_get
 
 
 @contextmanager
