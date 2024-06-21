@@ -1,10 +1,13 @@
-from typing import TYPE_CHECKING, Callable, List, Optional
+from typing import TYPE_CHECKING, Callable, List, Optional, Type, Union
 
-import pytest
 from loguru import logger
 
 if TYPE_CHECKING:
-    from loguru import Message
+    from loguru import Message, Record
+
+    class NotRequiredRecord(Record, total=False):
+        pass
+
 
 LoguruHandler = Callable[["Message"], None]
 
@@ -31,19 +34,34 @@ class LoggingContext:
             logger.remove(self.id)
         self.check()
 
-    def should_message(self, msg: str):
-        def checker(message: "Message"):
-            if msg == (actual := message.record["message"]):
-                return
-            pytest.fail(f'Logging message mismatch, expected "{msg}", got "{actual}"')
-
-        self.checker_stack.append(checker)
-
-    def should_contain_message(self, msg: str):
-        def checker(message: "Message"):
-            if msg in (actual := message.record["message"]):
-                return
-            pytest.fail(f'Logging message does not contain "{msg}", got "{actual}"')
+    def should_log(
+        self,
+        *,
+        exception: Union[BaseException, Type[BaseException], None] = None,
+        level_str: Optional[str] = None,
+        level_no: Optional[int] = None,
+        message: Optional[str] = None,
+        message_fullmatch: bool = True,
+    ):
+        def checker(m: "Message"):
+            record = m.record
+            if exception is not None:
+                r_exception = record.get("exception")
+                assert r_exception
+                assert (
+                    r_exception.type is exception
+                    if isinstance(exception, type)
+                    else r_exception.value is exception
+                )
+            if level_str is not None:
+                assert record["level"].name == level_str
+            if level_no is not None:
+                assert record["level"].no == level_no
+            if message is not None:
+                r_message = record["message"]
+                assert (
+                    message == r_message if message_fullmatch else message in r_message
+                )
 
         self.checker_stack.append(checker)
 
