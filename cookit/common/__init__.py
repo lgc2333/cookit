@@ -21,6 +21,7 @@ from .math import (
     format_timedelta_human_zh_spc as format_timedelta_human_zh_spc,
 )
 from .other import (
+    queued as queued,
     with_semaphore as with_semaphore,
 )
 from .text import (

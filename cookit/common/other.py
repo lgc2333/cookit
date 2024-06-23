@@ -15,3 +15,7 @@ def with_semaphore(semaphore: Semaphore):
         return wrapper
 
     return decorator
+
+
+def queued(func: Callable[P, Awaitable[R]]):
+    return with_semaphore(Semaphore(1))(func)
