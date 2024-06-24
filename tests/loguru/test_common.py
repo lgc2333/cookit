@@ -54,3 +54,8 @@ def test_logged_suppress():
             level_str="DEBUG",
             exception=IndexError,
         )
+
+        with logged_suppress("test6", log_stack=False, debug_stack=True):
+            value_error()
+        ctx.should_log(message="test6", level_str="ERROR", exception=None)
+        ctx.should_log(message="Stacktrace", level_str="DEBUG", exception=ValueError)

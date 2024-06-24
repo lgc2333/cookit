@@ -37,7 +37,7 @@ class LoggingContext:
     def should_log(
         self,
         *,
-        exception: Union[BaseException, Type[BaseException], None] = None,
+        exception: Union[BaseException, Type[BaseException], None] = ...,
         level_str: Optional[str] = None,
         level_no: Optional[int] = None,
         message: Optional[str] = None,
@@ -45,14 +45,17 @@ class LoggingContext:
     ):
         def checker(m: "Message"):
             record = m.record
-            if exception is not None:
+            if exception is not ...:
                 r_exception = record.get("exception")
-                assert r_exception
-                assert (
-                    r_exception.type is exception
-                    if isinstance(exception, type)
-                    else r_exception.value is exception
-                )
+                if exception is None:
+                    assert r_exception is None
+                else:
+                    assert r_exception
+                    assert (
+                        r_exception.type is exception
+                        if isinstance(exception, type)
+                        else r_exception.value is exception
+                    )
             if level_str is not None:
                 assert record["level"].name == level_str
             if level_no is not None:
