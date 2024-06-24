@@ -1,4 +1,5 @@
 from contextlib import contextmanager
+from functools import partial
 from typing import Iterator, Type, Union
 
 from loguru import logger
@@ -24,3 +25,11 @@ def logged_suppress(
         if debug_stack:
             logger.opt(exception=e).debug("Stacktrace")
         return
+
+
+warning_suppress = partial(
+    logged_suppress,
+    level="WARNING",
+    log_stack=False,
+    debug_stack=True,
+)
