@@ -1,6 +1,6 @@
 import pytest
 
-from .utils import test_logger
+from .utils import LoggingContext
 
 
 def test_logged_suppress():
@@ -12,7 +12,7 @@ def test_logged_suppress():
     def index_error():
         raise IndexError
 
-    with test_logger() as ctx:
+    with LoggingContext() as ctx:
         with logged_suppress("test1"):
             value_error()
         ctx.should_log(message="test1", level_str="ERROR", exception=ValueError)

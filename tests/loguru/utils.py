@@ -71,7 +71,3 @@ class LoggingContext:
     def check(self):
         for checker in self.checker_stack:
             checker(self.log_stack.pop(0))
-
-
-def test_logger():
-    return LoggingContext()
