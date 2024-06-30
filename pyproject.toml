@@ -3,7 +3,10 @@ name = "cookit"
 dynamic = ["version"]
 description = "A toolkit for self use."
 authors = [{ name = "student_2333", email = "lgc2333@126.com" }]
-dependencies = ["typing-extensions>=4.10.0", "fleep>=1.0.1"]
+dependencies = [
+    "typing-extensions>=4.12.2",
+    "fleep>=1.0.1",
+]
 requires-python = ">=3.9,<4.0"
 readme = "README.md"
 license = { text = "MIT" }
@@ -12,22 +15,39 @@ license = { text = "MIT" }
 homepage = "https://github.com/lgc2333/cookit"
 
 [project.optional-dependencies]
-pydantic = ["pydantic>=1.10.0,<3.0.0,!=2.5.0,!=2.5.1"]
-pyd = ["cookit[pydantic]"]
-nonebot-base = ["nonebot2>=2.2.0"]
-nonebot-alconna = ["cookit[nonebot-base]", "nonebot-plugin-alconna>=0.40.1"]
-nonebot = ["cookit[nonebot-alconna]"]
-loguru = ["loguru>=0.7.2"]
-jinja = ["jinja2>=3.1.4"]
-all = ["cookit[pydantic,nonebot,loguru,jinja]"]
+pydantic = [
+    "pydantic>=2.7.4",
+]
+pyd = [
+    "cookit[pydantic]",
+]
+nonebot-base = [
+    "nonebot2>=2.3.1",
+]
+nonebot-alconna = [
+    "cookit[nonebot-base]",
+    "nonebot-plugin-alconna>=0.48.0",
+]
+nonebot = [
+    "cookit[nonebot-alconna]",
+]
+loguru = [
+    "loguru>=0.7.2",
+]
+jinja = [
+    "jinja2>=3.1.4",
+]
+all = [
+    "cookit[jinja,loguru,nonebot,pydantic]",
+]
 
 [tool.pdm.dev-dependencies]
 dev = [
-    "pytest>=8.1.1",
-    "pytest-asyncio>=0.23.5.post1",
-    "nonebot2[all]>=2.2.1",
-    "nonebug>=0.3.6",
-    "nonebot-adapter-satori>=0.10.2", # for alconna recall test
+    "pytest>=8.2.2",
+    "pytest-asyncio>=0.23.7",
+    "nonebot2[all]>=2.3.1",
+    "nonebug>=0.3.7",
+    "nonebot-adapter-satori>=0.12.3", # for alconna recall test
 ]
 
 [tool.pytest.ini_options]
