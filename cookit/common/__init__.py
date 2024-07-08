@@ -22,6 +22,7 @@ from .math import (
 )
 from .other import (
     queued as queued,
+    race as race,
     with_semaphore as with_semaphore,
 )
 from .text import (

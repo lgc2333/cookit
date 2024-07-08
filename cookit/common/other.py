@@ -1,7 +1,9 @@
+import asyncio
 from asyncio import Semaphore
-from typing import Awaitable, Callable, TypeVar
+from typing import Any, Awaitable, Callable, Coroutine, TypeVar
 from typing_extensions import ParamSpec
 
+T = TypeVar("T")
 R = TypeVar("R")
 P = ParamSpec("P")
 
@@ -19,3 +21,14 @@ def with_semaphore(semaphore: Semaphore):
 
 def queued(func: Callable[P, Awaitable[R]]):
     return with_semaphore(Semaphore(1))(func)
+
+
+async def race(*coros: Coroutine[Any, Any, T]) -> T:
+    done, pending = await asyncio.wait(
+        [asyncio.create_task(x) for x in coros],
+        return_when=asyncio.FIRST_COMPLETED,
+    )
+    first, *other = done
+    for t in (*other, *pending):
+        t.cancel()
+    return first.result()
