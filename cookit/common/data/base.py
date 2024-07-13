@@ -32,6 +32,8 @@ V = TypeVar("V")
 P = ParamSpec("P")
 R = TypeVar("R")
 
+T_SEQ = TypeVar("T_SEQ", bound=Sequence)
+
 LazyGetterType = Union[T, Callable[P, T]]
 
 
@@ -54,7 +56,7 @@ def qor(
     return a if guard(a) else lazy_get(b)
 
 
-def chunks(lst: Sequence[T], n: int) -> Iterator[Sequence[T]]:
+def chunks(lst: T_SEQ, n: int) -> Iterator[T_SEQ]:
     for i in range(0, len(lst), n):
         yield lst[i : i + n]
 
