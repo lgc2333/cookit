@@ -8,9 +8,6 @@ from yarl import URL
 from ..utils import mark_test
 from .utils import get_page
 
-# pytest playwright currently doesn't support asyncio
-# so i won't write pytest based tests for it
-
 ROUTE_BASE_URL = "https://cookit.route"
 
 
