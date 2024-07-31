@@ -1,12 +1,13 @@
 import mimetypes
 import re
-from dataclasses import dataclass, field
+from dataclasses import dataclass
 from pathlib import Path
 from typing import (
     Any,
     Awaitable,
     Callable,
     Generic,
+    Iterable,
     List,
     Optional,
     Protocol,
@@ -65,9 +66,11 @@ async def apply_router_to_page(page: Page, router: CKRouterInfo):
     await page.route(router.pattern, wrapped)
 
 
-@dataclass
 class RouterGroup:
-    routers: List[CKRouterInfo] = field(default_factory=list)
+    def __init__(self, routers: Optional[Iterable[CKRouterInfo]] = None) -> None:
+        self.routers: List[CKRouterInfo] = []
+        if routers:
+            self.routers.extend(routers)
 
     def register_router(
         self,
