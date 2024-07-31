@@ -30,10 +30,12 @@ jobs:
         uses: pdm-project/setup-pdm@v4
         with:
           python-version: ${{ matrix.python-version }}
-          # cache: true
+          cache: true
 
       - name: Install prerequisites
-        run: pdm install -G:all
+        run: |-
+          pdm install -G:all
+          pdm run playwright install
 
       - name: Install Specific Version Pydantic (Bash)
         if: runner.os != 'Windows'
@@ -44,3 +46,5 @@ jobs:
 
       - name: Run Pytest
         run: pdm run pytest
+      - name: Run standabone tests
+        run: pdm run python -m tests_standalone

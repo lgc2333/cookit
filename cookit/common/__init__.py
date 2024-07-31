@@ -21,6 +21,7 @@ from .math import (
     format_timedelta_human_zh_spc as format_timedelta_human_zh_spc,
 )
 from .other import (
+    auto_import as auto_import,
     queued as queued,
     race as race,
     with_semaphore as with_semaphore,
@@ -31,4 +32,5 @@ from .text import (
     escape_double_quotes as escape_double_quotes,
     escape_single_quotes as escape_single_quotes,
     full_to_half as full_to_half,
+    pascal_case as pascal_case,
 )

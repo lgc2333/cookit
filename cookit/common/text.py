@@ -1,9 +1,15 @@
+from functools import partial
+
+
 def camel_case(string: str, upper_first: bool = False) -> str:
     pfx, *rest = string.split("_")
     if upper_first:
         pfx = pfx.capitalize()
     sfx = "".join(x.capitalize() for x in rest)
     return f"{pfx}{sfx}"
+
+
+pascal_case = partial(camel_case, upper_first=True)
 
 
 def full_to_half(text: str) -> str:

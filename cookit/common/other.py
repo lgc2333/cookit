@@ -1,7 +1,22 @@
 import asyncio
+import importlib
 from asyncio import Semaphore
-from typing import Any, Awaitable, Callable, Coroutine, TypeVar
+from pathlib import Path
+from typing import (
+    TYPE_CHECKING,
+    Any,
+    Awaitable,
+    Callable,
+    Coroutine,
+    List,
+    Optional,
+    TypeVar,
+    Union,
+)
 from typing_extensions import ParamSpec
+
+if TYPE_CHECKING:
+    from types import ModuleType
 
 T = TypeVar("T")
 R = TypeVar("R")
@@ -32,3 +47,27 @@ async def race(*coros: Coroutine[Any, Any, T]) -> T:
     for t in (*other, *pending):
         t.cancel()
     return first.result()
+
+
+def auto_import(
+    path: Union[str, Path],
+    package: Optional[str] = None,
+    path_filter: Optional[Callable[[Path], bool]] = None,
+):
+    if not isinstance(path, Path):
+        path = Path(path)
+    if not path_filter:
+        path_filter = lambda x: not x.name.startswith("_")  # noqa: E731
+
+    modules: List[ModuleType] = []
+    for p in path.iterdir():
+        if (
+            (not (p / "__init__.py").exists()) if p.is_dir() else (p.suffix != ".py")
+        ) or (not path_filter(p)):
+            continue
+
+        p = importlib.import_module(f".{p.stem}", package)
+        assert p
+        modules.append(p)
+
+    return modules

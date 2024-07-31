@@ -3,7 +3,7 @@
 from cookit.pyd import CamelAliasModel, model_dump, type_validate_python
 
 
-async def test_camel_alias_model():
+def test_camel_alias_model():
     assert isinstance(CamelAliasModel(), CamelAliasModel)
 
     class TestModel(CamelAliasModel):

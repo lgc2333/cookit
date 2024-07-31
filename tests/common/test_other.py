@@ -1,4 +1,6 @@
 import asyncio as aio
+from pathlib import Path
+from typing import List
 
 import pytest
 
@@ -23,24 +25,24 @@ async def test_with_semaphore():
 async def test_queued():
     from cookit import queued
 
-    ret = "Hello, World!"
     counter = 0
+    count_list: List[int] = []
 
     @queued
     async def async_func():
         nonlocal counter
-        await aio.sleep(0)
         counter += 1
-        return f"{ret}{counter}"
+        await aio.sleep(0)
+        count_list.append(counter)
 
-    result = await aio.gather(
+    await aio.gather(
         async_func(),
         async_func(),
         async_func(),
         async_func(),
         async_func(),
     )
-    assert tuple(result) == (f"{ret}1", f"{ret}2", f"{ret}3", f"{ret}4", f"{ret}5")
+    assert count_list == [1, 2, 3, 4, 5]
 
 
 async def test_race():
@@ -60,3 +62,26 @@ async def test_race():
     assert await race(f1(), f2()) == 1
     with pytest.raises(Exception):  # noqa: B017, PT011
         await race(f1(), f2(), fe())
+
+
+def test_auto_import():
+    from cookit import auto_import
+
+    from .auto_import.base import get_counter
+
+    for m in auto_import(
+        Path(__file__).parent / "auto_import",
+        f"{__package__}.auto_import",
+    ):
+        if hasattr(m, "main"):
+            m.main()
+    assert get_counter() == 2
+
+    for m in auto_import(
+        Path(__file__).parent / "auto_import",
+        f"{__package__}.auto_import",
+        lambda _: True,
+    ):
+        if hasattr(m, "main"):
+            m.main()
+    assert get_counter() == 5

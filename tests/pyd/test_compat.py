@@ -15,7 +15,7 @@ from pydantic import BaseModel, ConfigDict
 # region from nonebot2
 
 
-async def test_model_dump():
+def test_model_dump():
     class TestModel(BaseModel):
         test1: int
         test2: int
@@ -24,7 +24,7 @@ async def test_model_dump():
     assert model_dump(TestModel(test1=1, test2=2), exclude={"test1"}) == {"test2": 2}
 
 
-async def test_validate():
+def test_validate():
     class TestModel(BaseModel):
         test1: int
         test2: str
@@ -49,7 +49,7 @@ async def test_validate():
 # endregion
 
 
-async def test_get_model_with_config():
+def test_get_model_with_config():
     config = ConfigDict(arbitrary_types_allowed=True)
     Model = get_model_with_config(config)  # noqa: N806
     assert isinstance(Model(), Model)

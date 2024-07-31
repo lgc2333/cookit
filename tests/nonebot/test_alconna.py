@@ -2,8 +2,6 @@ import time
 from typing import TYPE_CHECKING, Any
 from typing_extensions import override
 
-from nonebot.adapters.satori.models import LoginStatus
-
 if TYPE_CHECKING:
     from nonebot.adapters.satori import Adapter as SatoriAdapter
     from nonebug import App
@@ -25,10 +23,16 @@ def create_fake_satori_adapter(ctx: "MatcherContext") -> "SatoriAdapter":
 
 async def test_captured_recall(app: "App"):
     from nonebot import on_message, require
-    from nonebot.adapters.satori import Bot as SatoriBot
+    from nonebot.adapters.satori import Bot as SatoriBot, Message, MessageSegment
     from nonebot.adapters.satori.config import ClientInfo
     from nonebot.adapters.satori.event import MessageCreatedEvent
-    from nonebot.adapters.satori.models import ChannelType, Login, MessageObject, User
+    from nonebot.adapters.satori.models import (
+        ChannelType,
+        Login,
+        LoginStatus,
+        MessageObject,
+        User,
+    )
     from nonebot.compat import type_validate_python
 
     require("nonebot_plugin_alconna")
@@ -73,16 +77,27 @@ async def test_captured_recall(app: "App"):
         )
         ctx.receive_event(bot, event)
 
-        ctx.should_call_api(
-            "message_create",
-            {"channel_id": "fake_channel", "content": "world!"},
+        # ctx.should_call_api(
+        #     "message_create",
+        #     {"channel_id": "fake_channel", "content": "world!"},
+        #     [MessageObject(id="114515", content="world!")],
+        # )
+        # ctx.should_call_api(
+        #     "message_create",
+        #     {"channel_id": "fake_channel", "content": "world!"},
+        #     [MessageObject(id="114516", content="world!")],
+        # )
+        ctx.should_call_send(
+            event,
+            Message() + MessageSegment.text("world!"),
             [MessageObject(id="114515", content="world!")],
         )
-        ctx.should_call_api(
-            "message_create",
-            {"channel_id": "fake_channel", "content": "world!"},
+        ctx.should_call_send(
+            event,
+            Message() + MessageSegment.text("world!"),
             [MessageObject(id="114516", content="world!")],
         )
+
         ctx.should_call_api(
             "message_delete",
             {"channel_id": "fake_channel", "message_id": "114515"},
