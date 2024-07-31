@@ -35,7 +35,7 @@ jobs:
       - name: Install prerequisites
         run: |-
           pdm install -G:all
-          pdm run playwright install
+          pdm run playwright install chromium
 
       - name: Install Specific Version Pydantic (Bash)
         if: runner.os != 'Windows'
