@@ -11,7 +11,7 @@ WaitForType: TypeAlias = Union[
 ]
 
 
-async def _wait_for(wait_type: WaitForType, page: Page):
+async def _wait_for(page: Page, wait_type: WaitForType):
     if callable(wait_type):
         await wait_type(page)
     elif wait_type:
@@ -24,7 +24,7 @@ async def screenshot_selector(
     wait_type: WaitForType = "load",
     **kwargs,
 ) -> bytes:
-    await _wait_for(wait_type, page)
+    await _wait_for(page, wait_type)
     elem = await page.query_selector(selector)
     if not elem:
         raise ValueError("Element not found")
@@ -41,5 +41,5 @@ async def screenshot_html(
     await page.set_content(html)
     if selector:
         return await screenshot_selector(page, selector, wait_type, **kwargs)
-    await _wait_for(wait_type, page)
+    await _wait_for(page, wait_type)
     return await page.screenshot(**kwargs)

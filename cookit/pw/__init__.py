@@ -11,6 +11,8 @@ from .router import (
     make_real_path_router as make_real_path_router,
 )
 from .screenshot import (
+    WaitForType as WaitForType,
+    WaitFunction as WaitFunction,
     screenshot_html as screenshot_html,
     screenshot_selector as screenshot_selector,
 )
