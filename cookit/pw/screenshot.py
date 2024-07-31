@@ -18,13 +18,7 @@ async def _wait_for(page: Page, wait_type: WaitForType):
         await page.wait_for_load_state(wait_type)
 
 
-async def screenshot_selector(
-    page: Page,
-    selector: str,
-    wait_type: WaitForType = "load",
-    **kwargs,
-) -> bytes:
-    await _wait_for(page, wait_type)
+async def screenshot_selector(page: Page, selector: str, **kwargs) -> bytes:
     elem = await page.query_selector(selector)
     if not elem:
         raise ValueError("Element not found")
@@ -39,7 +33,7 @@ async def screenshot_html(
     **kwargs,
 ) -> bytes:
     await page.set_content(html)
-    if selector:
-        return await screenshot_selector(page, selector, wait_type, **kwargs)
     await _wait_for(page, wait_type)
+    if selector:
+        return await screenshot_selector(page, selector, **kwargs)
     return await page.screenshot(**kwargs)
