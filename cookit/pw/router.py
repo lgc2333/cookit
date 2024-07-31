@@ -99,6 +99,9 @@ class RouterGroup:
             await apply_router_to_page(page, router)
         return page
 
+    def copy(self) -> "RouterGroup":
+        return RouterGroup(self.routers)
+
 
 def make_real_path_router(path_extractor: CKRouterFunc[Path]) -> CKRouterFunc:
     async def router(route: Route, matched: Optional[re.Match[str]], **add_kwds):

@@ -32,7 +32,7 @@ V = TypeVar("V")
 P = ParamSpec("P")
 R = TypeVar("R")
 
-T_SEQ = TypeVar("T_SEQ", bound=Sequence)
+TSeq = TypeVar("TSeq", bound=Sequence, covariant=True)
 
 LazyGetterType = Union[T, Callable[P, T]]
 
@@ -56,9 +56,9 @@ def qor(
     return a if guard(a) else lazy_get(b)
 
 
-def chunks(lst: T_SEQ, n: int) -> Iterator[T_SEQ]:
+def chunks(lst: Sequence[T], n: int) -> Iterator[List[T]]:
     for i in range(0, len(lst), n):
-        yield lst[i : i + n]
+        yield list(lst[i : i + n])
 
 
 def flatten(li: Iterable[Iterable[T]]) -> List[T]:
@@ -96,6 +96,7 @@ def auto_delete(  # noqa: E302
 
 def to_b64_url(data: bytes, mime: Optional[str] = None) -> str:
     if mime is None:
+        mime = ""
         with suppress(IndexError):
             mime = cast(List[str], fleep.get(data[:128]).mime)[0]
     return f"data:{mime};base64,{base64.b64encode(data).decode()}"

@@ -91,3 +91,24 @@ async def test_real_path_router():
         resp = await page.goto(f"{ROUTE_BASE_URL}/unknown_file.html")
         assert resp
         assert resp.status == 404
+
+
+@mark_test
+async def test_router_group_copy():
+    from cookit.pw import RouterGroup
+
+    router_group = RouterGroup()
+
+    @router_group.router(f"{ROUTE_BASE_URL}/test")
+    async def _(route: Route, **_):
+        await route.fulfill(body=b"")
+
+    router_group2 = router_group.copy()
+
+    @router_group2.router(f"{ROUTE_BASE_URL}/test2")
+    async def _(route: Route, **_):
+        await route.fulfill(body=b"")
+
+    assert router_group.routers is not router_group2.routers
+    assert len(router_group.routers) == 1
+    assert len(router_group2.routers) == 2
