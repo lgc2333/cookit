@@ -46,6 +46,8 @@ class RecallContext:
         fallback: bool = True,
         at_sender: Union[str, bool] = False,
         reply_to: Union[str, bool, Reply, None] = False,
+        no_wrapper: bool = False,
+        **kwargs,
     ) -> None:
         self.append(
             await (
@@ -56,6 +58,8 @@ class RecallContext:
                 fallback=fallback,
                 at_sender=at_sender,
                 reply_to=reply_to,
+                no_wrapper=no_wrapper,
+                **kwargs,
             ),
         )
 

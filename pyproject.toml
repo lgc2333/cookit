@@ -18,7 +18,7 @@ jinja = ["jinja2>=3.1.4"]
 loguru = ["loguru>=0.7.2"]
 
 nonebot-base = ["nonebot2>=2.3.1"]
-nonebot-alconna = ["cookit[nonebot-base]", "nonebot-plugin-alconna>=0.48.0"]
+nonebot-alconna = ["cookit[nonebot-base]", "nonebot-plugin-alconna>=0.50.2"]
 nonebot = ["cookit[nonebot-alconna]"]
 
 playwright = ["playwright>=1.45.1"]
