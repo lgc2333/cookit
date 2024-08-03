@@ -18,6 +18,7 @@ PYDANTIC_V2 = int(VERSION.split(".", 1)[0]) == 2
 
 T = TypeVar("T")
 
+
 if PYDANTIC_V2:  # pragma: pydantic-v2
     from pydantic import (
         TypeAdapter,
@@ -64,6 +65,51 @@ if PYDANTIC_V2:  # pragma: pydantic-v2
             model_config = config
 
         return Model
+
+    def type_dump_python(
+        type_: Type[T],
+        data: T,
+        include: Optional[Set[str]] = None,
+        exclude: Optional[Set[str]] = None,
+        by_alias: bool = False,
+        exclude_unset: bool = False,
+        exclude_defaults: bool = False,
+        exclude_none: bool = False,
+    ) -> Any:
+        return TypeAdapter(type_).dump_python(
+            data,
+            include=include,
+            exclude=exclude,
+            by_alias=by_alias,
+            exclude_unset=exclude_unset,
+            exclude_defaults=exclude_defaults,
+            exclude_none=exclude_none,
+        )
+
+    def type_dump_json(
+        type_: Type[T],
+        data: T,
+        include: Optional[Set[str]] = None,
+        exclude: Optional[Set[str]] = None,
+        by_alias: bool = False,
+        exclude_unset: bool = False,
+        exclude_defaults: bool = False,
+        exclude_none: bool = False,
+    ) -> str:
+        return (
+            TypeAdapter(type_)
+            .dump_json(
+                data,
+                include=include,
+                exclude=exclude,
+                by_alias=by_alias,
+                exclude_unset=exclude_unset,
+                exclude_defaults=exclude_defaults,
+                exclude_none=exclude_none,
+            )
+            .decode()
+        )
+
 
 else:  # pragma: pydantic-v1
     from pydantic import parse_obj_as, parse_raw_as, root_validator, validator
@@ -159,3 +205,47 @@ else:  # pragma: pydantic-v1
             pass
 
         return Model
+
+    def type_dump_python(
+        type_: Type[T],
+        data: T,
+        include: Optional[Set[str]] = None,
+        exclude: Optional[Set[str]] = None,
+        by_alias: bool = False,
+        exclude_unset: bool = False,
+        exclude_defaults: bool = False,
+        exclude_none: bool = False,
+    ) -> Any:
+        class TempModel(BaseModel):
+            __root__: type_
+
+        return TempModel.parse_obj(data).dict(
+            include=include,
+            exclude=exclude,
+            by_alias=by_alias,
+            exclude_unset=exclude_unset,
+            exclude_defaults=exclude_defaults,
+            exclude_none=exclude_none,
+        )
+
+    def type_dump_json(
+        type_: Type[T],
+        data: T,
+        include: Optional[Set[str]] = None,
+        exclude: Optional[Set[str]] = None,
+        by_alias: bool = False,
+        exclude_unset: bool = False,
+        exclude_defaults: bool = False,
+        exclude_none: bool = False,
+    ) -> Any:
+        class TempModel(BaseModel):
+            __root__: type_
+
+        return TempModel.parse_obj(data).json(
+            include=include,
+            exclude=exclude,
+            by_alias=by_alias,
+            exclude_unset=exclude_unset,
+            exclude_defaults=exclude_defaults,
+            exclude_none=exclude_none,
+        )
