@@ -21,6 +21,7 @@ T = TypeVar("T")
 
 if PYDANTIC_V2:  # pragma: pydantic-v2
     from pydantic import (
+        RootModel,
         TypeAdapter,
         field_validator as field_validator,
         model_validator as model_validator,
@@ -76,8 +77,8 @@ if PYDANTIC_V2:  # pragma: pydantic-v2
         exclude_defaults: bool = False,
         exclude_none: bool = False,
     ) -> Any:
-        return TypeAdapter(type_).dump_python(
-            data,
+        TempModel = RootModel(type_)  # noqa: N806
+        return TempModel.model_validate(data).model_dump(
             include=include,
             exclude=exclude,
             by_alias=by_alias,
@@ -96,18 +97,14 @@ if PYDANTIC_V2:  # pragma: pydantic-v2
         exclude_defaults: bool = False,
         exclude_none: bool = False,
     ) -> str:
-        return (
-            TypeAdapter(type_)
-            .dump_json(
-                data,
-                include=include,
-                exclude=exclude,
-                by_alias=by_alias,
-                exclude_unset=exclude_unset,
-                exclude_defaults=exclude_defaults,
-                exclude_none=exclude_none,
-            )
-            .decode()
+        TempModel = RootModel(type_)  # noqa: N806
+        return TempModel.model_validate(data).model_dump_json(
+            include=include,
+            exclude=exclude,
+            by_alias=by_alias,
+            exclude_unset=exclude_unset,
+            exclude_defaults=exclude_defaults,
+            exclude_none=exclude_none,
         )
 
 
@@ -226,7 +223,7 @@ else:  # pragma: pydantic-v1
             exclude_unset=exclude_unset,
             exclude_defaults=exclude_defaults,
             exclude_none=exclude_none,
-        )
+        )["__root__"]
 
     def type_dump_json(
         type_: Type[T],
