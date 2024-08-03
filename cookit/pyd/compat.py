@@ -68,8 +68,7 @@ if PYDANTIC_V2:  # pragma: pydantic-v2
         return Model
 
     def type_dump_python(
-        type_: Type[T],
-        data: T,
+        data: object,
         include: Optional[Set[str]] = None,
         exclude: Optional[Set[str]] = None,
         by_alias: bool = False,
@@ -77,7 +76,7 @@ if PYDANTIC_V2:  # pragma: pydantic-v2
         exclude_defaults: bool = False,
         exclude_none: bool = False,
     ) -> Any:
-        TempModel = RootModel(type_)  # noqa: N806
+        TempModel = RootModel(Any)  # noqa: N806
         return TempModel.model_validate(data).model_dump(
             include=include,
             exclude=exclude,
@@ -88,8 +87,7 @@ if PYDANTIC_V2:  # pragma: pydantic-v2
         )
 
     def type_dump_json(
-        type_: Type[T],
-        data: T,
+        data: object,
         include: Optional[Set[str]] = None,
         exclude: Optional[Set[str]] = None,
         by_alias: bool = False,
@@ -97,7 +95,7 @@ if PYDANTIC_V2:  # pragma: pydantic-v2
         exclude_defaults: bool = False,
         exclude_none: bool = False,
     ) -> str:
-        TempModel = RootModel(type_)  # noqa: N806
+        TempModel = RootModel(Any)  # noqa: N806
         return TempModel.model_validate(data).model_dump_json(
             include=include,
             exclude=exclude,
@@ -204,8 +202,7 @@ else:  # pragma: pydantic-v1
         return Model
 
     def type_dump_python(
-        type_: Type[T],
-        data: T,
+        data: object,
         include: Optional[Set[str]] = None,
         exclude: Optional[Set[str]] = None,
         by_alias: bool = False,
@@ -214,7 +211,7 @@ else:  # pragma: pydantic-v1
         exclude_none: bool = False,
     ) -> Any:
         class TempModel(BaseModel):
-            __root__: type_
+            __root__: Any
 
         return TempModel.parse_obj(data).dict(
             include=include,
@@ -226,8 +223,7 @@ else:  # pragma: pydantic-v1
         )["__root__"]
 
     def type_dump_json(
-        type_: Type[T],
-        data: T,
+        data: object,
         include: Optional[Set[str]] = None,
         exclude: Optional[Set[str]] = None,
         by_alias: bool = False,
@@ -236,7 +232,7 @@ else:  # pragma: pydantic-v1
         exclude_none: bool = False,
     ) -> Any:
         class TempModel(BaseModel):
-            __root__: type_
+            __root__: Any
 
         return TempModel.parse_obj(data).json(
             include=include,

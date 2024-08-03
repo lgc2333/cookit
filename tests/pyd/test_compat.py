@@ -67,9 +67,5 @@ def test_validate_root():
 
     data = [{"test1": 1, "test2": "2"}]
     expected = [TestModel(test1=1, test2="2")]
-    assert type_dump_python(List[TestModel], expected) == data
-    assert json.loads(type_dump_json(List[TestModel], expected)) == data
-
-    data_err = [{"test1": "homo114514", "test2": "2"}]
-    # with pytest.raises(ValidationError):
-    type_dump_python(List[TestModel], data_err)
+    assert type_dump_python(expected) == data
+    assert json.loads(type_dump_json(expected)) == data
