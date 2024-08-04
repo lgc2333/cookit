@@ -10,6 +10,9 @@ from .base import (
     set_default as set_default,
     to_b64_url as to_b64_url,
 )
+from .cache import (
+    FileCacheManager as FileCacheManager,
+)
 from .pagination import (
     IterPFKwargs as IterPFKwargs,
     PaginationCallable as PaginationCallable,
