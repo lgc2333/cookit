@@ -60,11 +60,15 @@ def test_get_model_with_config():
 def test_validate_root():
     from cookit.pyd import type_dump_json, type_dump_python
 
+    class InnerTestModel(BaseModel):
+        test31: int
+
     class TestModel(BaseModel):
         test1: int
         test2: str
+        test3: InnerTestModel
 
-    data = [{"test1": 1, "test2": "2"}]
-    expected = [TestModel(test1=1, test2="2")]
+    data = [{"test1": 1, "test2": "2", "test3": {"test31": 3}}]
+    expected = [TestModel(test1=1, test2="2", test3=InnerTestModel(test31=3))]
     assert type_dump_python(expected) == data
     assert json.loads(type_dump_json(expected)) == data
