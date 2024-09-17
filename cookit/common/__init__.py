@@ -21,6 +21,7 @@ from .math import (
     format_timedelta_human_zh_spc as format_timedelta_human_zh_spc,
 )
 from .other import (
+    StrEnum as StrEnum,
     auto_import as auto_import,
     queued as queued,
     race as race,

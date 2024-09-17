@@ -1,5 +1,6 @@
 import asyncio
 import importlib
+import sys
 from asyncio import Semaphore
 from pathlib import Path
 from typing import (
@@ -13,7 +14,7 @@ from typing import (
     TypeVar,
     Union,
 )
-from typing_extensions import ParamSpec
+from typing_extensions import ParamSpec, override
 
 if TYPE_CHECKING:
     from types import ModuleType
@@ -71,3 +72,20 @@ def auto_import(
         modules.append(p)
 
     return modules
+
+
+if sys.version_info >= (3, 11):
+    from enum import StrEnum as StrEnum
+else:
+    from enum import Enum
+
+    class StrEnum(str, Enum):
+        @override
+        @staticmethod
+        def _generate_next_value_(
+            name: str,
+            start: int,
+            count: int,
+            last_values: List[str],
+        ):
+            return name.lower()

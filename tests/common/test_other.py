@@ -85,3 +85,20 @@ def test_auto_import():
         if hasattr(m, "main"):
             m.main()
     assert get_counter() == 5
+
+
+def test_str_enum():
+    from enum import auto
+
+    from cookit import StrEnum
+
+    class TestEnum1(StrEnum):
+        A = "a"
+        B = auto()
+
+    assert TestEnum1.A == "a"
+    assert TestEnum1.B == "b"
+    assert TestEnum1.A.value == "a"
+    assert TestEnum1.B.value == "b"
+    assert TestEnum1.A.name == "A"
+    assert TestEnum1.B.name == "B"
