@@ -31,7 +31,7 @@ all = ["cookit[jinja,loguru,nonebot,playwright,pydantic]"]
 yarl = ["playwright>=1.45.1"]
 
 
-[tool.pdm.dev-dependencies]
+[dependency-groups]
 dev = [
     "pytest>=8.2.2",
     "pytest-asyncio>=0.23.7",
