@@ -16,23 +16,29 @@ async def test_file_cache_manager():
         assert "test" in bytes_cache
         assert bytes_cache.get("test") == b"test test"
 
+        await asyncio.sleep(0.01)
         bytes_cache["test2"] = b"test2"
         assert "test2" in bytes_cache
         assert bytes_cache.get("test2") == b"test2"
 
+        await asyncio.sleep(0.01)
         bytes_cache["test3"] = b"test3"
         assert "test3" in bytes_cache
         assert bytes_cache.get("test3") == b"test3"
+
         assert "test2" in bytes_cache
         assert bytes_cache.get("test2") == b"test2"
+
         assert "test" not in bytes_cache
         assert bytes_cache.get("test") is None
 
         await asyncio.sleep(0.5)
 
+        await asyncio.sleep(0.01)
         bytes_cache["test4"] = b"test4"
         assert "test4" in bytes_cache
         assert bytes_cache.get("test4") == b"test4"
+
         assert "test" not in bytes_cache
         assert bytes_cache.get("test") is None
         assert "test2" not in bytes_cache
