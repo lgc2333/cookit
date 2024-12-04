@@ -2,18 +2,9 @@ import asyncio
 import importlib
 import sys
 from asyncio import Semaphore
+from collections.abc import Awaitable, Coroutine
 from pathlib import Path
-from typing import (
-    TYPE_CHECKING,
-    Any,
-    Awaitable,
-    Callable,
-    Coroutine,
-    List,
-    Optional,
-    TypeVar,
-    Union,
-)
+from typing import TYPE_CHECKING, Any, Callable, Optional, TypeVar, Union
 from typing_extensions import ParamSpec, override
 
 if TYPE_CHECKING:
@@ -60,7 +51,7 @@ def auto_import(
     if not path_filter:
         path_filter = lambda x: not x.name.startswith("_")  # noqa: E731
 
-    modules: List[ModuleType] = []
+    modules: list[ModuleType] = []
     for p in path.iterdir():
         if (
             (not (p / "__init__.py").exists()) if p.is_dir() else (p.suffix != ".py")
@@ -86,6 +77,6 @@ else:
             name: str,
             start: int,
             count: int,
-            last_values: List[str],
+            last_values: list[str],
         ):
             return name.lower()

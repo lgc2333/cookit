@@ -1,6 +1,5 @@
 import asyncio as aio
 from pathlib import Path
-from typing import List
 
 import pytest
 
@@ -26,7 +25,7 @@ async def test_queued():
     from cookit import queued
 
     counter = 0
-    count_list: List[int] = []
+    count_list: list[int] = []
 
     @queued
     async def async_func():

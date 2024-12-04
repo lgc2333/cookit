@@ -71,4 +71,4 @@ async def test_file_cache_manager():
         text_cache["test_text"] = "test测试测试"
         assert "test_text" in text_cache
         assert text_cache.get("test_text") == "test测试测试"
-        assert bytes_cache.get("test_text") == "test测试测试".encode("utf-8")
+        assert bytes_cache.get("test_text") == "test测试测试".encode()

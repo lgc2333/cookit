@@ -3,6 +3,7 @@ from typing import TYPE_CHECKING, Any
 from typing_extensions import override
 
 if TYPE_CHECKING:
+    from nonebot.adapters import Bot as BaseBot
     from nonebot.adapters.satori import Adapter as SatoriAdapter
     from nonebug import App
     from nonebug.mixin.process import MatcherContext
@@ -10,12 +11,11 @@ if TYPE_CHECKING:
 
 def create_fake_satori_adapter(ctx: "MatcherContext") -> "SatoriAdapter":
     from nonebot import get_driver
-    from nonebot.adapters import Bot as BaseBot
     from nonebot.adapters.satori import Adapter as SatoriAdapter
 
     class FakeAdapter(SatoriAdapter):
         @override
-        async def _call_api(self, bot: BaseBot, api: str, **data) -> Any:
+        async def _call_api(self, bot: "BaseBot", api: str, **data) -> Any:
             return ctx.got_call_api(self, api, **data)
 
     return FakeAdapter(get_driver())

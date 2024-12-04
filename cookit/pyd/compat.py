@@ -2,11 +2,8 @@ from typing import (
     TYPE_CHECKING,
     Any,
     Callable,
-    Dict,
     Literal,
     Optional,
-    Set,
-    Type,
     TypeVar,
     Union,
     overload,
@@ -29,19 +26,19 @@ if PYDANTIC_V2:  # pragma: pydantic-v2
 
     # region from nonebot2
 
-    def model_config(model: Type[BaseModel]) -> ConfigDict:
+    def model_config(model: type[BaseModel]) -> ConfigDict:
         """Get config of a model."""
         return model.model_config
 
     def model_dump(
         model: BaseModel,
-        include: Optional[Set[str]] = None,
-        exclude: Optional[Set[str]] = None,
+        include: Optional[set[str]] = None,
+        exclude: Optional[set[str]] = None,
         by_alias: bool = False,
         exclude_unset: bool = False,
         exclude_defaults: bool = False,
         exclude_none: bool = False,
-    ) -> Dict[str, Any]:
+    ) -> dict[str, Any]:
         return model.model_dump(
             include=include,
             exclude=exclude,
@@ -51,17 +48,17 @@ if PYDANTIC_V2:  # pragma: pydantic-v2
             exclude_none=exclude_none,
         )
 
-    def type_validate_python(type_: Type[T], data: Any) -> T:
+    def type_validate_python(type_: type[T], data: Any) -> T:
         """Validate data with given type."""
         return TypeAdapter(type_).validate_python(data)
 
-    def type_validate_json(type_: Type[T], data: Union[str, bytes]) -> T:
+    def type_validate_json(type_: type[T], data: Union[str, bytes]) -> T:
         """Validate JSON with given type."""
         return TypeAdapter(type_).validate_json(data)
 
     # endregion
 
-    def get_model_with_config(config: ConfigDict) -> Type[BaseModel]:
+    def get_model_with_config(config: ConfigDict) -> type[BaseModel]:
         class Model(BaseModel):
             model_config = config
 
@@ -69,8 +66,8 @@ if PYDANTIC_V2:  # pragma: pydantic-v2
 
     def type_dump_python(
         data: object,
-        include: Optional[Set[str]] = None,
-        exclude: Optional[Set[str]] = None,
+        include: Optional[set[str]] = None,
+        exclude: Optional[set[str]] = None,
         by_alias: bool = False,
         exclude_unset: bool = False,
         exclude_defaults: bool = False,
@@ -88,8 +85,8 @@ if PYDANTIC_V2:  # pragma: pydantic-v2
 
     def type_dump_json(
         data: object,
-        include: Optional[Set[str]] = None,
-        exclude: Optional[Set[str]] = None,
+        include: Optional[set[str]] = None,
+        exclude: Optional[set[str]] = None,
         by_alias: bool = False,
         exclude_unset: bool = False,
         exclude_defaults: bool = False,
@@ -114,7 +111,7 @@ else:  # pragma: pydantic-v1
 
     # region from nonebot2
 
-    def model_config(model: Type[BaseModel]) -> ConfigDict:
+    def model_config(model: type[BaseModel]) -> ConfigDict:
         """Get config of a model."""
         return (
             model.__config__
@@ -130,13 +127,13 @@ else:  # pragma: pydantic-v1
 
     def model_dump(
         model: BaseModel,
-        include: Optional[Set[str]] = None,
-        exclude: Optional[Set[str]] = None,
+        include: Optional[set[str]] = None,
+        exclude: Optional[set[str]] = None,
         by_alias: bool = False,
         exclude_unset: bool = False,
         exclude_defaults: bool = False,
         exclude_none: bool = False,
-    ) -> Dict[str, Any]:
+    ) -> dict[str, Any]:
         return model.dict(
             include=include,
             exclude=exclude,
@@ -146,11 +143,11 @@ else:  # pragma: pydantic-v1
             exclude_none=exclude_none,
         )
 
-    def type_validate_python(type_: Type[T], data: Any) -> T:
+    def type_validate_python(type_: type[T], data: Any) -> T:
         """Validate data with given type."""
         return parse_obj_as(type_, data)
 
-    def type_validate_json(type_: Type[T], data: Union[str, bytes]) -> T:
+    def type_validate_json(type_: type[T], data: Union[str, bytes]) -> T:
         """Validate JSON with given type."""
         return parse_raw_as(type_, data)
 
@@ -195,7 +192,7 @@ else:  # pragma: pydantic-v1
     ):
         return validator(__field, *fields, pre=(mode == "before"), allow_reuse=True)
 
-    def get_model_with_config(config: ConfigDict) -> Type[BaseModel]:
+    def get_model_with_config(config: ConfigDict) -> type[BaseModel]:
         class Model(BaseModel, **config):
             pass
 
@@ -203,8 +200,8 @@ else:  # pragma: pydantic-v1
 
     def type_dump_python(
         data: object,
-        include: Optional[Set[str]] = None,
-        exclude: Optional[Set[str]] = None,
+        include: Optional[set[str]] = None,
+        exclude: Optional[set[str]] = None,
         by_alias: bool = False,
         exclude_unset: bool = False,
         exclude_defaults: bool = False,
@@ -224,8 +221,8 @@ else:  # pragma: pydantic-v1
 
     def type_dump_json(
         data: object,
-        include: Optional[Set[str]] = None,
-        exclude: Optional[Set[str]] = None,
+        include: Optional[set[str]] = None,
+        exclude: Optional[set[str]] = None,
         by_alias: bool = False,
         exclude_unset: bool = False,
         exclude_defaults: bool = False,

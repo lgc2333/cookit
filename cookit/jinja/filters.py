@@ -1,6 +1,4 @@
-from typing import Callable, Dict
-
-from jinja2 import Environment
+from typing import TYPE_CHECKING, Callable
 
 from ..common import (
     camel_case,
@@ -8,12 +6,15 @@ from ..common import (
     escape_double_quotes,
     escape_single_quotes,
     full_to_half,
-    make_append_func_to_dict_deco,
+    make_append_obj_to_dict_deco,
 )
 
-all_filters: Dict[str, Callable] = {}
+if TYPE_CHECKING:
+    from jinja2 import Environment
 
-__append_filter = make_append_func_to_dict_deco(all_filters)
+all_filters: dict[str, Callable] = {}
+
+__append_filter = make_append_obj_to_dict_deco(all_filters)
 
 
 __append_filter(camel_case)
@@ -28,5 +29,5 @@ def br(value: str) -> str:
     return value.replace("\n", "<br/>")
 
 
-def register_all_filters(env: Environment):
+def register_all_filters(env: "Environment"):
     env.filters.update(all_filters)

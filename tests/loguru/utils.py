@@ -1,4 +1,4 @@
-from typing import TYPE_CHECKING, Callable, List, Optional, Type, Union
+from typing import TYPE_CHECKING, Callable, Optional, Union
 
 from loguru import logger
 
@@ -12,7 +12,7 @@ if TYPE_CHECKING:
 LoguruHandler = Callable[["Message"], None]
 
 
-def make_handler(log_stack: List["Message"]) -> LoguruHandler:
+def make_handler(log_stack: list["Message"]) -> LoguruHandler:
     def handler(message: "Message") -> None:
         log_stack.append(message)
 
@@ -21,8 +21,8 @@ def make_handler(log_stack: List["Message"]) -> LoguruHandler:
 
 class LoggingContext:
     def __init__(self) -> None:
-        self.log_stack: List["Message"] = []
-        self.checker_stack: List[Callable[["Message"], None]] = []
+        self.log_stack: list[Message] = []
+        self.checker_stack: list[Callable[[Message], None]] = []
         self.id: Optional[int] = None
 
     def __enter__(self):
@@ -37,7 +37,7 @@ class LoggingContext:
     def should_log(
         self,
         *,
-        exception: Union[BaseException, Type[BaseException], None] = ...,
+        exception: Union[BaseException, type[BaseException], None] = ...,
         level_str: Optional[str] = None,
         level_no: Optional[int] = None,
         message: Optional[str] = None,

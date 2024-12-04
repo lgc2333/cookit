@@ -1,19 +1,7 @@
 import time
+from collections.abc import Iterator, MutableMapping
 from pathlib import Path
-from typing import (
-    TYPE_CHECKING,
-    Any,
-    Iterator,
-    List,
-    Literal,
-    MutableMapping,
-    Optional,
-    Set,
-    Tuple,
-    TypeVar,
-    Union,
-    overload,
-)
+from typing import TYPE_CHECKING, Any, Literal, Optional, TypeVar, Union, overload
 from typing_extensions import override
 
 if TYPE_CHECKING:
@@ -61,13 +49,13 @@ class FileCacheManager(MutableMapping[str, TF]):
         if (not self.cache_dir.exists()) or ((not self.max_size) and (not self.ttl)):
             return
 
-        files: List[Tuple[Path, "stat_result"]] = [
+        files: list[tuple[Path, stat_result]] = [
             (x, x.stat()) for x in self.cache_dir.iterdir() if x.is_file()
         ]
         files.sort(key=lambda x: x[1].st_mtime)
         files_len = len(files)
 
-        should_unlink: Set[Path] = set()
+        should_unlink: set[Path] = set()
         if self.max_size and files_len > self.max_size:
             should_unlink.update(x[0] for x in files[: files_len - self.max_size])
 

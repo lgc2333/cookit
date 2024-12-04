@@ -1,4 +1,5 @@
-from typing import Any, Callable, Dict, MutableMapping, TypeVar, overload
+from collections.abc import MutableMapping
+from typing import Any, Callable, TypeVar, overload
 from typing_extensions import deprecated
 
 from cookit.common import (
@@ -27,5 +28,5 @@ def append_func_to_dict_deco(name_dict: Any, func_or_name: Any):
 
 
 @deprecated("Use `make_append_obj_to_dict_deco` instead")
-def make_append_func_to_dict_deco(name_dict: Dict[str, Callable]):
+def make_append_func_to_dict_deco(name_dict: dict[str, Callable]):
     return make_append_obj_to_dict_deco(name_dict)

@@ -1,4 +1,4 @@
-from typing import Any, Callable, Dict, List, cast
+from typing import Any, Callable, cast
 
 import pytest
 
@@ -14,7 +14,7 @@ def test_lazy_get():
     result = lazy_get(b)
     assert result == b()
 
-    c = cast(Callable[[int], int], lambda x: x + 1)  # noqa: E731
+    c = cast("Callable[[int], int]", lambda x: x + 1)  # noqa: E731
     result = lazy_get(c, 1)
     assert result == c(1)
 
@@ -135,12 +135,12 @@ def test_append_obj_to_dict_deco():
     def func2():
         return 2
 
-    func_dict1: Dict[str, Callable] = {}
+    func_dict1: dict[str, Callable] = {}
     append_obj_to_dict_deco(func_dict1, func1)
     append_obj_to_dict_deco(func_dict1, "func_func2")(func2)
     assert func_dict1 == {"func1": func1, "func_func2": func2}
 
-    func_dict2: Dict[str, Callable] = {}
+    func_dict2: dict[str, Callable] = {}
     append_func = make_append_obj_to_dict_deco(func_dict2)
     append_func(func1)
     append_func("func_func2")(func2)
@@ -152,17 +152,17 @@ def test_append_obj_to_dict_deco():
     class ClassB:
         pass
 
-    class_dict1: Dict[str, type] = {}
+    class_dict1: dict[str, type] = {}
     append_obj_to_dict_deco(class_dict1, ClassA)
     append_obj_to_dict_deco(class_dict1, "class_class_b")(ClassB)
     assert class_dict1 == {"ClassA": ClassA, "class_class_b": ClassB}
 
-    class_dict2: Dict[str, type] = {}
+    class_dict2: dict[str, type] = {}
     append_class = make_append_obj_to_dict_deco(class_dict2)
     append_class(ClassA)
     append_class("class_class_b")(ClassB)
     assert class_dict2 == {"ClassA": ClassA, "class_class_b": ClassB}
 
-    obj_dict: Dict[str, List[Any]] = {}
+    obj_dict: dict[str, list[Any]] = {}
     with pytest.raises(TypeError):  # no __name__
         append_obj_to_dict_deco(obj_dict, [])  # type: ignore

@@ -1,6 +1,7 @@
+from collections.abc import Iterator
 from contextlib import contextmanager
 from functools import partial
-from typing import Iterator, Type, Union
+from typing import Union
 
 from loguru import logger
 
@@ -10,7 +11,7 @@ from ..common import LazyGetterType, lazy_get
 @contextmanager
 def logged_suppress(
     msg: "LazyGetterType[str, [Exception]]",
-    *t: Type[Exception],
+    *t: type[Exception],
     level: Union[int, str] = "ERROR",
     log_stack: bool = True,
     debug_stack: bool = False,

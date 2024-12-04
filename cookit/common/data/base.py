@@ -1,22 +1,8 @@
 import base64
+from collections.abc import Iterable, Iterator, MutableMapping, Sequence
 from contextlib import suppress
 from functools import partial
-from typing import (
-    Any,
-    Callable,
-    Dict,
-    Iterable,
-    Iterator,
-    List,
-    MutableMapping,
-    Optional,
-    Protocol,
-    Sequence,
-    TypeVar,
-    Union,
-    cast,
-    overload,
-)
+from typing import Any, Callable, Optional, Protocol, TypeVar, Union, cast, overload
 from typing_extensions import ParamSpec, TypeGuard
 
 import fleep
@@ -50,7 +36,7 @@ def lazy_get(
     *args: P.args,
     **kwargs: P.kwargs,
 ) -> T:
-    return cast(T, val(*args, **kwargs) if callable(val) else val)
+    return cast("T", val(*args, **kwargs) if callable(val) else val)
 
 
 def qor(
@@ -64,16 +50,16 @@ def qor(
     return a if guard(a) else lazy_get(b)
 
 
-def chunks(lst: Sequence[T], n: int) -> Iterator[List[T]]:
+def chunks(lst: Sequence[T], n: int) -> Iterator[list[T]]:
     for i in range(0, len(lst), n):
         yield list(lst[i : i + n])
 
 
-def flatten(li: Iterable[Iterable[T]]) -> List[T]:
+def flatten(li: Iterable[Iterable[T]]) -> list[T]:
     return [x for y in li for x in y]
 
 
-def set_default(target: Dict[K, V], key: K, default: "LazyGetterType[V, []]") -> V:
+def set_default(target: dict[K, V], key: K, default: "LazyGetterType[V, []]") -> V:
     if key in target:
         return target[key]
     default = lazy_get(default)
@@ -82,17 +68,17 @@ def set_default(target: Dict[K, V], key: K, default: "LazyGetterType[V, []]") ->
 
 
 @overload
-def auto_delete(target: Dict[K, V], transform: None = None) -> Dict[K, V]: ...
+def auto_delete(target: dict[K, V], transform: None = None) -> dict[K, V]: ...
 @overload
 def auto_delete(
-    target: Dict[K, V],
+    target: dict[K, V],
     transform: Callable[[V], Optional[T]],
-) -> Dict[K, T]: ...
+) -> dict[K, T]: ...
 def auto_delete(  # noqa: E302
-    target: Dict[K, V],
+    target: dict[K, V],
     transform: Optional[Callable[[V], Optional[T]]] = None,
-) -> Dict[K, Any]:
-    data: Dict[K, Union[V, T]] = {}
+) -> dict[K, Any]:
+    data: dict[K, Union[V, T]] = {}
     for k, v in tuple(target.items()):
         vt = transform(v) if transform else v
         if vt:
@@ -106,7 +92,7 @@ def to_b64_url(data: bytes, mime: Optional[str] = None) -> str:
     if mime is None:
         mime = ""
         with suppress(IndexError):
-            mime = cast(List[str], fleep.get(data[:128]).mime)[0]
+            mime = cast("list[str]", fleep.get(data[:128]).mime)[0]
     return f"data:{mime};base64,{base64.b64encode(data).decode()}"
 
 
@@ -142,5 +128,5 @@ def append_obj_to_dict_deco(  # type: ignore
     raise TypeError("func_or_name must be str or object with __name__ attribute")
 
 
-def make_append_obj_to_dict_deco(name_dict: Dict[str, Callable]):
+def make_append_obj_to_dict_deco(name_dict: dict[str, Callable]):
     return partial(append_obj_to_dict_deco, name_dict)

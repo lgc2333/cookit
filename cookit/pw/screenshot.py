@@ -1,4 +1,5 @@
-from typing import Any, Awaitable, Callable, Literal, Optional, Union
+from collections.abc import Awaitable
+from typing import Any, Callable, Literal, Optional, Union
 from typing_extensions import TypeAlias
 
 from playwright.async_api import Page

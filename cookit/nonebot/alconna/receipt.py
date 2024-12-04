@@ -1,9 +1,8 @@
 import asyncio as aio
 import random
-from typing import List, Optional, Tuple, Union
+from typing import TYPE_CHECKING, Optional, Union
 
 from nonebot import logger
-from nonebot.adapters import Bot as BaseBot, Event as BaseEvent
 from nonebot_plugin_alconna.uniseg import (  # noqa: E402
     Receipt,
     Reply,
@@ -11,16 +10,19 @@ from nonebot_plugin_alconna.uniseg import (  # noqa: E402
     UniMessage,
 )
 
+if TYPE_CHECKING:
+    from nonebot.adapters import Bot as BaseBot, Event as BaseEvent
+
 
 class RecallContext:
     def __init__(
         self,
-        delay: Union[float, Tuple[float, float], None] = None,
+        delay: Union[float, tuple[float, float], None] = None,
         wait: bool = False,
     ) -> None:
         self.delay = delay
         self.wait = wait
-        self.receipts: List[Receipt] = []
+        self.receipts: list[Receipt] = []
 
     async def __aenter__(self) -> "RecallContext":
         return self
@@ -41,8 +43,8 @@ class RecallContext:
     async def send(
         self,
         message: Union[UniMessage, str],
-        target: Union[BaseEvent, Target, None] = None,
-        bot: Optional[BaseBot] = None,
+        target: Union["BaseEvent", Target, None] = None,
+        bot: Optional["BaseBot"] = None,
         fallback: bool = True,
         at_sender: Union[str, bool] = False,
         reply_to: Union[str, bool, Reply, None] = False,

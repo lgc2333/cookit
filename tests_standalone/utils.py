@@ -1,8 +1,9 @@
 import asyncio
 from asyncio import Semaphore
+from collections.abc import Awaitable
 from contextlib import contextmanager
 from pathlib import Path
-from typing import Any, Awaitable, Callable, List, Optional, Type, TypeVar
+from typing import Any, Callable, Optional, TypeVar
 from typing_extensions import TypeAlias
 
 from loguru import logger
@@ -12,8 +13,8 @@ TestFunc: TypeAlias = Callable[[], Awaitable[Any]]
 T = TypeVar("T")
 TF = TypeVar("TF", bound=TestFunc)
 
-tests: List[TestFunc] = []
-before_exit_hooks: List[TestFunc] = []
+tests: list[TestFunc] = []
+before_exit_hooks: list[TestFunc] = []
 
 
 def mark_test(func: TF) -> TF:
@@ -80,7 +81,7 @@ def auto_import_tests(path: str, package: Optional[str]):
 
 
 @contextmanager
-def expect_exc(*exc: Type[BaseException]):
+def expect_exc(*exc: type[BaseException]):
     try:
         yield
     except exc:

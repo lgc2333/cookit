@@ -1,12 +1,13 @@
 import re
 from pathlib import Path
-from typing import Optional, cast
-
-from playwright.async_api import Route
-from yarl import URL
+from typing import TYPE_CHECKING, Optional, cast
 
 from ..utils import mark_test
 from .utils import get_page
+
+if TYPE_CHECKING:
+    from playwright.async_api import Route
+    from yarl import URL
 
 ROUTE_BASE_URL = "https://cookit.route"
 
@@ -20,22 +21,22 @@ async def test_router_group_route():
     body_root = "root"
 
     @router_group.router(f"{ROUTE_BASE_URL}/")
-    async def _(route: Route, **_):
+    async def _(route: "Route", **_):
         await route.fulfill(body=body_root)
 
     body_test = "test"
 
     @router_group.router(f"{ROUTE_BASE_URL}/test/**/*")
     @router_group.router(f"{ROUTE_BASE_URL}/test")
-    async def _(route: Route, **_):
+    async def _(route: "Route", **_):
         await route.fulfill(body=body_test)
 
     body_test2_re = "test2_re"
 
-    last_matched = cast(Optional[re.Match[str]], None)
+    last_matched = cast("Optional[re.Match[str]]", None)
 
     @router_group.router(re.compile(rf"{ROUTE_BASE_URL}/test2(/.*)?"))
-    async def _(route: Route, matched: Optional[re.Match[str]], **_):
+    async def _(route: "Route", matched: Optional[re.Match[str]], **_):
         nonlocal last_matched
         last_matched = matched
         await route.fulfill(body=body_test2_re)
@@ -78,7 +79,7 @@ async def test_real_path_router():
 
     @router_group.router(f"{ROUTE_BASE_URL}/**/*")
     @make_real_path_router
-    async def _(url: URL, **_):
+    async def _(url: "URL", **_):
         return base_path.joinpath(url.path[1:])
 
     async with await get_page() as page:
@@ -100,13 +101,13 @@ async def test_router_group_copy():
     router_group = RouterGroup()
 
     @router_group.router(f"{ROUTE_BASE_URL}/test")
-    async def _(route: Route, **_):
+    async def _(route: "Route", **_):
         await route.fulfill(body=b"")
 
     router_group2 = router_group.copy()
 
     @router_group2.router(f"{ROUTE_BASE_URL}/test2")
-    async def _(route: Route, **_):
+    async def _(route: "Route", **_):
         await route.fulfill(body=b"")
 
     assert router_group.routers is not router_group2.routers

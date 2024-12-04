@@ -1,13 +1,5 @@
-from typing import (
-    Generic,
-    Iterable,
-    List,
-    Optional,
-    SupportsIndex,
-    TypeVar,
-    Union,
-    overload,
-)
+from collections.abc import Iterable
+from typing import Generic, Optional, SupportsIndex, TypeVar, Union, overload
 from typing_extensions import Self, deprecated
 
 T = TypeVar("T")
@@ -15,7 +7,7 @@ TB = TypeVar("TB")
 
 
 @deprecated("Use `collections.deque` instead")
-class SizedList(List[T], Generic[T]):
+class SizedList(list[T], Generic[T]):
     def __init__(
         self,
         iterable: Optional[Iterable[T]] = None,

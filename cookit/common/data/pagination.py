@@ -1,22 +1,14 @@
 import asyncio
+from collections.abc import AsyncIterable
 from functools import wraps
-from typing import (
-    AsyncIterable,
-    Callable,
-    Generic,
-    List,
-    Optional,
-    Protocol,
-    TypedDict,
-    TypeVar,
-)
+from typing import Callable, Generic, Optional, Protocol, TypedDict, TypeVar
 from typing_extensions import NotRequired, Unpack
 
 T = TypeVar("T")
 
 
 class PaginationCallable(Protocol, Generic[T]):
-    async def __call__(self, page_size: int, offset: int) -> Optional[List[T]]: ...
+    async def __call__(self, page_size: int, offset: int) -> Optional[list[T]]: ...
 
 
 class IterPFKwargs(TypedDict):
