@@ -1,11 +1,14 @@
-from datetime import timedelta
 from enum import IntEnum
 from functools import partial
-from typing import Any, Optional, Sequence
+from typing import TYPE_CHECKING, Any, Optional
+
+if TYPE_CHECKING:
+    from collections.abc import Sequence
+    from datetime import timedelta
 
 
 def auto_convert_unit(
-    units: Sequence[str],
+    units: "Sequence[str]",
     multiplier: int,
     value: float,
     round_n: int = 2,
@@ -74,7 +77,7 @@ class TimeUnit(IntEnum):
 
 
 def format_timedelta(
-    t: timedelta,
+    t: "timedelta",
     unit_up_to: TimeUnit = TimeUnit.DAY,
     with_ms: bool = False,
     with_empty_day: bool = False,

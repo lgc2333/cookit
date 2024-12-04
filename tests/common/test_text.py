@@ -19,7 +19,7 @@ def test_camel_case_single_word():
 def test_camel_case_empty_string():
     from cookit import camel_case
 
-    assert camel_case("") == ""
+    assert camel_case("") == ""  # noqa: PLC1901
 
 
 def test_full_to_half():
@@ -32,11 +32,11 @@ def test_full_to_half():
     assert full_to_half("［］｛｝（）＜＞＝＋－／＊＆％＃＠") == "[]{}()<>=+-/*&%#@"
     assert (
         full_to_half("ａｂｃｄｅｆｇｈｉｊｋｌｍｎｏｐｑｒｓｔｕｖｗｘｙｚ")
-        == "abcdefghijklmnopqrstuvwxyz"
+        == "abcdefghijklmnopqrstuvwxyz"  # noqa: FURB156
     )
     assert (
         full_to_half("ＡＢＣＤＥＦＧＨＩＪＫＬＭＮＯＰＱＲＳＴＵＶＷＸＹＺ")
-        == "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+        == "ABCDEFGHIJKLMNOPQRSTUVWXYZ"  # noqa: FURB156
     )
     assert (
         full_to_half(

@@ -1,6 +1,6 @@
 from .data import *  # noqa: F403
 from .deprecated import *  # noqa: F403
-from .math import (
+from .maths import (
     BYTE_B_UNITS as BYTE_B_UNITS,
     BYTE_UNITS as BYTE_UNITS,
     TIMEDELTA_EMPTY_DIVIDER as TIMEDELTA_EMPTY_DIVIDER,

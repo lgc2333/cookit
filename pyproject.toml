@@ -3,11 +3,7 @@ name = "cookit"
 dynamic = ["version"]
 description = "A toolkit for self use."
 authors = [{ name = "student_2333", email = "lgc2333@126.com" }]
-dependencies = [
-    "typing-extensions>=4.12.2",
-    "fleep>=1.0.1",
-    "anyio>=4.6.2.post1",
-]
+dependencies = ["typing-extensions>=4.12.2", "fleep>=1.0.1"]
 requires-python = ">=3.9,<4.0"
 readme = "README.md"
 license = { text = "MIT" }
@@ -24,7 +20,7 @@ nonebot-base = ["nonebot2>=2.4.0"]
 nonebot-alconna = ["cookit[nonebot-base]", "nonebot-plugin-alconna>=0.54.0"]
 nonebot = ["cookit[nonebot-alconna]"]
 
-playwright = ["playwright>=1.49.0"]
+playwright = ["playwright>=1.49.0", "anyio>=4.6.2.post1", "yarl>=1.18.3"]
 pw = ["cookit[playwright]"]
 
 pydantic = ["pydantic>=1.10.0,<3.0.0,!=2.5.0,!=2.5.1"]
