@@ -3,14 +3,17 @@ name = "cookit"
 dynamic = ["version"]
 description = "A toolkit for self use."
 authors = [{ name = "student_2333", email = "lgc2333@126.com" }]
-dependencies = ["typing-extensions>=4.12.2", "fleep>=1.0.1", "anyio>=4.4.0"]
+dependencies = [
+    "typing-extensions>=4.12.2",
+    "fleep>=1.0.1",
+    "anyio>=4.6.2.post1",
+]
 requires-python = ">=3.9,<4.0"
 readme = "README.md"
 license = { text = "MIT" }
 
 [project.urls]
 homepage = "https://github.com/lgc2333/cookit"
-
 
 [project.optional-dependencies]
 jinja = ["jinja2>=3.1.4"]
@@ -28,22 +31,19 @@ pydantic = ["pydantic>=1.10.0,<3.0.0,!=2.5.0,!=2.5.1"]
 pyd = ["cookit[pydantic]"]
 
 all = ["cookit[jinja,loguru,nonebot,playwright,pydantic]"]
-yarl = ["playwright>=1.45.1"]
-
 
 [dependency-groups]
 dev = [
-    "pytest>=8.2.2",
-    "pytest-asyncio>=0.23.7",
-    "pytest-playwright-async>=0.17.0",
-    "nonebot2[all]>=2.3.1",
-    "nonebug>=0.3.7",
-    "nonebot-adapter-satori>=0.12.3",  # for alconna recall test
+    "pytest>=8.3.4",
+    "pytest-asyncio>=0.24.0",
+    "nonebot2[all]>=2.4.0",
+    "nonebug>=0.4.2",
+    "nonebot-adapter-satori>=0.12.6", # for alconna recall test
 ]
 
-[tool.pytest.ini_options]
-addopts = "--ignore=tests_standalone"
-asyncio_mode = "auto"
+[build-system]
+requires = ["pdm-backend"]
+build-backend = "pdm.backend"
 
 [tool.pdm.build]
 includes = []
@@ -52,6 +52,7 @@ includes = []
 source = "file"
 path = "cookit/__init__.py"
 
-[build-system]
-requires = ["pdm-backend"]
-build-backend = "pdm.backend"
+[tool.pytest.ini_options]
+addopts = "--ignore=tests_standalone"
+asyncio_mode = "auto"
+asyncio_default_fixture_loop_scope = "session"
