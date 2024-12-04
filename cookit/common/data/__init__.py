@@ -1,4 +1,5 @@
 from .base import (
+    AppendObjDecoProtocol as AppendObjDecoProtocol,
     HasNameProtocol as HasNameProtocol,
     LazyGetterType as LazyGetterType,
     append_obj_to_dict_deco as append_obj_to_dict_deco,

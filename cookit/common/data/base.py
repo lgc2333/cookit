@@ -2,7 +2,17 @@ import base64
 from collections.abc import Iterable, Iterator, MutableMapping, Sequence
 from contextlib import suppress
 from functools import partial
-from typing import Any, Callable, Optional, Protocol, TypeVar, Union, cast, overload
+from typing import (
+    Any,
+    Callable,
+    Generic,
+    Optional,
+    Protocol,
+    TypeVar,
+    Union,
+    cast,
+    overload,
+)
 from typing_extensions import ParamSpec, TypeGuard
 
 import fleep
@@ -128,5 +138,20 @@ def append_obj_to_dict_deco(  # type: ignore
     raise TypeError("func_or_name must be str or object with __name__ attribute")
 
 
-def make_append_obj_to_dict_deco(name_dict: dict[str, Callable]):
+class AppendObjDecoProtocol(Protocol, Generic[T]):
+    @overload
+    def __call__(self, x: T) -> T: ...
+    @overload
+    def __call__(self, x: str) -> Callable[[T], T]: ...
+
+
+@overload
+def make_append_obj_to_dict_deco(
+    name_dict: MutableMapping[str, T_HasName],
+) -> AppendObjDecoProtocol[T_HasName]: ...
+@overload
+def make_append_obj_to_dict_deco(
+    name_dict: MutableMapping[str, T],
+) -> Callable[[str], Callable[[T], T]]: ...
+def make_append_obj_to_dict_deco(name_dict: MutableMapping[str, Any]):  # type: ignore
     return partial(append_obj_to_dict_deco, name_dict)
