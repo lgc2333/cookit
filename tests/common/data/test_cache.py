@@ -1,18 +1,11 @@
 import asyncio
-import shutil
-from pathlib import Path
+import tempfile
 
 
 async def test_file_cache_manager():
     from cookit import FileCacheManager
 
-    path = (
-        Path(__file__).parent.parent.parent.parent
-        / ".pytest_cache"
-        / "common_data_test_cache"
-    )
-
-    try:
+    with tempfile.TemporaryDirectory() as path:
         bytes_cache = FileCacheManager(path, max_size=2, ttl=1)
 
         bytes_cache["test"] = b"test"
@@ -73,6 +66,3 @@ async def test_file_cache_manager():
         assert "test_text" in text_cache
         assert text_cache.get("test_text") == "test测试测试"
         assert bytes_cache.get("test_text") == "test测试测试".encode("utf-8")
-
-    finally:
-        shutil.rmtree(path)

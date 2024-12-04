@@ -20,11 +20,11 @@ jinja = ["jinja2>=3.1.4"]
 
 loguru = ["loguru>=0.7.2"]
 
-nonebot-base = ["nonebot2>=2.3.1"]
-nonebot-alconna = ["cookit[nonebot-base]", "nonebot-plugin-alconna>=0.50.2"]
+nonebot-base = ["nonebot2>=2.4.0"]
+nonebot-alconna = ["cookit[nonebot-base]", "nonebot-plugin-alconna>=0.54.0"]
 nonebot = ["cookit[nonebot-alconna]"]
 
-playwright = ["playwright>=1.45.1"]
+playwright = ["playwright>=1.49.0"]
 pw = ["cookit[playwright]"]
 
 pydantic = ["pydantic>=1.10.0,<3.0.0,!=2.5.0,!=2.5.1"]

@@ -11,6 +11,7 @@ from typing import (
     Set,
     Tuple,
     TypeVar,
+    Union,
     overload,
 )
 from typing_extensions import override
@@ -25,7 +26,7 @@ class FileCacheManager(MutableMapping[str, TF]):
     @overload
     def __init__(
         self: "FileCacheManager[str]",
-        cache_dir: Path,
+        cache_dir: Union[str, Path],
         /,
         text_mode: Literal[True],
         max_size: Optional[int] = None,
@@ -35,7 +36,7 @@ class FileCacheManager(MutableMapping[str, TF]):
     @overload
     def __init__(
         self: "FileCacheManager[bytes]",
-        cache_dir: Path,
+        cache_dir: Union[str, Path],
         /,
         text_mode: bool = False,
         max_size: Optional[int] = None,
@@ -43,14 +44,14 @@ class FileCacheManager(MutableMapping[str, TF]):
     ) -> None: ...
     def __init__(
         self,
-        cache_dir: Path,
+        cache_dir: Union[str, Path],
         /,
         text_mode: bool = False,
         max_size: Optional[int] = None,
         ttl: Optional[int] = None,
         encoding: str = "utf-8",
     ):
-        self.cache_dir = cache_dir
+        self.cache_dir = cache_dir if isinstance(cache_dir, Path) else Path(cache_dir)
         self.text_mode = text_mode
         self.max_size = max_size
         self.ttl = ttl
