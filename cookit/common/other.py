@@ -13,6 +13,7 @@ if TYPE_CHECKING:
 T = TypeVar("T")
 R = TypeVar("R")
 P = ParamSpec("P")
+P2 = ParamSpec("P2")
 
 
 def with_semaphore(semaphore: Semaphore):
@@ -80,3 +81,18 @@ else:
             last_values: list[str],
         ):
             return name.lower()
+
+
+# https://stackoverflow.com/questions/71968447/python-typing-copy-kwargs-from-one-function-to-another
+def copy_func_annotations(_source: Callable[P, T]):
+    def deco(func: Callable[..., T]) -> Callable[P, T]:
+        return func
+
+    return deco
+
+
+def copy_func_arg_annotations(_source: Callable[P, Any]):
+    def deco(func: Callable[..., T]) -> Callable[P, T]:
+        return func
+
+    return deco

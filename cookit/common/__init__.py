@@ -23,6 +23,8 @@ from .maths import (
 from .other import (
     StrEnum as StrEnum,
     auto_import as auto_import,
+    copy_func_annotations as copy_func_annotations,
+    copy_func_arg_annotations as copy_func_arg_annotations,
     queued as queued,
     race as race,
     with_semaphore as with_semaphore,
