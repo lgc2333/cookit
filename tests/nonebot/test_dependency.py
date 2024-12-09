@@ -11,8 +11,8 @@ async def test_command_arg_plaintext(app: "App"):
     from nonebot import on_command
     from nonebot.matcher import Matcher
 
-    ev = make_fake_event(_message=FakeMessage("test resp1\n"))()
-    ev_empty = make_fake_event(_message=FakeMessage("test"))()
+    ev = make_fake_event(_message=FakeMessage("/test resp1\n"))()
+    ev_empty = make_fake_event(_message=FakeMessage("/test"))()
 
     matcher1 = on_command("test")
 
@@ -33,7 +33,7 @@ async def test_command_arg_plaintext(app: "App"):
     async def _(m: Matcher, arg: str = CommandArgPlaintext(strip=False)):
         await m.finish(arg)
 
-    async with app.test_matcher(matcher1) as ctx:
+    async with app.test_matcher(matcher2) as ctx:
         bot = ctx.create_bot()
         ctx.receive_event(bot, ev)
         ctx.should_call_send(ev, "resp1\n")
