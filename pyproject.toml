@@ -2,7 +2,7 @@
 name = "cookit"
 dynamic = ["version"]
 description = "A toolkit for self use."
-authors = [{ name = "student_2333", email = "lgc2333@126.com" }]
+authors = [{ name = "LgCookie", email = "lgc2333@126.com" }]
 dependencies = ["typing-extensions>=4.12.2", "fleep>=1.0.1"]
 requires-python = ">=3.9,<4.0"
 readme = "README.md"
