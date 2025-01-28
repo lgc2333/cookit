@@ -23,6 +23,13 @@ def test_model_dump():
     assert model_dump(TestModel(test1=1, test2=2), include={"test1"}) == {"test1": 1}
     assert model_dump(TestModel(test1=1, test2=2), exclude={"test1"}) == {"test2": 2}
 
+    class TestModelNested(BaseModel):
+        nested: TestModel
+
+    assert model_dump(TestModelNested(nested=TestModel(test1=1, test2=2))) == {
+        "nested": {"test1": 1, "test2": 2},
+    }
+
 
 def test_validate():
     class TestModel(BaseModel):
@@ -44,6 +51,13 @@ def test_validate():
     expected = TestModel(test1=1, test2="2", test3=True, test4={}, test5=[], test6=None)
     assert type_validate_python(TestModel, data) == expected
     assert type_validate_json(TestModel, json.dumps(data)) == expected
+
+    class TestModelNested(BaseModel):
+        nested: TestModel
+
+    data = {"nested": data}
+    expected = TestModelNested(nested=expected)
+    assert type_validate_python(TestModelNested, data) == expected
 
 
 # endregion
