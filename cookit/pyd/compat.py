@@ -50,11 +50,19 @@ if PYDANTIC_V2:  # pragma: pydantic-v2
 
     def type_validate_python(type_: type[T], data: Any) -> T:
         """Validate data with given type."""
-        return TypeAdapter(type_).validate_python(data)
+        return (
+            type_.model_validate(data)
+            if type_ is BaseModel
+            else TypeAdapter(type_).validate_python(data)
+        )
 
     def type_validate_json(type_: type[T], data: Union[str, bytes]) -> T:
         """Validate JSON with given type."""
-        return TypeAdapter(type_).validate_json(data)
+        return (
+            type_.model_validate_json(data)
+            if type_ is BaseModel
+            else TypeAdapter(type_).validate_json(data)
+        )
 
     # endregion
 
