@@ -3,7 +3,7 @@ name = "cookit"
 dynamic = ["version"]
 description = "A toolkit for self use."
 authors = [{ name = "LgCookie", email = "lgc2333@126.com" }]
-dependencies = ["typing-extensions>=4.12.2", "fleep>=1.0.1"]
+dependencies = ["typing-extensions>=4.12.2"]
 requires-python = ">=3.9,<4.0"
 readme = "README.md"
 license = { text = "MIT" }
@@ -12,6 +12,8 @@ license = { text = "MIT" }
 homepage = "https://github.com/lgc2333/cookit"
 
 [project.optional-dependencies]
+common = ["fleep>=1.0.1"]
+
 jinja = ["jinja2>=3.1.4"]
 
 loguru = ["loguru>=0.7.2"]
@@ -26,7 +28,7 @@ pw = ["cookit[playwright]"]
 pydantic = ["pydantic>=1.10.0,<3.0.0,!=2.5.0,!=2.5.1"]
 pyd = ["cookit[pydantic]"]
 
-all = ["cookit[jinja,loguru,nonebot,playwright,pydantic]"]
+all = ["cookit[common,jinja,loguru,nonebot,playwright,pydantic]"]
 
 [dependency-groups]
 dev = [

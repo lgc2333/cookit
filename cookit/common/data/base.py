@@ -1,21 +1,8 @@
 import base64
-from collections.abc import Iterable, Iterator, MutableMapping, Sequence
+from collections.abc import Iterable, Iterator, Sequence
 from contextlib import suppress
-from functools import partial
-from typing import (
-    Any,
-    Callable,
-    Generic,
-    Optional,
-    Protocol,
-    TypeVar,
-    Union,
-    cast,
-    overload,
-)
+from typing import Any, Callable, Optional, TypeVar, Union, cast, overload
 from typing_extensions import ParamSpec, TypeGuard
-
-import fleep
 
 T = TypeVar("T")
 
@@ -27,18 +14,8 @@ K = TypeVar("K")
 V = TypeVar("V")
 
 P = ParamSpec("P")
-R = TypeVar("R")
-
-TSeq_co = TypeVar("TSeq_co", bound=Sequence, covariant=True)
 
 LazyGetterType = Union[T, Callable[P, T]]
-
-
-class HasNameProtocol(Protocol):
-    __name__: str
-
-
-T_HasName = TypeVar("T_HasName", bound=HasNameProtocol)
 
 
 def lazy_get(
@@ -101,57 +78,9 @@ def auto_delete(  # noqa: E302
 def to_b64_url(data: bytes, mime: Optional[str] = None) -> str:
     if mime is None:
         mime = ""
-        with suppress(IndexError):
+        with suppress(ImportError, IndexError):
+            import fleep
+
             mime = cast("list[str]", fleep.get(data[:128]).mime)[0]
+
     return f"data:{mime};base64,{base64.b64encode(data).decode()}"
-
-
-@overload
-def append_obj_to_dict_deco(
-    name_dict: MutableMapping[str, T_HasName],
-    obj_or_name: T_HasName,
-) -> T_HasName: ...
-@overload
-def append_obj_to_dict_deco(
-    name_dict: MutableMapping[str, T],
-    obj_or_name: str,
-) -> Callable[[T], T]: ...
-def append_obj_to_dict_deco(  # type: ignore
-    name_dict: MutableMapping[str, T],
-    obj_or_name: Union[str, T],
-):
-    if isinstance(obj_or_name, str):
-
-        def inner_deco(obj: T, /):
-            name_dict[obj_or_name] = obj
-            return obj
-
-        return inner_deco
-
-    if isinstance(
-        (name := getattr(obj_or_name, "__name__", None)),
-        str,
-    ):
-        name_dict[name] = obj_or_name
-        return obj_or_name
-
-    raise TypeError("func_or_name must be str or object with __name__ attribute")
-
-
-class AppendObjDecoProtocol(Protocol, Generic[T]):
-    @overload
-    def __call__(self, x: T) -> T: ...
-    @overload
-    def __call__(self, x: str) -> Callable[[T], T]: ...
-
-
-@overload
-def make_append_obj_to_dict_deco(
-    name_dict: MutableMapping[str, T_HasName],
-) -> AppendObjDecoProtocol[T_HasName]: ...
-@overload
-def make_append_obj_to_dict_deco(
-    name_dict: MutableMapping[str, T],
-) -> Callable[[str], Callable[[T], T]]: ...
-def make_append_obj_to_dict_deco(name_dict: MutableMapping[str, Any]):  # type: ignore
-    return partial(append_obj_to_dict_deco, name_dict)

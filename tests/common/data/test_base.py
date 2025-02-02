@@ -1,4 +1,4 @@
-from typing import Any, Callable, cast
+from typing import Callable, cast
 
 import pytest
 
@@ -126,43 +126,65 @@ def test_auto_delete():
     assert target3 == expected_result3
 
 
-def test_append_obj_to_dict_deco():
-    from cookit import append_obj_to_dict_deco, make_append_obj_to_dict_deco
+def test_deco_collector():
+    from cookit import DecoCollector
 
-    def func1():
-        return 1
+    collector = DecoCollector[str, int]()
+    collector("test1")(1)
+    assert collector.data == {"test1": 1}
+    collector("test2")(2)
+    assert collector.data == {"test1": 1, "test2": 2}
+    with pytest.raises(ValueError, match="Object with key 'test1' already exists"):
+        collector("test1")(114514)
 
-    def func2():
-        return 2
+    collector2_data: dict[str, int] = {}
+    collector2 = DecoCollector(collector2_data, allow_overwrite=True)
+    collector2("test2_1")(1)
+    assert collector2.data == {"test2_1": 1}
+    assert collector2.data is collector2_data
+    collector2("test2_1")(114514)
+    assert collector2.data == {"test2_1": 114514}
 
-    func_dict1: dict[str, Callable] = {}
-    append_obj_to_dict_deco(func_dict1, func1)
-    append_obj_to_dict_deco(func_dict1, "func_func2")(func2)
-    assert func_dict1 == {"func1": func1, "func_func2": func2}
 
-    func_dict2: dict[str, Callable] = {}
-    append_func = make_append_obj_to_dict_deco(func_dict2)
-    append_func(func1)
-    append_func("func_func2")(func2)
-    assert func_dict2 == {"func1": func1, "func_func2": func2}
+def test_type_deco_collector():
+    from cookit import TypeDecoCollector
 
-    class ClassA:
+    class BaseCls:
         pass
 
-    class ClassB:
+    class Cls1(BaseCls):
         pass
 
-    class_dict1: dict[str, type] = {}
-    append_obj_to_dict_deco(class_dict1, ClassA)
-    append_obj_to_dict_deco(class_dict1, "class_class_b")(ClassB)
-    assert class_dict1 == {"ClassA": ClassA, "class_class_b": ClassB}
+    class Cls2(BaseCls):
+        pass
 
-    class_dict2: dict[str, type] = {}
-    append_class = make_append_obj_to_dict_deco(class_dict2)
-    append_class(ClassA)
-    append_class("class_class_b")(ClassB)
-    assert class_dict2 == {"ClassA": ClassA, "class_class_b": ClassB}
+    collector = TypeDecoCollector[BaseCls, int]()
+    collector(Cls1)(1)
+    assert collector.data == {Cls1: 1}
+    collector(Cls2)(2)
+    assert collector.data == {Cls1: 1, Cls2: 2}
+    with pytest.raises(
+        ValueError,
+        match="Object with key '<class '.+Cls1'>' already exists",
+    ):
+        collector(Cls1)(114514)
 
-    obj_dict: dict[str, list[Any]] = {}
-    with pytest.raises(TypeError):  # no __name__
-        append_obj_to_dict_deco(obj_dict, [])  # type: ignore
+
+def test_name_deco_collector():
+    from cookit import NameDecoCollector
+
+    class Cls1:
+        pass
+
+    class Cls2:
+        pass
+
+    collector = NameDecoCollector[type]()
+    collector(Cls1)
+    assert collector.data == {"Cls1": Cls1}
+    with pytest.raises(ValueError, match="Object with key 'Cls1' already exists"):
+        collector(Cls1)
+    collector("ClsABC")(Cls2)
+    assert collector.data == {"Cls1": Cls1, "ClsABC": Cls2}
+    with pytest.raises(ValueError, match="Object with key 'Cls1' already exists"):
+        collector("Cls1")(Cls2)
