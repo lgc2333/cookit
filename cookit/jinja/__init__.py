@@ -6,5 +6,6 @@ from .common import (
 )
 from .filters import (
     all_filters as all_filters,
+    cookit_global_filter as cookit_global_filter,
     register_all_filters as register_all_filters,
 )

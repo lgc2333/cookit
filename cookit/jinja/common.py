@@ -1,10 +1,10 @@
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Callable
 
-from ..common import make_append_obj_to_dict_deco
+from ..common import NameDecoCollector
 
 if TYPE_CHECKING:
     from jinja2 import Environment
 
 
 def make_register_jinja_filter_deco(env: "Environment"):
-    return make_append_obj_to_dict_deco(env.filters)
+    return NameDecoCollector[Callable](env.filters)

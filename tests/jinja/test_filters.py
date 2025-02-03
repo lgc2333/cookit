@@ -9,9 +9,9 @@ def test_br():
 
 
 def test_register_all_filters():
-    from cookit.jinja import all_filters, register_all_filters
+    from cookit.jinja import cookit_global_filter, register_all_filters
 
     env = jj.Environment(autoescape=True)
     register_all_filters(env)
-    for k, v in all_filters.items():
+    for k, v in cookit_global_filter.data.items():
         assert env.filters[k] is v

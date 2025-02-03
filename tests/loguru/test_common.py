@@ -92,7 +92,7 @@ def test_logged_suppress():
         with warning_suppress("test7"):
             value_error()
         ctx.should_log(
-            message="test7",
+            message="test7: ValueError: val",
             level_str="WARNING",
             exception=None,
             **call_stack_check_kw,
