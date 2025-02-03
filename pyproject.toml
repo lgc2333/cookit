@@ -14,18 +14,18 @@ homepage = "https://github.com/lgc2333/cookit"
 [project.optional-dependencies]
 common = ["fleep>=1.0.1"]
 
-jinja = ["jinja2>=3.1.4"]
+jinja = ["jinja2>=3.1.5"]
 
-loguru = ["loguru>=0.7.2"]
+loguru = ["loguru>=0.7.3"]
 
-nonebot-base = ["nonebot2>=2.4.0"]
-nonebot-alconna = ["cookit[nonebot-base]", "nonebot-plugin-alconna>=0.54.0"]
+nonebot-base = ["nonebot2>=2.4.1"]
+nonebot-alconna = ["cookit[nonebot-base]", "nonebot-plugin-alconna>=0.54.2"]
 nonebot = ["cookit[nonebot-alconna]"]
 
-playwright = ["playwright>=1.49.0", "anyio>=4.6.2.post1", "yarl>=1.18.3"]
+playwright = ["playwright>=1.50.0", "anyio>=4.8.0", "yarl>=1.18.3"]
 pw = ["cookit[playwright]"]
 
-pydantic = ["pydantic>=1.10.0,<3.0.0,!=2.5.0,!=2.5.1"]
+pydantic = ["pydantic>=2.10.6"]
 pyd = ["cookit[pydantic]"]
 
 all = ["cookit[common,jinja,loguru,nonebot,playwright,pydantic]"]
@@ -33,10 +33,10 @@ all = ["cookit[common,jinja,loguru,nonebot,playwright,pydantic]"]
 [dependency-groups]
 dev = [
     "pytest>=8.3.4",
-    "pytest-asyncio>=0.24.0",
-    "nonebot2[all]>=2.4.0",
-    "nonebug>=0.4.2",
-    "nonebot-adapter-satori>=0.12.6", # for alconna recall test
+    "pytest-asyncio>=0.25.3",
+    "nonebot2[all]>=2.4.1",
+    "nonebug>=0.4.3",
+    "nonebot-adapter-satori>=0.13.3",
 ]
 
 [build-system]
