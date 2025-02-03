@@ -21,10 +21,10 @@ def logged_suppress(
     except Exception as e:
         if t and (not isinstance(e, t)):
             raise
-        lg = logger.opt(exception=e) if log_stack else logger
+        lg = logger.opt(exception=e if log_stack else False, depth=2)
         lg.log(level, lazy_get(msg, e))
         if debug_stack:
-            logger.opt(exception=e).debug("Stacktrace")
+            logger.opt(exception=e, depth=2).debug("Stacktrace")
         return
 
 

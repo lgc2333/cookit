@@ -42,6 +42,8 @@ class LoggingContext:
         level_no: Optional[int] = None,
         message: Optional[str] = None,
         message_fullmatch: bool = True,
+        name: Optional[str] = None,
+        function: Optional[str] = None,
     ):
         def checker(m: "Message"):
             record = m.record
@@ -65,6 +67,10 @@ class LoggingContext:
                 assert (
                     message == r_message if message_fullmatch else message in r_message
                 )
+            if name is not None:
+                assert record["name"] == name
+            if function is not None:
+                assert record["function"] == function
 
         self.checker_stack.append(checker)
 

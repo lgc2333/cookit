@@ -28,7 +28,7 @@ async def test_captured_recall(app: "App"):
     from nonebot.adapters.satori.event import MessageCreatedEvent
     from nonebot.adapters.satori.models import (
         ChannelType,
-        Login,
+        LoginOnline,
         LoginStatus,
         MessageObject,
         User,
@@ -50,25 +50,27 @@ async def test_captured_recall(app: "App"):
 
     async with app.test_matcher(matcher) as ctx:
         adapter = create_fake_satori_adapter(ctx)
+        login = LoginOnline(
+            sn=0,
+            adapter="fake",
+            user=User(id="fake_bot"),
+            platform="fake",
+            status=LoginStatus.ONLINE,
+        )
         bot = ctx.create_bot(
             base=SatoriBot,
             adapter=adapter,
             self_id="fake_bot",
-            login=Login(
-                user=User(id="fake_user"),
-                platform="fake",
-                self_id="fake_bot",
-                status=LoginStatus.ONLINE,
-            ),
+            login=login,
             info=ClientInfo(port=14514),
+            proxy_urls=[],
         )
         event = type_validate_python(
             MessageCreatedEvent,
             {
-                "id": 114514,
+                "sn": 1,
                 "type": "message-created",
-                "platform": "fake",
-                "self_id": "fake_bot",
+                "login": login,
                 "timestamp": int(time.time() * 1000),
                 "channel": {"id": "fake_channel", "type": ChannelType.TEXT},
                 "user": {"id": "fake_user"},

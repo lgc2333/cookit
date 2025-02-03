@@ -1,10 +1,12 @@
+from typing import Any
+
 import pytest
 
 from .utils import LoggingContext
 
 
 def test_logged_suppress():
-    from cookit.loguru import logged_suppress
+    from cookit.loguru import logged_suppress, warning_suppress
 
     def value_error():
         raise ValueError("val")
@@ -12,14 +14,29 @@ def test_logged_suppress():
     def index_error():
         raise IndexError
 
+    call_stack_check_kw: dict[str, Any] = {
+        "name": "tests",
+        "function": "test_logged_suppress",
+    }
+
     with LoggingContext() as ctx:
         with logged_suppress("test1"):
             value_error()
-        ctx.should_log(message="test1", level_str="ERROR", exception=ValueError)
+        ctx.should_log(
+            message="test1",
+            level_str="ERROR",
+            exception=ValueError,
+            **call_stack_check_kw,
+        )
 
         with logged_suppress("test2", ValueError):
             value_error()
-        ctx.should_log(message="test2", level_str="ERROR", exception=ValueError)
+        ctx.should_log(
+            message="test2",
+            level_str="ERROR",
+            exception=ValueError,
+            **call_stack_check_kw,
+        )
 
         try:
             with logged_suppress("test3", ValueError):
@@ -40,6 +57,7 @@ def test_logged_suppress():
             message="test4: val",
             level_str="WARNING",
             exception=ValueError,
+            **call_stack_check_kw,
         )
 
         with logged_suppress(
@@ -53,9 +71,35 @@ def test_logged_suppress():
             message="test5: IndexError",
             level_str="DEBUG",
             exception=IndexError,
+            **call_stack_check_kw,
         )
 
         with logged_suppress("test6", log_stack=False, debug_stack=True):
             value_error()
-        ctx.should_log(message="test6", level_str="ERROR", exception=None)
-        ctx.should_log(message="Stacktrace", level_str="DEBUG", exception=ValueError)
+        ctx.should_log(
+            message="test6",
+            level_str="ERROR",
+            exception=None,
+            **call_stack_check_kw,
+        )
+        ctx.should_log(
+            message="Stacktrace",
+            level_str="DEBUG",
+            exception=ValueError,
+            **call_stack_check_kw,
+        )
+
+        with warning_suppress("test7"):
+            value_error()
+        ctx.should_log(
+            message="test7",
+            level_str="WARNING",
+            exception=None,
+            **call_stack_check_kw,
+        )
+        ctx.should_log(
+            message="Stacktrace",
+            level_str="DEBUG",
+            exception=ValueError,
+            **call_stack_check_kw,
+        )

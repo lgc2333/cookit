@@ -1,3 +1,6 @@
+from .compat import (
+    nullcontext as nullcontext,
+)
 from .data import *  # noqa: F403
 from .deprecated import *  # noqa: F403
 from .maths import (
