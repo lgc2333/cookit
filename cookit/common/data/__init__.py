@@ -2,6 +2,7 @@ from .base import (
     LazyGetterType as LazyGetterType,
     auto_delete as auto_delete,
     chunks as chunks,
+    deep_merge as deep_merge,
     flatten as flatten,
     lazy_get as lazy_get,
     qor as qor,

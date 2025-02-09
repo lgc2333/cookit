@@ -84,3 +84,17 @@ def to_b64_url(data: bytes, mime: Optional[str] = None) -> str:
             mime = cast("list[str]", fleep.get(data[:128]).mime)[0]
 
     return f"data:{mime};base64,{base64.b64encode(data).decode()}"
+
+
+def deep_merge(*args: Any) -> Any:
+    if all(isinstance(x, dict) for x in args):
+        keys = {x for d in args for x in d}
+        result = {}
+        for k in keys:
+            result[k] = deep_merge(*(d[k] for d in args if k in d))
+        return result
+
+    if all(isinstance(x, list) for x in args):
+        return [x for ls in args for x in ls]
+
+    return args[-1]

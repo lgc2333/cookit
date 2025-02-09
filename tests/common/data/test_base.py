@@ -188,3 +188,25 @@ def test_name_deco_collector():
     assert collector.data == {"Cls1": Cls1, "ClsABC": Cls2}
     with pytest.raises(ValueError, match="Object with key 'Cls1' already exists"):
         collector("Cls1")(Cls2)
+
+
+def test_deep_merge():
+    from cookit import deep_merge
+
+    assert deep_merge(1, 2, 3) == 3
+    assert deep_merge([1, 2], [3, 4], [5]) == [1, 2, 3, 4, 5]
+    assert deep_merge([1, 2], [3, 4], 5) == 5
+    assert deep_merge({"a": 1, "b": 2}, {"a": 3, "c": 4}) == {"a": 3, "b": 2, "c": 4}
+    assert deep_merge(
+        {"a": 1, "b": 2},
+        {"a": 3, "c": 4},
+        {"b": 3},
+    ) == {"a": 3, "b": 3, "c": 4}
+    assert deep_merge(
+        {"a": [1, 2], "b": [3, 4]},
+        {"a": [5, 6], "c": [7, 8]},
+    ) == {"a": [1, 2, 5, 6], "b": [3, 4], "c": [7, 8]}
+    assert deep_merge(
+        {"a": [1, 2], "b": [3, 4]},
+        {"a": [5, 6], "b": 6},
+    ) == {"a": [1, 2, 5, 6], "b": 6}
