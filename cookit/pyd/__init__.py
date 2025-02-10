@@ -5,6 +5,7 @@ from .compat import (
     field_validator as field_validator,
     get_model_with_config as get_model_with_config,
     model_config as model_config,
+    model_copy as model_copy,
     model_dump as model_dump,
     model_validator as model_validator,
     type_dump_json as type_dump_json,

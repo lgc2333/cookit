@@ -89,11 +89,13 @@ def test_validate_root():
 
 
 def test_model_copy():
+    from cookit.pyd import model_copy
+
     class TestModel(BaseModel):
         test1: int
         test2: int
 
     model = TestModel(test1=1, test2=2)
 
-    copied = model.model_copy()
+    copied = model_copy(model)
     assert copied is not model
