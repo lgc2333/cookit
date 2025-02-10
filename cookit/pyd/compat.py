@@ -1,3 +1,4 @@
+from collections.abc import Mapping
 from typing import (
     TYPE_CHECKING,
     Any,
@@ -14,6 +15,7 @@ from pydantic import VERSION, BaseModel, ConfigDict
 PYDANTIC_V2 = int(VERSION.split(".", 1)[0]) == 2
 
 T = TypeVar("T")
+TM = TypeVar("TM", bound=BaseModel)
 
 
 if PYDANTIC_V2:  # pragma: pydantic-v2
@@ -112,6 +114,13 @@ if PYDANTIC_V2:  # pragma: pydantic-v2
             exclude_defaults=exclude_defaults,
             exclude_none=exclude_none,
         )
+
+    def model_copy(
+        model: TM,
+        update: Optional[Mapping[str, Any]] = None,
+        deep: bool = False,
+    ) -> TM:
+        return model.model_copy(update=update, deep=deep)
 
 
 else:  # pragma: pydantic-v1
@@ -253,3 +262,10 @@ else:  # pragma: pydantic-v1
             exclude_defaults=exclude_defaults,
             exclude_none=exclude_none,
         )
+
+    def model_copy(
+        model: TM,
+        update: Optional[Mapping[str, Any]] = None,
+        deep: bool = False,
+    ) -> TM:
+        return model.copy(update=update, deep=deep)

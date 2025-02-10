@@ -86,3 +86,14 @@ def test_validate_root():
     expected = [TestModel(test1=1, test2="2", test3=InnerTestModel(test31=3))]
     assert type_dump_python(expected) == data
     assert json.loads(type_dump_json(expected)) == data
+
+
+def test_model_copy():
+    class TestModel(BaseModel):
+        test1: int
+        test2: int
+
+    model = TestModel(test1=1, test2=2)
+
+    copied = model.model_copy()
+    assert copied is not model
