@@ -1,5 +1,5 @@
 import base64
-from collections.abc import Iterable, Iterator, Sequence
+from collections.abc import Container, Iterable, Iterator, Sequence
 from contextlib import suppress
 from typing import Any, Callable, Optional, TypeVar, Union, cast, overload
 from typing_extensions import ParamSpec, TypeGuard
@@ -86,15 +86,34 @@ def to_b64_url(data: bytes, mime: Optional[str] = None) -> str:
     return f"data:{mime};base64,{base64.b64encode(data).decode()}"
 
 
-def deep_merge(*args: Any) -> Any:
-    if all(isinstance(x, dict) for x in args):
-        keys = {x for d in args for x in d}
-        result = {}
-        for k in keys:
-            result[k] = deep_merge(*(d[k] for d in args if k in d))
-        return result
+def deep_merge(
+    *args_input: Any,
+    skip_merge_paths: Optional[Container[str]] = None,
+) -> Any:
+    def merge_path(current: Optional[str], *paths: str) -> str:
+        x = []
+        if current:
+            x.append(current)
+        x.extend(paths)
+        return ".".join(x)
 
-    if all(isinstance(x, list) for x in args):
-        return [x for ls in args for x in ls]
+    def merge_obj(*args: Any, current_path: Optional[str] = None) -> Any:
+        if skip_merge_paths and (current_path in skip_merge_paths):
+            return args[-1]
 
-    return args[-1]
+        if all(isinstance(x, dict) for x in args):
+            keys = {x for d in args for x in d}
+            result = {}
+            for k in keys:
+                result[k] = merge_obj(
+                    *(d[k] for d in args if k in d),
+                    current_path=merge_path(current_path, k),
+                )
+            return result
+
+        if all(isinstance(x, list) for x in args):
+            return [x for ls in args for x in ls]
+
+        return args[-1]
+
+    return merge_obj(*args_input)
