@@ -111,8 +111,10 @@ def deep_merge(
                 )
             return result
 
-        if all(isinstance(x, list) for x in args):
-            return [x for ls in args for x in ls]
+        if issubclass((seq_type := type(args[0])), (list, set)) and all(
+            isinstance(x, seq_type) for x in args
+        ):
+            return seq_type(x for ls in args for x in ls)
 
         return args[-1]
 

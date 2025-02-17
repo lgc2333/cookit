@@ -232,3 +232,9 @@ def test_deep_merge():
         {"a": {"b": {"c": [3, 4]}}},
         skip_merge_paths={"a.b.c"},
     ) == {"a": {"b": {"c": [3, 4]}}}
+
+    assert deep_merge((1, 2), (3, 4)) == (3, 4)
+    assert deep_merge({1, 2}, {3, 4}) == {1, 2, 3, 4}
+
+    assert deep_merge((1, 2), {3, 4}) == {3, 4}
+    assert deep_merge([1, 2], (3, 4)) == (3, 4)
