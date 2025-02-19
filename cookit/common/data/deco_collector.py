@@ -28,7 +28,7 @@ class DecoCollector(Generic[K, V]):
             raise ValueError(f"Object with key '{key}' already exists")
         self.data[key] = value
 
-    def __call__(self, key: K):
+    def __call__(self, key: K) -> Callable[[V], V]:
         def deco(obj: V) -> V:
             self.set_data_item(key, obj)
             return obj
