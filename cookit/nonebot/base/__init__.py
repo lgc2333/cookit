@@ -5,3 +5,6 @@ from .dependency import (
 from .plugin import (
     assert_plugin_loaded as assert_plugin_loaded,
 )
+from .tools import (
+    exception_notify as exception_notify,
+)
