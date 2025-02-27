@@ -22,6 +22,6 @@ async def exception_notify(
             raise
         msg = msg.format(e=str(e), type=type(e).__name__)
         log_msg = log_msg.format(e=str(e), type=type(e).__name__) if log_msg else msg
-        logger.exception(log_msg)
+        logger.opt(depth=2).exception(log_msg)
         await current_matcher.get().finish(msg)
     return  # noqa: PLR1711
