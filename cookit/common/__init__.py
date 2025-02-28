@@ -2,6 +2,9 @@ from .compat import (
     nullcontext as nullcontext,
 )
 from .data import *  # noqa: F403
+from .debug import (
+    DebugFileWriter as DebugFileWriter,
+)
 from .deprecated import *  # noqa: F403
 from .maths import (
     BYTE_B_UNITS as BYTE_B_UNITS,
