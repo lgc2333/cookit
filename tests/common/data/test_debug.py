@@ -1,10 +1,10 @@
 import json
 from pathlib import Path
 
-from cookit import DebugFileWriter
-
 
 def test_debug_file_writer(tmp_path: Path):
+    from cookit import DebugFileWriter
+
     # Test enabled states
     writer = DebugFileWriter(tmp_path, "subdir")
     assert writer.enabled is True
