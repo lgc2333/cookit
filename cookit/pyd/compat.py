@@ -39,12 +39,12 @@ TMAV = TypeVar("TMAV", bound=ModelAfterValidator)
 
 if PYDANTIC_V2:  # pragma: pydantic-v2
     from pydantic import (
-        ModelWrapValidatorHandler,
         RootModel,
         TypeAdapter,
         field_validator as v2_field_validator,
         model_validator as v2_model_validator,
     )
+    from pydantic.functional_validators import ModelWrapValidatorHandler
 
     def model_config(model: type[BaseModel]) -> ConfigDict:
         return model.model_config
