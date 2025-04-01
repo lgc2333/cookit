@@ -1,5 +1,6 @@
 import json
 import time
+from io import BytesIO
 from pathlib import Path
 from typing import Any
 
@@ -18,13 +19,13 @@ class DebugFileWriter:
         self.full_path.mkdir(parents=True, exist_ok=True)
         path = self.full_path / filename
         if isinstance(content, (bytes, bytearray)):
-            path.write_bytes(content)
+            data = content
+        elif isinstance(content, BytesIO):
+            data = content.getvalue()
         else:
-            path.write_text(
-                (
-                    content
-                    if isinstance(content, str)
-                    else json.dumps(content, ensure_ascii=False)
-                ),
-                "u8",
-            )
+            data = (
+                content
+                if isinstance(content, str)
+                else json.dumps(content, ensure_ascii=False)
+            ).encode("u8")
+        path.write_bytes(data)

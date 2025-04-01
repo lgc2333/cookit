@@ -61,11 +61,11 @@ LOCALSTORE_DEFAULT_PATH_WARNING_MSG = (
 
 
 def ensure_localstore_path_config():
-    if (
-        (not localstore_config.localstore_use_cwd)
-        and (not localstore_config.localstore_cache_dir)
-        and (not localstore_config.localstore_config_dir)
-        and (not localstore_config.localstore_data_dir)
-        and (not get_plugin_config(LocalStoreConfigModel).sure)
+    if not (
+        localstore_config.localstore_use_cwd
+        or localstore_config.localstore_cache_dir
+        or localstore_config.localstore_config_dir
+        or localstore_config.localstore_data_dir
+        or get_plugin_config(LocalStoreConfigModel).sure
     ):
         raise RuntimeError(LOCALSTORE_DEFAULT_PATH_WARNING_MSG)
