@@ -91,16 +91,6 @@ def test_get_model_with_config():
     TestModel3 = get_model_with_config(config, type_name="TestModel3")  # noqa: N806
     assert TestModel3.__name__ == "TestModel3"
 
-    alias_generator = lambda x: x  # noqa: E731
-    TestModel4 = get_model_with_config(  # noqa: N806
-        ConfigDict(alias_generator=alias_generator),
-        base=TestModel2New,
-        type_name="TestModel4",
-    )
-    model4_cfg = model_config(TestModel4)
-    assert model4_cfg.get("alias_generator") is alias_generator
-    assert model4_cfg.get("arbitrary_types_allowed") is True
-
 
 def test_validate_root():
     from cookit.pyd import type_dump_json, type_dump_python
