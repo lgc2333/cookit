@@ -2,6 +2,7 @@ from pydantic import BaseModel, ConfigDict
 
 
 def test_model_with_model_config():
+    from cookit.pyd.compat import model_config
     from cookit.pyd.util import model_with_model_config
 
     # 创建一个测试配置
@@ -18,7 +19,7 @@ def test_model_with_model_config():
         pass
 
     # 验证配置是否正确应用
-    assert ConfiguredModel.model_config.get("arbitrary_types_allowed") is True
+    assert model_config(ConfiguredModel).get("arbitrary_types_allowed") is True
 
     # 验证模型功能是否正常
     model = ConfiguredModel(name="test", age=25)
@@ -26,7 +27,7 @@ def test_model_with_model_config():
     assert model.age == 25
 
     # 验证原始模型的配置不受影响
-    assert not TestModel.model_config.get("arbitrary_types_allowed", False)
+    assert not model_config(TestModel).get("arbitrary_types_allowed", False)
 
 
 def test_model_with_alias_generator():
@@ -73,7 +74,7 @@ def test_model_with_alias_generator():
 
 def test_combined_decorators():
     from cookit import camel_case
-    from cookit.pyd.compat import type_validate_python
+    from cookit.pyd.compat import model_config, type_validate_python
     from cookit.pyd.util import model_with_alias_generator, model_with_model_config
 
     # 创建一个基础模型
@@ -88,7 +89,7 @@ def test_combined_decorators():
         pass
 
     # 验证配置是否正确应用
-    assert CombinedModel.model_config.get("arbitrary_types_allowed") is True
+    assert model_config(CombinedModel).get("arbitrary_types_allowed") is True
 
     # 验证模型功能是否正常
     model = type_validate_python(
@@ -110,7 +111,7 @@ def test_combined_decorators():
         TestModel,
         {"user_name": "test", "user_age": 25},
     )
-    assert not original_model.model_config.get("arbitrary_types_allowed", False)
+    assert not model_config(TestModel).get("arbitrary_types_allowed", False)
     original_dict = original_model.model_dump(by_alias=True)
     assert "user_name" in original_dict
     assert "user_age" in original_dict
