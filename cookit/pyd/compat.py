@@ -138,7 +138,6 @@ if PYDANTIC_V2:  # pragma: pydantic-v2
         base: type[BaseModel] = BaseModel,
         type_name: Optional[str] = None,
     ) -> type[BaseModel]:
-        config = {**base.model_config, **config}
         return type(type_name or base.__name__, (base,), {"model_config": config})
 
     def __get_model_instance(data: object) -> BaseModel:
