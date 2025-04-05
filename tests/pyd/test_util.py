@@ -32,7 +32,7 @@ def test_model_with_model_config():
 
 def test_model_with_alias_generator():
     from cookit import camel_case
-    from cookit.pyd.compat import type_validate_python
+    from cookit.pyd.compat import type_dump_python, type_validate_python
     from cookit.pyd.util import model_with_alias_generator
 
     # 创建一个基础模型
@@ -56,7 +56,7 @@ def test_model_with_alias_generator():
     assert model.user_age == 25
 
     # 验证别名是否正确生成
-    model_dict = model.model_dump(by_alias=True)
+    model_dict = type_dump_python(model, by_alias=True)
     assert "userName" in model_dict
     assert "userAge" in model_dict
     assert model_dict["userName"] == "test"
@@ -67,14 +67,14 @@ def test_model_with_alias_generator():
         TestModel,
         {"user_name": "test", "user_age": 25},
     )
-    original_dict = original_model.model_dump(by_alias=True)
+    original_dict = type_dump_python(original_model, by_alias=True)
     assert "user_name" in original_dict
     assert "user_age" in original_dict
 
 
 def test_combined_decorators():
     from cookit import camel_case
-    from cookit.pyd.compat import model_config, type_validate_python
+    from cookit.pyd.compat import model_config, type_dump_python, type_validate_python
     from cookit.pyd.util import model_with_alias_generator, model_with_model_config
 
     # 创建一个基础模型
@@ -100,7 +100,7 @@ def test_combined_decorators():
     assert model.user_age == 25
 
     # 验证别名是否正确生成
-    model_dict = model.model_dump(by_alias=True)
+    model_dict = type_dump_python(model, by_alias=True)
     assert "userName" in model_dict
     assert "userAge" in model_dict
     assert model_dict["userName"] == "test"
@@ -111,7 +111,7 @@ def test_combined_decorators():
         TestModel,
         {"user_name": "test", "user_age": 25},
     )
-    assert not model_config(TestModel).get("arbitrary_types_allowed", False)
-    original_dict = original_model.model_dump(by_alias=True)
+    assert model_config(TestModel).get("arbitrary_types_allowed") is not True
+    original_dict = type_dump_python(original_model, by_alias=True)
     assert "user_name" in original_dict
     assert "user_age" in original_dict
