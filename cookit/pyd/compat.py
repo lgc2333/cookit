@@ -1,4 +1,5 @@
 from typing import (
+    TYPE_CHECKING,
     Any,
     Callable,
     Literal,
@@ -44,7 +45,9 @@ if PYDANTIC_V2:  # pragma: pydantic-v2
         field_validator as v2_field_validator,
         model_validator as v2_model_validator,
     )
-    from pydantic.functional_validators import ModelWrapValidatorHandler
+
+    if TYPE_CHECKING:
+        from pydantic.functional_validators import ModelWrapValidatorHandler
 
     def model_config(model: type[BaseModel]) -> ConfigDict:
         return model.model_config
@@ -99,7 +102,7 @@ if PYDANTIC_V2:  # pragma: pydantic-v2
             def wrapper(
                 cls: type[BaseModel],
                 data: Any,
-                handler: ModelWrapValidatorHandler[BaseModel],
+                handler: "ModelWrapValidatorHandler[BaseModel]",
             ) -> Any:
                 if mode == "before":
                     data = func(cls, data)
@@ -130,11 +133,13 @@ if PYDANTIC_V2:  # pragma: pydantic-v2
             check_fields=check_fields if check_fields is not None else True,
         )
 
-    def get_model_with_config(config: ConfigDict) -> type[BaseModel]:
-        class Model(BaseModel):
-            model_config = config
-
-        return Model
+    def get_model_with_config(
+        config: ConfigDict,
+        base: type[BaseModel] = BaseModel,
+        type_name: Optional[str] = None,
+    ) -> type[BaseModel]:
+        config = {**base.model_config, **config}
+        return type(type_name or base.__name__, (base,), {"model_config": config})
 
     def __get_model_instance(data: object) -> BaseModel:
         return (
@@ -255,11 +260,12 @@ else:  # pragma: pydantic-v1
             check_fields=check_fields if check_fields is not None else True,
         )
 
-    def get_model_with_config(config: ConfigDict) -> type[BaseModel]:
-        class Model(BaseModel, **config):
-            pass
-
-        return Model
+    def get_model_with_config(
+        config: ConfigDict,
+        base: type[BaseModel] = BaseModel,
+        type_name: Optional[str] = None,
+    ) -> type[BaseModel]:
+        return type(type_name or base.__name__, (base,), {}, **config)
 
     class AnyRootModel(BaseModel):
         __root__: Any

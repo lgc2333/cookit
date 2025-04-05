@@ -13,8 +13,11 @@ from .compat import (
     type_validate_json as type_validate_json,
     type_validate_python as type_validate_python,
 )
-from .util import (
-    AliasFuncType as AliasFuncType,
+from .deprecated import (
     CamelAliasModel as CamelAliasModel,
     get_alias_model as get_alias_model,
+)
+from .util import (
+    AliasFuncType as AliasFuncType,
+    model_with_model_config as model_with_model_config,
 )

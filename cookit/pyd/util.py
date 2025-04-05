@@ -1,16 +1,25 @@
-from typing import Callable
+from typing import Callable, TypeVar, cast
 from typing_extensions import TypeAlias
 
 from pydantic import BaseModel, ConfigDict
 
-from .. import camel_case
 from .compat import get_model_with_config
 
+TTM = TypeVar("TTM", bound=type[BaseModel])
 AliasFuncType: TypeAlias = Callable[[str], str]
 
 
-def get_alias_model(alias_func: AliasFuncType) -> type[BaseModel]:
-    return get_model_with_config(ConfigDict(alias_generator=alias_func))
+def model_with_model_config(config: ConfigDict) -> Callable[[TTM], TTM]:
+    def wrapper(base: TTM) -> TTM:
+        m = get_model_with_config(config, base)
+        return cast("TTM", m)
+
+    return wrapper
 
 
-CamelAliasModel = get_alias_model(camel_case)
+def model_with_alias_generator(alias_func: AliasFuncType) -> Callable[[TTM], TTM]:
+    def wrapper(base: TTM) -> TTM:
+        m = get_model_with_config(ConfigDict(alias_generator=alias_func), base)
+        return cast("TTM", m)
+
+    return wrapper

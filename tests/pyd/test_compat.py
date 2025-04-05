@@ -68,10 +68,28 @@ def test_validate():
 
 def test_get_model_with_config():
     config = ConfigDict(arbitrary_types_allowed=True)
-    Model = get_model_with_config(config)  # noqa: N806
-    assert isinstance(Model(), Model)
+    TestModel1 = get_model_with_config(config)  # noqa: N806
+    model1_ins = TestModel1()
+    assert isinstance(model1_ins, TestModel1)
+    assert isinstance(model1_ins, BaseModel)
+    assert TestModel1.__name__ == "BaseModel"
     for k in config:
-        assert model_config(Model)[k] == config[k]
+        assert model_config(TestModel1)[k] == config[k]
+
+    class TestModel2(BaseModel):
+        pass
+
+    TestModel2New = get_model_with_config(config, base=TestModel2)  # noqa: N806
+    model2_ins = TestModel2New()
+    assert isinstance(model2_ins, TestModel2New)
+    assert isinstance(model2_ins, TestModel2)
+    assert isinstance(model1_ins, BaseModel)
+    assert TestModel2New.__name__ == "TestModel2"
+    for k in config:
+        assert model_config(TestModel2New)[k] == config[k]
+
+    TestModel3 = get_model_with_config(config, type_name="TestModel3")  # noqa: N806
+    assert TestModel3.__name__ == "TestModel3"
 
 
 def test_validate_root():
