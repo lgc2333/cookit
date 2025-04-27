@@ -19,5 +19,6 @@ from .deprecated import (
 )
 from .util import (
     AliasFuncType as AliasFuncType,
+    model_with_alias_generator as model_with_alias_generator,
     model_with_model_config as model_with_model_config,
 )
