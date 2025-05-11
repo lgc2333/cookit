@@ -71,3 +71,13 @@ class NameDecoCollector(DecoCollector[str, Union[T_HasName]]):
         if isinstance((name := getattr(key, "__name__", None)), str):
             return super().__call__(name)(key)
         raise TypeError("'key' must be str or object with __name__ attribute")
+
+
+class DecoListCollector(Generic[T]):
+    def __init__(self, data: Optional[list[T]] = None) -> None:
+        super().__init__()
+        self.data: list[T] = [] if data is None else data
+
+    def __call__(self, obj: T) -> T:
+        self.data.append(obj)
+        return obj

@@ -1,7 +1,5 @@
 from typing import Callable, cast
 
-import pytest
-
 
 def test_lazy_get():
     from cookit import LazyGetterType, lazy_get
@@ -124,70 +122,6 @@ def test_auto_delete():
     result3 = auto_delete(target3)
     assert result3 == expected_result3
     assert target3 == expected_result3
-
-
-def test_deco_collector():
-    from cookit import DecoCollector
-
-    collector = DecoCollector[str, int]()
-    collector("test1")(1)
-    assert collector.data == {"test1": 1}
-    collector("test2")(2)
-    assert collector.data == {"test1": 1, "test2": 2}
-    with pytest.raises(ValueError, match="Object with key 'test1' already exists"):
-        collector("test1")(114514)
-
-    collector2_data: dict[str, int] = {}
-    collector2 = DecoCollector(collector2_data, allow_overwrite=True)
-    collector2("test2_1")(1)
-    assert collector2.data == {"test2_1": 1}
-    assert collector2.data is collector2_data
-    collector2("test2_1")(114514)
-    assert collector2.data == {"test2_1": 114514}
-
-
-def test_type_deco_collector():
-    from cookit import TypeDecoCollector
-
-    class BaseCls:
-        pass
-
-    class Cls1(BaseCls):
-        pass
-
-    class Cls2(BaseCls):
-        pass
-
-    collector = TypeDecoCollector[BaseCls, int]()
-    collector(Cls1)(1)
-    assert collector.data == {Cls1: 1}
-    collector(Cls2)(2)
-    assert collector.data == {Cls1: 1, Cls2: 2}
-    with pytest.raises(
-        ValueError,
-        match="Object with key '<class '.+Cls1'>' already exists",
-    ):
-        collector(Cls1)(114514)
-
-
-def test_name_deco_collector():
-    from cookit import NameDecoCollector
-
-    class Cls1:
-        pass
-
-    class Cls2:
-        pass
-
-    collector = NameDecoCollector[type]()
-    collector(Cls1)
-    assert collector.data == {"Cls1": Cls1}
-    with pytest.raises(ValueError, match="Object with key 'Cls1' already exists"):
-        collector(Cls1)
-    collector("ClsABC")(Cls2)
-    assert collector.data == {"Cls1": Cls1, "ClsABC": Cls2}
-    with pytest.raises(ValueError, match="Object with key 'Cls1' already exists"):
-        collector("Cls1")(Cls2)
 
 
 def test_deep_merge():

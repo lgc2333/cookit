@@ -14,6 +14,7 @@ from .cache import (
 )
 from .deco_collector import (
     DecoCollector as DecoCollector,
+    DecoListCollector as DecoListCollector,
     HasNameProtocol as HasNameProtocol,
     NameDecoCollector as NameDecoCollector,
     TypeDecoCollector as TypeDecoCollector,
