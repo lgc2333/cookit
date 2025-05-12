@@ -1,6 +1,7 @@
 from typing import Any
 
 import pytest
+from loguru import logger
 
 from .utils import LoggingContext
 
@@ -20,6 +21,13 @@ def test_logged_suppress():
     }
 
     with LoggingContext() as ctx:
+        logger.info("test")
+        ctx.should_log(
+            message="test",
+            level_str="INFO",
+            **call_stack_check_kw,
+        )
+
         with logged_suppress("test1"):
             value_error()
         ctx.should_log(
