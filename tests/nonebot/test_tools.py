@@ -2,7 +2,6 @@ from typing import TYPE_CHECKING
 
 import pytest
 from nonebot import on_message
-from nonebot.exception import FinishedException, SkippedException
 from nonebot.matcher import Matcher
 
 from .utils import FakeMessage, make_fake_event
@@ -73,44 +72,11 @@ async def test_exception_notify(app: "App"):
     @matcher5.handle()
     async def _(m: Matcher):
         async with exception_notify("err", ignore_nb_exc=False):
-            await m.finish("finished")
+            await m.pause("paused")
 
     async with app.test_matcher(matcher5) as ctx:
         bot = ctx.create_bot()
         ctx.receive_event(bot, cmd_ev)
-        ctx.should_call_send(cmd_ev, "finished")
+        ctx.should_call_send(cmd_ev, "paused")
         ctx.should_call_send(cmd_ev, "err")
-
-    matcher6 = on_message()
-
-    @matcher6.handle()
-    async def _(m: Matcher):
-        async with exception_notify(
-            "err",
-            types=(FinishedException,),
-            ignore_nb_exc=False,
-        ):
-            await m.finish("finished")
-
-    async with app.test_matcher(matcher6) as ctx:
-        bot = ctx.create_bot()
-        ctx.receive_event(bot, cmd_ev)
-        ctx.should_call_send(cmd_ev, "finished")
-        ctx.should_call_send(cmd_ev, "err")
-
-    matcher7 = on_message()
-
-    @matcher7.handle()
-    async def _(m: Matcher):
-        async with exception_notify(
-            "err",
-            types=(SkippedException,),
-            ignore_nb_exc=False,
-        ):
-            await m.finish("finished")
-
-    async with app.test_matcher(matcher7) as ctx:
-        bot = ctx.create_bot()
-        ctx.receive_event(bot, cmd_ev)
-        ctx.should_call_send(cmd_ev, "finished")
         ctx.should_finished()
