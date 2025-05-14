@@ -1,4 +1,3 @@
-import mimetypes
 import re
 from collections.abc import Awaitable, Iterable
 from dataclasses import dataclass
@@ -15,7 +14,6 @@ from typing import (
 )
 from typing_extensions import TypeAlias, Unpack
 
-import anyio
 from playwright.async_api import Page, Request, Route
 from yarl import URL
 
@@ -107,12 +105,8 @@ class RouterGroup:
 def make_real_path_router(path_extractor: CKRouterFunc["Path"]) -> CKRouterFunc:
     async def router(route: Route, matched: Optional[re.Match[str]], **add_kwds):
         path = await path_extractor(route=route, matched=matched, **add_kwds)
-
         if (not path.exists()) or (not path.is_file()):
             return await route.fulfill(status=404)
-
-        body = await anyio.Path(path).read_bytes()
-        mime = mimetypes.guess_type(path)[0] or "application/octet-stream"
-        return await route.fulfill(body=body, content_type=mime)
+        return await route.fulfill(path=path)
 
     return router

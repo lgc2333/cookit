@@ -1,4 +1,5 @@
 from typing import TYPE_CHECKING, Callable
+from urllib.parse import quote
 
 from ..common import (
     NameDecoCollector,
@@ -29,6 +30,11 @@ cookit_global_filter(escape_single_quotes)
 @cookit_global_filter
 def br(value: str) -> str:
     return value.replace("\n", "<br/>")
+
+
+@cookit_global_filter
+def url_encode(value: str) -> str:
+    return quote(value)
 
 
 def register_all_filters(env: "Environment"):
