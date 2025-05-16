@@ -1,5 +1,8 @@
-from typing import TYPE_CHECKING, Callable
+from typing import TYPE_CHECKING, Any, Callable, Protocol, TypeVar, overload
 from urllib.parse import quote
+
+from jinja2.filters import do_mark_safe
+from markupsafe import Markup, escape
 
 from ..common import (
     NameDecoCollector,
@@ -13,8 +16,25 @@ from ..common import (
 if TYPE_CHECKING:
     from jinja2 import Environment
 
+    from ..common import HasNameProtocol
 
-cookit_global_filter = NameDecoCollector[Callable]()
+    class _HasNameCallable(HasNameProtocol, Protocol):
+        def __call__(self, *args: Any, **kwargs: Any) -> Any: ...
+
+    TC = TypeVar("TC", bound=_HasNameCallable)
+
+    class _GlobalFilterCollector(NameDecoCollector[Callable]):
+        @overload
+        def __call__(self, key: str) -> Callable[[TC], TC]: ...
+        @overload
+        def __call__(self, key: TC) -> TC: ...
+        def __call__(self, key: Any) -> Any: ...
+
+    cookit_global_filter = _GlobalFilterCollector()
+
+else:
+    cookit_global_filter = NameDecoCollector[Callable]()
+
 
 all_filters = cookit_global_filter.data
 """@deprecated: Use `cookit_global_filter.data` instead."""
@@ -30,6 +50,19 @@ cookit_global_filter(escape_single_quotes)
 @cookit_global_filter
 def br(value: str) -> str:
     return value.replace("\n", "<br/>")
+
+
+@cookit_global_filter
+def space(value: str) -> str:
+    return value.replace(" ", "&nbsp;")
+
+
+@cookit_global_filter
+def safe_layout(value: str) -> Markup:
+    value = str(escape(value))
+    value = br(value)
+    value = space(value)
+    return do_mark_safe(value)
 
 
 @cookit_global_filter
