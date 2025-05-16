@@ -1,3 +1,4 @@
+import re
 from typing import TYPE_CHECKING, Any, Callable, Protocol, TypeVar, overload
 from urllib.parse import quote
 
@@ -52,9 +53,12 @@ def br(value: str) -> str:
     return value.replace("\n", "<br/>")
 
 
+space_re = re.compile(r"\s{2,}")
+
+
 @cookit_global_filter
 def space(value: str) -> str:
-    return value.replace(" ", "&nbsp;")
+    return space_re.sub(lambda m: f"{'&nbsp;' * (len(m[0]) - 1)} ", value)
 
 
 @cookit_global_filter
