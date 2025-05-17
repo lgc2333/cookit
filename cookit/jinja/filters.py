@@ -53,7 +53,7 @@ def br(value: str) -> str:
     return value.replace("\n", "<br/>")
 
 
-space_re = re.compile(r"\s{2,}")
+space_re = re.compile(r" {2,}")
 
 
 @cookit_global_filter
