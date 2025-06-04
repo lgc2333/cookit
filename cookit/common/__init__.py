@@ -35,6 +35,11 @@ from .other import (
     race as race,
     with_semaphore as with_semaphore,
 )
+from .signal import (
+    Signal as Signal,
+    default_exc_handler as default_exc_handler,
+    safe_exc_handler as safe_exc_handler,
+)
 from .text import (
     camel_case as camel_case,
     escape_backticks as escape_backticks,
