@@ -1,6 +1,3 @@
-from .compat import (
-    nullcontext as nullcontext,
-)
 from .data import *  # noqa: F403
 from .debug import (
     DebugFileWriter as DebugFileWriter,
