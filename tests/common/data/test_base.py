@@ -1,4 +1,5 @@
-from typing import Callable, cast
+from collections.abc import Callable
+from typing import cast
 
 
 def test_lazy_get():

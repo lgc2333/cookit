@@ -1,7 +1,7 @@
 import asyncio
 from collections.abc import Callable, Coroutine
-from typing import Any, Generic, NoReturn, TypeVar, Union
-from typing_extensions import ParamSpec, Self, TypeAlias
+from typing import Any, Generic, NoReturn, TypeAlias, TypeVar
+from typing_extensions import ParamSpec, Self
 
 T = TypeVar("T")
 
@@ -37,7 +37,7 @@ class Signal(Generic[A, R, E]):
         func: Callable[A, Co[R]],
         *args: A.args,
         **kwargs: A.kwargs,
-    ) -> Union[R, E]:
+    ) -> R | E:
         try:
             return await func(*args, **kwargs)
         except Exception as e:
@@ -47,17 +47,17 @@ class Signal(Generic[A, R, E]):
         self,
         *args: A.args,
         **kwargs: A.kwargs,
-    ) -> list[Union[R, E]]:
+    ) -> list[R | E]:
         return [await self.run(slot, *args, **kwargs) for slot in self.slots]
 
     def task_sequential(
         self,
         *args: A.args,
         **kwargs: A.kwargs,
-    ) -> asyncio.Task[list[Union[R, E]]]:
+    ) -> asyncio.Task[list[R | E]]:
         return asyncio.create_task(self.sequential(*args, **kwargs))
 
-    async def gather(self, *args: A.args, **kwargs: A.kwargs) -> list[Union[R, E]]:
+    async def gather(self, *args: A.args, **kwargs: A.kwargs) -> list[R | E]:
         return await asyncio.gather(
             *(self.run(slot, *args, **kwargs) for slot in self.slots),
         )
@@ -66,5 +66,5 @@ class Signal(Generic[A, R, E]):
         self,
         *args: A.args,
         **kwargs: A.kwargs,
-    ) -> asyncio.Task[list[Union[R, E]]]:
+    ) -> asyncio.Task[list[R | E]]:
         return asyncio.create_task(self.gather(*args, **kwargs))

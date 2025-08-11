@@ -1,6 +1,6 @@
-from collections.abc import MutableMapping
+from collections.abc import Callable, MutableMapping
 from functools import partial
-from typing import Any, Callable, Generic, Protocol, TypeVar, Union, overload
+from typing import Any, Generic, Protocol, TypeVar, overload
 from typing_extensions import deprecated
 
 from cookit.common import HasNameProtocol
@@ -24,7 +24,7 @@ def append_obj_to_dict_deco(
 @deprecated("Use `NameDecoCollector` instead")
 def append_obj_to_dict_deco(  # type: ignore
     name_dict: MutableMapping[str, T],
-    obj_or_name: Union[str, T],
+    obj_or_name: str | T,
     allow_overwrite: bool = True,
 ):
     def set_obj(name: str, obj: T) -> T:

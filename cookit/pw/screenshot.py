@@ -1,15 +1,10 @@
-from collections.abc import Awaitable
-from typing import Any, Callable, Literal, Optional, Union
-from typing_extensions import TypeAlias
+from collections.abc import Awaitable, Callable
+from typing import Any, Literal, TypeAlias
 
 from playwright.async_api import Page
 
 WaitFunction: TypeAlias = Callable[[Page], Awaitable[Any]]
-WaitForType: TypeAlias = Union[
-    Literal["domcontentloaded", "load", "networkidle"],
-    WaitFunction,
-    None,
-]
+WaitForType: TypeAlias = Literal["domcontentloaded", "load", "networkidle"] | WaitFunction | None
 
 
 async def _wait_for(page: Page, wait_type: WaitForType):
@@ -29,7 +24,7 @@ async def screenshot_selector(page: Page, selector: str, **kwargs) -> bytes:
 async def screenshot_html(
     page: Page,
     html: str,
-    selector: Optional[str] = None,
+    selector: str | None = None,
     wait_type: WaitForType = "load",
     **kwargs,
 ) -> bytes:

@@ -1,12 +1,10 @@
+from collections.abc import Callable
 from typing import (
     TYPE_CHECKING,
     Any,
-    Callable,
     Literal,
-    Optional,
     Protocol,
     TypeVar,
-    Union,
     overload,
 )
 
@@ -54,8 +52,8 @@ if PYDANTIC_V2:  # pragma: pydantic-v2
 
     def model_dump(
         model: BaseModel,
-        include: Optional[set[str]] = None,
-        exclude: Optional[set[str]] = None,
+        include: set[str] | None = None,
+        exclude: set[str] | None = None,
         by_alias: bool = False,
         exclude_unset: bool = False,
         exclude_defaults: bool = False,
@@ -77,7 +75,7 @@ if PYDANTIC_V2:  # pragma: pydantic-v2
             else TypeAdapter(type_).validate_python(data)
         )
 
-    def type_validate_json(type_: type[T], data: Union[str, bytes]) -> T:
+    def type_validate_json(type_: type[T], data: str | bytes) -> T:
         return (
             type_.model_validate_json(data)
             if type_ is BaseModel
@@ -124,7 +122,7 @@ if PYDANTIC_V2:  # pragma: pydantic-v2
         field: str,
         *fields: str,
         mode: Literal["before", "after"] = "after",
-        check_fields: Optional[bool] = ...,
+        check_fields: bool | None = ...,
     ) -> Callable[[TFV], TFV]:
         return v2_field_validator(
             field,
@@ -136,7 +134,7 @@ if PYDANTIC_V2:  # pragma: pydantic-v2
     def get_model_with_config(
         config: ConfigDict,
         base: type[BaseModel] = BaseModel,
-        type_name: Optional[str] = None,
+        type_name: str | None = None,
     ) -> type[BaseModel]:
         return type(type_name or base.__name__, (base,), {"model_config": config})
 
@@ -147,8 +145,8 @@ if PYDANTIC_V2:  # pragma: pydantic-v2
 
     def type_dump_python(
         data: object,
-        include: Optional[set[str]] = None,
-        exclude: Optional[set[str]] = None,
+        include: set[str] | None = None,
+        exclude: set[str] | None = None,
         by_alias: bool = False,
         exclude_unset: bool = False,
         exclude_defaults: bool = False,
@@ -165,8 +163,8 @@ if PYDANTIC_V2:  # pragma: pydantic-v2
 
     def type_dump_json(
         data: object,
-        include: Optional[set[str]] = None,
-        exclude: Optional[set[str]] = None,
+        include: set[str] | None = None,
+        exclude: set[str] | None = None,
         by_alias: bool = False,
         exclude_unset: bool = False,
         exclude_defaults: bool = False,
@@ -183,11 +181,13 @@ if PYDANTIC_V2:  # pragma: pydantic-v2
 
     def model_copy(
         model: TM,
-        update: Optional[dict[str, Any]] = None,
+        update: dict[str, Any] | None = None,
         deep: bool = False,
     ) -> TM:
         return model.model_copy(update=update, deep=deep)
 
+    def model_fields_set(model: BaseModel) -> set[str]:
+        return model.model_fields_set
 
 else:  # pragma: pydantic-v1
     from pydantic import parse_obj_as, parse_raw_as, root_validator, validator
@@ -207,8 +207,8 @@ else:  # pragma: pydantic-v1
 
     def model_dump(
         model: BaseModel,
-        include: Optional[set[str]] = None,
-        exclude: Optional[set[str]] = None,
+        include: set[str] | None = None,
+        exclude: set[str] | None = None,
         by_alias: bool = False,
         exclude_unset: bool = False,
         exclude_defaults: bool = False,
@@ -226,7 +226,7 @@ else:  # pragma: pydantic-v1
     def type_validate_python(type_: type[T], data: Any) -> T:
         return parse_obj_as(type_, data)
 
-    def type_validate_json(type_: type[T], data: Union[str, bytes]) -> T:
+    def type_validate_json(type_: type[T], data: str | bytes) -> T:
         return parse_raw_as(type_, data)  # type: ignore
 
     @overload
@@ -249,7 +249,7 @@ else:  # pragma: pydantic-v1
         field: str,
         *fields: str,
         mode: Literal["before", "after"] = "after",
-        check_fields: Optional[bool] = ...,
+        check_fields: bool | None = ...,
     ) -> Callable[[TFV], TFV]:
         return validator(
             field,
@@ -262,7 +262,7 @@ else:  # pragma: pydantic-v1
     def get_model_with_config(
         config: ConfigDict,
         base: type[BaseModel] = BaseModel,
-        type_name: Optional[str] = None,
+        type_name: str | None = None,
     ) -> type[BaseModel]:
         return type(type_name or base.__name__, (base,), {}, **config)
 
@@ -274,8 +274,8 @@ else:  # pragma: pydantic-v1
 
     def type_dump_python(
         data: object,
-        include: Optional[set[str]] = None,
-        exclude: Optional[set[str]] = None,
+        include: set[str] | None = None,
+        exclude: set[str] | None = None,
         by_alias: bool = False,
         exclude_unset: bool = False,
         exclude_defaults: bool = False,
@@ -295,8 +295,8 @@ else:  # pragma: pydantic-v1
 
     def type_dump_json(
         data: object,
-        include: Optional[set[str]] = None,
-        exclude: Optional[set[str]] = None,
+        include: set[str] | None = None,
+        exclude: set[str] | None = None,
         by_alias: bool = False,
         exclude_unset: bool = False,
         exclude_defaults: bool = False,
@@ -313,7 +313,10 @@ else:  # pragma: pydantic-v1
 
     def model_copy(
         model: TM,
-        update: Optional[dict[str, Any]] = None,
+        update: dict[str, Any] | None = None,
         deep: bool = False,
     ) -> TM:
         return model.copy(update=update, deep=deep)
+
+    def model_fields_set(model: BaseModel) -> set[str]:
+        return model.__fields_set__

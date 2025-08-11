@@ -1,4 +1,5 @@
-from typing import TYPE_CHECKING, Callable, Optional, Union
+from collections.abc import Callable
+from typing import TYPE_CHECKING
 
 from loguru import logger
 
@@ -23,7 +24,7 @@ class LoggingContext:
     def __init__(self) -> None:
         self.log_stack: list[Message] = []
         self.checker_stack: list[Callable[[Message], None]] = []
-        self.id: Optional[int] = None
+        self.id: int | None = None
 
     def __enter__(self):
         self.id = logger.add(make_handler(self.log_stack))
@@ -37,13 +38,13 @@ class LoggingContext:
     def should_log(
         self,
         *,
-        exception: Union[BaseException, type[BaseException], None] = ...,
-        level_str: Optional[str] = None,
-        level_no: Optional[int] = None,
-        message: Optional[str] = None,
+        exception: BaseException | type[BaseException] | None = ...,
+        level_str: str | None = None,
+        level_no: int | None = None,
+        message: str | None = None,
         message_fullmatch: bool = True,
-        name: Optional[str] = None,
-        function: Optional[str] = None,
+        name: str | None = None,
+        function: str | None = None,
     ):
         def checker(m: "Message"):
             record = m.record

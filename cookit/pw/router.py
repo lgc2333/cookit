@@ -1,18 +1,16 @@
 import re
-from collections.abc import Awaitable, Iterable
+from collections.abc import Awaitable, Callable, Iterable
 from dataclasses import dataclass
 from typing import (
     TYPE_CHECKING,
     Any,
-    Callable,
     Generic,
-    Optional,
     Protocol,
+    TypeAlias,
     TypedDict,
     TypeVar,
-    Union,
 )
-from typing_extensions import TypeAlias, Unpack
+from typing_extensions import Unpack
 
 from playwright.async_api import Page, Request, Route
 from yarl import URL
@@ -21,7 +19,7 @@ if TYPE_CHECKING:
     from pathlib import Path
 
 PWRouter: TypeAlias = Callable[[Route, Request], Awaitable[Any]]
-CKRouterPattern: TypeAlias = Union[str, re.Pattern]
+CKRouterPattern: TypeAlias = str | re.Pattern
 
 T_co = TypeVar("T_co", covariant=True)
 TF = TypeVar("TF", bound="CKRouterFunc")
@@ -32,7 +30,7 @@ class CKRouterKwArgs(TypedDict):
     request: Request
     info: "CKRouterInfo"
     url: URL
-    matched: Optional[re.Match[str]]
+    matched: re.Match[str] | None
 
 
 class CKRouterFunc(Protocol, Generic[T_co]):
@@ -66,7 +64,7 @@ async def apply_router_to_page(page: Page, router: CKRouterInfo):
 
 
 class RouterGroup:
-    def __init__(self, routers: Optional[Iterable[CKRouterInfo]] = None) -> None:
+    def __init__(self, routers: Iterable[CKRouterInfo] | None = None) -> None:
         self.routers: list[CKRouterInfo] = []
         if routers:
             self.routers.extend(routers)
@@ -103,7 +101,7 @@ class RouterGroup:
 
 
 def make_real_path_router(path_extractor: CKRouterFunc["Path"]) -> CKRouterFunc:
-    async def router(route: Route, matched: Optional[re.Match[str]], **add_kwds):
+    async def router(route: Route, matched: re.Match[str] | None, **add_kwds):
         path = await path_extractor(route=route, matched=matched, **add_kwds)
         if (not path.exists()) or (not path.is_file()):
             return await route.fulfill(status=404)

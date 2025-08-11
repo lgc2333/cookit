@@ -1,5 +1,4 @@
 from contextlib import asynccontextmanager
-from typing import Optional
 
 from nonebot import logger
 from nonebot.exception import MatcherException, ProcessException
@@ -9,15 +8,15 @@ from nonebot.matcher import current_matcher
 @asynccontextmanager
 async def exception_notify(
     msg: str,
-    log_msg: Optional[str] = None,
-    types: Optional[tuple[type[BaseException]]] = None,
+    log_msg: str | None = None,
+    types: tuple[type[BaseException]] | None = None,
     ignore_nb_exc: bool = True,
 ):
     try:
         yield
     except Exception as e:
         if (types and (not isinstance(e, types))) or (
-            ignore_nb_exc and isinstance(e, (ProcessException, MatcherException))
+            ignore_nb_exc and isinstance(e, ProcessException | MatcherException)
         ):
             raise
         msg = msg.format(e=str(e), type=type(e).__name__)

@@ -1,7 +1,6 @@
 # https://github.com/nonebot/nonebot2/blob/master/tests/utils.py
 
 from collections.abc import Iterable, Mapping
-from typing import Optional, Union
 from typing_extensions import override
 
 from nonebot.adapters import Event, Message, MessageSegment
@@ -43,7 +42,7 @@ class FakeMessage(Message[FakeMessageSegment]):
 
     @staticmethod
     @override
-    def _construct(msg: Union[str, Iterable[Mapping]]):
+    def _construct(msg: str | Iterable[Mapping]):
         if isinstance(msg, str):
             yield FakeMessageSegment.text(msg)
         else:
@@ -52,13 +51,13 @@ class FakeMessage(Message[FakeMessageSegment]):
 
 
 def make_fake_event(
-    _base: Optional[type[Event]] = None,
+    _base: type[Event] | None = None,
     _type: str = "message",
     _name: str = "test",
     _description: str = "test",
-    _user_id: Optional[str] = "test",
-    _session_id: Optional[str] = "test",
-    _message: Optional[Message] = None,
+    _user_id: str | None = "test",
+    _session_id: str | None = "test",
+    _message: Message | None = None,
     _to_me: bool = True,
     **fields,
 ) -> type[Event]:

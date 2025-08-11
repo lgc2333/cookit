@@ -2,7 +2,7 @@ from collections.abc import Iterator
 from contextlib import AbstractContextManager, contextmanager
 from functools import partial
 from types import TracebackType
-from typing import TYPE_CHECKING, Any, Optional, Union
+from typing import TYPE_CHECKING, Any
 
 from loguru import logger
 
@@ -17,16 +17,16 @@ if TYPE_CHECKING:
             self,
             msg: "LazyGetterType[str, [Exception]]",
             *t: type[Exception],
-            level: Union[int, str] = "ERROR",
+            level: int | str = "ERROR",
             log_stack: bool = True,
             debug_stack: bool = False,
             append_exc_msg: bool = False,
         ): ...
         def __exit__(
             self,
-            exc_type: Optional[type[BaseException]],
-            exc_value: Optional[BaseException],
-            traceback: Optional[TracebackType],
+            exc_type: type[BaseException] | None,
+            exc_value: BaseException | None,
+            traceback: TracebackType | None,
         ) -> bool: ...
 
 
@@ -36,7 +36,7 @@ else:
     def logged_suppress(
         msg: "LazyGetterType[str, [Exception]]",
         *t: type[Exception],
-        level: Union[int, str] = "ERROR",
+        level: int | str = "ERROR",
         log_stack: bool = True,
         debug_stack: bool = False,
         append_exc_msg: bool = False,

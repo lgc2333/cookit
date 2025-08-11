@@ -1,5 +1,5 @@
 import json
-from typing import Any, Optional
+from typing import Any
 
 from cookit.pyd import (
     field_validator,
@@ -41,7 +41,7 @@ def test_validate():
         test3: bool
         test4: dict
         test5: list
-        test6: Optional[int]
+        test6: int | None
 
     data = {
         "test1": 1,
@@ -227,7 +227,7 @@ def test_type_dump_python_advanced():
         str_val: str
         list_val: list[int]
         dict_val: dict[str, Any]
-        none_val: Optional[int] = None
+        none_val: int | None = None
 
     model = ComplexModel(
         int_val=1,

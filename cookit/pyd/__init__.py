@@ -7,6 +7,7 @@ from .compat import (
     model_config as model_config,
     model_copy as model_copy,
     model_dump as model_dump,
+    model_fields_set as model_fields_set,
     model_validator as model_validator,
     type_dump_json as type_dump_json,
     type_dump_python as type_dump_python,

@@ -1,7 +1,7 @@
 import time
 from collections.abc import Iterator, MutableMapping
 from pathlib import Path
-from typing import TYPE_CHECKING, Any, Literal, Optional, TypeVar, Union, overload
+from typing import TYPE_CHECKING, Any, Literal, TypeVar, overload
 from typing_extensions import override
 
 if TYPE_CHECKING:
@@ -14,29 +14,29 @@ class FileCacheManager(MutableMapping[str, TF]):
     @overload
     def __init__(
         self: "FileCacheManager[str]",
-        cache_dir: Union[str, Path],
+        cache_dir: str | Path,
         /,
         text_mode: Literal[True],
-        max_size: Optional[int] = None,
-        ttl: Optional[int] = None,
+        max_size: int | None = None,
+        ttl: int | None = None,
         encoding: str = "utf-8",
     ) -> None: ...
     @overload
     def __init__(
         self: "FileCacheManager[bytes]",
-        cache_dir: Union[str, Path],
+        cache_dir: str | Path,
         /,
         text_mode: bool = False,
-        max_size: Optional[int] = None,
-        ttl: Optional[int] = None,
+        max_size: int | None = None,
+        ttl: int | None = None,
     ) -> None: ...
     def __init__(
         self,
-        cache_dir: Union[str, Path],
+        cache_dir: str | Path,
         /,
         text_mode: bool = False,
-        max_size: Optional[int] = None,
-        ttl: Optional[int] = None,
+        max_size: int | None = None,
+        ttl: int | None = None,
         encoding: str = "utf-8",
     ):
         self.cache_dir = cache_dir if isinstance(cache_dir, Path) else Path(cache_dir)

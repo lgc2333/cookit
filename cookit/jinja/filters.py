@@ -1,5 +1,6 @@
 import re
-from typing import TYPE_CHECKING, Any, Callable, Protocol, TypeVar, overload
+from collections.abc import Callable
+from typing import TYPE_CHECKING, Any, Protocol, TypeVar, overload
 from urllib.parse import quote
 
 from jinja2.filters import do_mark_safe

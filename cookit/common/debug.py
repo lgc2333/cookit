@@ -18,7 +18,7 @@ class DebugFileWriter:
         filename = filename.format(time=round(time.time() * 1000))
         self.full_path.mkdir(parents=True, exist_ok=True)
         path = self.full_path / filename
-        if isinstance(content, (bytes, bytearray)):
+        if isinstance(content, bytes | bytearray):
             data = content
         elif isinstance(content, BytesIO):
             data = content.getvalue()

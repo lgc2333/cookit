@@ -1,6 +1,6 @@
 from enum import IntEnum
 from functools import partial
-from typing import TYPE_CHECKING, Any, Optional
+from typing import TYPE_CHECKING, Any
 
 if TYPE_CHECKING:
     from collections.abc import Sequence
@@ -15,7 +15,7 @@ def auto_convert_unit(
     suffix: str = "",
     with_space: bool = True,
     unit_index: int = 0,
-    unit_threshold: Optional[int] = None,
+    unit_threshold: int | None = None,
 ) -> str:
     if unit_threshold is None:
         unit_threshold = multiplier
@@ -93,7 +93,7 @@ def format_timedelta(
     pad_time: bool = True,
     pad_time_first: bool = True,
     day_pad_num: int = 2,
-    ms_num: Optional[int] = 3,
+    ms_num: int | None = 3,
 ) -> str:
     mm, ss = divmod(t.seconds, 60)
     hh, mm = divmod(mm, 60)

@@ -1,8 +1,8 @@
 import base64
-from collections.abc import Container, Iterable, Iterator, Sequence
+from collections.abc import Callable, Container, Iterable, Iterator, Sequence
 from contextlib import suppress
-from typing import Any, Callable, Optional, TypeVar, Union, cast, overload
-from typing_extensions import ParamSpec, TypeGuard
+from typing import Any, TypeGuard, TypeVar, cast, overload
+from typing_extensions import ParamSpec
 
 T = TypeVar("T")
 
@@ -15,7 +15,7 @@ V = TypeVar("V")
 
 P = ParamSpec("P")
 
-LazyGetterType = Union[T, Callable[P, T]]
+LazyGetterType = T | Callable[P, T]
 
 
 def lazy_get(
@@ -27,11 +27,11 @@ def lazy_get(
 
 
 def qor(
-    a: Union[TA, N],
+    a: TA | N,
     b: "LazyGetterType[TB, []]",
     none_val: N = None,
-) -> Union[TA, TB]:
-    def guard(x: Union[TA, N]) -> TypeGuard[TA]:
+) -> TA | TB:
+    def guard(x: TA | N) -> TypeGuard[TA]:
         return x is not none_val
 
     return a if guard(a) else lazy_get(b)
@@ -59,13 +59,13 @@ def auto_delete(target: dict[K, V], transform: None = None) -> dict[K, V]: ...
 @overload
 def auto_delete(
     target: dict[K, V],
-    transform: Callable[[V], Optional[T]],
+    transform: Callable[[V], T | None],
 ) -> dict[K, T]: ...
 def auto_delete(  # noqa: E302
     target: dict[K, V],
-    transform: Optional[Callable[[V], Optional[T]]] = None,
+    transform: Callable[[V], T | None] | None = None,
 ) -> dict[K, Any]:
-    data: dict[K, Union[V, T]] = {}
+    data: dict[K, V | T] = {}
     for k, v in tuple(target.items()):
         vt = transform(v) if transform else v
         if vt:
@@ -75,7 +75,7 @@ def auto_delete(  # noqa: E302
     return data
 
 
-def to_b64_url(data: bytes, mime: Optional[str] = None) -> str:
+def to_b64_url(data: bytes, mime: str | None = None) -> str:
     if mime is None:
         mime = ""
         with suppress(ImportError, IndexError):
@@ -88,16 +88,16 @@ def to_b64_url(data: bytes, mime: Optional[str] = None) -> str:
 
 def deep_merge(
     *args_input: Any,
-    skip_merge_paths: Optional[Container[str]] = None,
+    skip_merge_paths: Container[str] | None = None,
 ) -> Any:
-    def merge_path(current: Optional[str], *paths: str) -> str:
+    def merge_path(current: str | None, *paths: str) -> str:
         x = []
         if current:
             x.append(current)
         x.extend(paths)
         return ".".join(x)
 
-    def merge_obj(*args: Any, current_path: Optional[str] = None) -> Any:
+    def merge_obj(*args: Any, current_path: str | None = None) -> Any:
         if skip_merge_paths and (current_path in skip_merge_paths):
             return args[-1]
 
@@ -111,7 +111,7 @@ def deep_merge(
                 )
             return result
 
-        if issubclass((seq_type := type(args[0])), (list, set)) and all(
+        if issubclass((seq_type := type(args[0])), list | set) and all(
             isinstance(x, seq_type) for x in args
         ):
             return seq_type(x for ls in args for x in ls)

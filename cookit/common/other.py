@@ -2,9 +2,9 @@ import asyncio
 import importlib
 import sys
 from asyncio import Semaphore
-from collections.abc import Awaitable, Coroutine
+from collections.abc import Awaitable, Callable, Coroutine
 from pathlib import Path
-from typing import TYPE_CHECKING, Any, Callable, Optional, TypeVar, Union
+from typing import TYPE_CHECKING, Any, TypeVar
 from typing_extensions import ParamSpec, override
 
 if TYPE_CHECKING:
@@ -43,9 +43,9 @@ async def race(*coros: Coroutine[Any, Any, T]) -> T:
 
 
 def auto_import(
-    path: Union[str, Path],
-    package: Optional[str] = None,
-    path_filter: Optional[Callable[[Path], bool]] = None,
+    path: str | Path,
+    package: str | None = None,
+    path_filter: Callable[[Path], bool] | None = None,
 ):
     if not isinstance(path, Path):
         path = Path(path)

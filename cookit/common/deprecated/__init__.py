@@ -5,4 +5,5 @@ from .data import (
     make_append_func_to_dict_deco as make_append_func_to_dict_deco,
     make_append_obj_to_dict_deco as make_append_obj_to_dict_deco,
 )
+from .nullcontext import nullcontext as nullcontext
 from .sized_list import SizedList as SizedList

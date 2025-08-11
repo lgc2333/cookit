@@ -1,5 +1,5 @@
 from collections.abc import Iterable
-from typing import Generic, Optional, SupportsIndex, TypeVar, Union, overload
+from typing import Generic, SupportsIndex, TypeVar, overload
 from typing_extensions import Self, deprecated
 
 T = TypeVar("T")
@@ -10,8 +10,8 @@ TB = TypeVar("TB")
 class SizedList(list[T], Generic[T]):
     def __init__(
         self,
-        iterable: Optional[Iterable[T]] = None,
-        size: Optional[int] = None,
+        iterable: Iterable[T] | None = None,
+        size: int | None = None,
     ) -> None:
         if iterable is None:
             super().__init__()
@@ -21,7 +21,7 @@ class SizedList(list[T], Generic[T]):
         self._handle_overflow()
 
     @property
-    def last(self) -> Optional[T]:
+    def last(self) -> T | None:
         if self:
             return self[-1]
         return None
@@ -48,7 +48,7 @@ class SizedList(list[T], Generic[T]):
     def __add__(self, items: Iterable[T]) -> "SizedList[T]": ...
 
     @overload
-    def __add__(self, items: Iterable[TB]) -> "SizedList[Union[T, TB]]": ...
+    def __add__(self, items: Iterable[TB]) -> "SizedList[T | TB]": ...
 
     def __add__(self, items):
         return SizedList((*self, *items), size=self.size)

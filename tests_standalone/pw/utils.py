@@ -1,11 +1,10 @@
-from typing import Optional
 
 from playwright.async_api import Browser, Playwright, async_playwright
 
 from tests_standalone.utils import mark_before_exit
 
-pw: Optional[Playwright] = None
-browser: Optional[Browser] = None
+pw: Playwright | None = None
+browser: Browser | None = None
 
 
 async def get_playwright():

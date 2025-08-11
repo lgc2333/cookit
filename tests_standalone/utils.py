@@ -1,10 +1,9 @@
 import asyncio
 from asyncio import Semaphore
-from collections.abc import Awaitable
+from collections.abc import Awaitable, Callable
 from contextlib import contextmanager
 from pathlib import Path
-from typing import Any, Callable, Optional, TypeVar
-from typing_extensions import TypeAlias
+from typing import Any, TypeAlias, TypeVar
 
 from loguru import logger
 
@@ -70,7 +69,7 @@ async def run_tests():
         )
 
 
-def auto_import_tests(path: str, package: Optional[str]):
+def auto_import_tests(path: str, package: str | None):
     from cookit import auto_import
 
     auto_import(

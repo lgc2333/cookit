@@ -17,7 +17,7 @@ if TYPE_CHECKING:
 class RecallContext:
     def __init__(
         self,
-        delay: Union[float, tuple[float, float], None] = None,
+        delay: float | tuple[float, float] | None = None,
         wait: bool = False,
     ) -> None:
         self.delay = delay
@@ -42,12 +42,12 @@ class RecallContext:
 
     async def send(
         self,
-        message: Union[UniMessage, str],
+        message: UniMessage | str,
         target: Union["BaseEvent", Target, None] = None,
         bot: Optional["BaseBot"] = None,
         fallback: bool = True,
-        at_sender: Union[str, bool] = False,
-        reply_to: Union[str, bool, Reply, None] = False,
+        at_sender: str | bool = False,
+        reply_to: str | bool | Reply | None = False,
         no_wrapper: bool = False,
         **kwargs,
     ) -> None:

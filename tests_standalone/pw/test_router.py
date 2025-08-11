@@ -1,6 +1,6 @@
 import re
 from pathlib import Path
-from typing import TYPE_CHECKING, Optional, cast
+from typing import TYPE_CHECKING, cast
 
 from ..utils import mark_test
 from .utils import get_page
@@ -33,10 +33,10 @@ async def test_router_group_route():
 
     body_test2_re = "test2_re"
 
-    last_matched = cast("Optional[re.Match[str]]", None)
+    last_matched = cast("re.Match[str] | None", None)
 
     @router_group.router(re.compile(rf"{ROUTE_BASE_URL}/test2(/.*)?"))
-    async def _(route: "Route", matched: Optional[re.Match[str]], **_):
+    async def _(route: "Route", matched: re.Match[str] | None, **_):
         nonlocal last_matched
         last_matched = matched
         await route.fulfill(body=body_test2_re)

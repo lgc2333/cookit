@@ -1,5 +1,5 @@
-from typing import Callable, TypeVar, cast
-from typing_extensions import TypeAlias
+from collections.abc import Callable
+from typing import TypeAlias, TypeVar, cast
 
 from pydantic import BaseModel, ConfigDict
 
