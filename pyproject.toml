@@ -36,22 +36,18 @@ all = ["cookit[common,jinja,loguru,nonebot,playwright,pydantic]"]
 
 [dependency-groups]
 dev = [
-    "pytest>=8.3.4",
-    "pytest-asyncio>=0.25.3",
-    "nonebot2[all]>=2.4.1",
+    "pytest>=8.4.1",
+    "pytest-asyncio>=1.1.0",
+    "nonebot2[all]>=2.4.3",
     "nonebug>=0.4.3",
-    "nonebot-adapter-satori>=0.13.3",
+    "nonebot-adapter-satori>=0.13.7",
 ]
 
 [build-system]
-requires = ["pdm-backend"]
-build-backend = "pdm.backend"
+requires = ["hatchling"]
+build-backend = "hatchling.build"
 
-[tool.pdm.build]
-includes = []
-
-[tool.pdm.version]
-source = "file"
+[tool.hatch.version]
 path = "cookit/__init__.py"
 
 [tool.pytest.ini_options]
