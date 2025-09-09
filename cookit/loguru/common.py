@@ -66,3 +66,13 @@ warning_suppress = partial(
     debug_stack=True,
     append_exc_msg=True,
 )
+
+
+def log_exception_warning(
+    e: BaseException,
+    msg: str,
+    debug_stacktrace: bool = True,
+):
+    logger.opt(depth=1).warning(f"{msg}: {type(e).__name__}: {e}")
+    if debug_stacktrace:
+        logger.opt(depth=1, exception=e).debug("Stacktrace")

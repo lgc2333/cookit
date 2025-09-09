@@ -1,7 +1,7 @@
 import asyncio
 import importlib
 import sys
-from asyncio import Semaphore
+from asyncio import Semaphore, Task
 from collections.abc import Awaitable, Callable, Coroutine
 from pathlib import Path
 from typing import TYPE_CHECKING, Any, TypeVar
@@ -31,14 +31,18 @@ def queued(func: Callable[P, Awaitable[R]]):
     return with_semaphore(Semaphore(1))(func)
 
 
-async def race(*coros: Coroutine[Any, Any, T]) -> T:
+async def race(
+    *coroutines: Coroutine[Any, Any, T],
+    cancel: bool = True,
+) -> T:
     done, pending = await asyncio.wait(
-        [asyncio.create_task(x) for x in coros],
+        [(x if isinstance(x, Task) else asyncio.create_task(x)) for x in coroutines],
         return_when=asyncio.FIRST_COMPLETED,
     )
     first, *other = done
-    for t in (*other, *pending):
-        t.cancel()
+    if cancel:
+        for t in (*other, *pending):
+            t.cancel()
     return first.result()
 
 

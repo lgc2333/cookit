@@ -111,3 +111,33 @@ def test_logged_suppress():
             exception=ValueError,
             **call_stack_check_kw,
         )
+
+
+def test_log_exception_warning():
+    from cookit.loguru import log_exception_warning
+
+    def value_error():
+        raise ValueError("val")
+
+    call_stack_check_kw: dict[str, Any] = {
+        "name": "tests",
+        "function": "test_log_exception_warning",
+    }
+
+    with LoggingContext() as ctx:
+        try:
+            value_error()
+        except ValueError as e:
+            log_exception_warning(e, "test1")
+        ctx.should_log(
+            message="test1: ValueError: val",
+            level_str="WARNING",
+            exception=None,
+            **call_stack_check_kw,
+        )
+        ctx.should_log(
+            message="Stacktrace",
+            level_str="DEBUG",
+            exception=ValueError,
+            **call_stack_check_kw,
+        )
