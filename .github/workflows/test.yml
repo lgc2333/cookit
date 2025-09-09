@@ -27,25 +27,27 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
-      - name: Setup PDM
-        uses: pdm-project/setup-pdm@v4
+      - name: Install uv
+        uses: astral-sh/setup-uv@v5
+
+      - name: 'Set up Python'
+        uses: actions/setup-python@v5
         with:
-          python-version: ${{ matrix.python-version }}
-          cache: true
+          python-version: ${{ matrix.pydantic-version }}
 
       - name: Install prerequisites
         run: |-
-          pdm install -G:all
-          pdm run playwright install chromium
+          uv sync
+          uv run playwright install chromium
 
       - name: Install Specific Version Pydantic (Bash)
         if: runner.os != 'Windows'
-        run: pdm add "pydantic$PYDANTIC_VERSION"
+        run: uv add "pydantic$PYDANTIC_VERSION"
       - name: Install Specific Version Pydantic (PowerShell)
         if: runner.os == 'Windows'
-        run: pdm add "pydantic$env:PYDANTIC_VERSION"
+        run: uv add "pydantic$env:PYDANTIC_VERSION"
 
       - name: Run Pytest
-        run: pdm run pytest
+        run: uv run pytest
       - name: Run standabone tests
-        run: pdm run python -m tests_standalone
+        run: uv run python -m tests_standalone
