@@ -8,6 +8,9 @@ del assert_plugin_loaded
 # endregion
 
 # ruff: noqa: E402
+from .common import (
+    extract_reply_msg as extract_reply_msg,
+)
 from .receipt import (
     RecallContext as RecallContext,
 )

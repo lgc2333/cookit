@@ -36,6 +36,7 @@ all = ["cookit[common,jinja,loguru,nonebot,playwright,pydantic]"]
 
 [dependency-groups]
 dev = [
+    "cookit[all]",
     "pytest>=8.4.1",
     "pytest-asyncio>=1.1.0",
     "nonebot2[all]>=2.4.3",

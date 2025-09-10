@@ -3,12 +3,7 @@ import random
 from typing import TYPE_CHECKING, Optional, Union
 
 from nonebot import logger
-from nonebot_plugin_alconna.uniseg import (  # noqa: E402
-    Receipt,
-    Reply,
-    Target,
-    UniMessage,
-)
+from nonebot_plugin_alconna.uniseg import Receipt, Reply, Target, UniMessage
 
 if TYPE_CHECKING:
     from nonebot.adapters import Bot as BaseBot, Event as BaseEvent
