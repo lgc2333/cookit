@@ -32,7 +32,7 @@ def queued(func: Callable[P, Awaitable[R]]):
 
 
 async def race(
-    *coroutines: Coroutine[Any, Any, T],
+    *coroutines: Coroutine[Any, Any, T] | Task[T],
     cancel: bool = True,
 ) -> T:
     done, pending = await asyncio.wait(
