@@ -42,7 +42,7 @@ def test_type_deco_collector():
     assert collector.data == {Cls1: 1, Cls2: 2}
     with pytest.raises(
         ValueError,
-        match="Object with key '<class '.+Cls1'>' already exists",
+        match=r"Object with key '<class '.+Cls1'>' already exists",
     ):
         collector(Cls1)(114514)
 
