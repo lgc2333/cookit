@@ -1,6 +1,7 @@
 import asyncio as aio
 import random
 from typing import TYPE_CHECKING, Optional, Union
+from typing_extensions import Self
 
 from nonebot import logger
 from nonebot_plugin_alconna.uniseg import Receipt, Reply, Target, UniMessage
@@ -19,7 +20,7 @@ class RecallContext:
         self.wait = wait
         self.receipts: list[Receipt] = []
 
-    async def __aenter__(self) -> "RecallContext":
+    async def __aenter__(self) -> Self:
         return self
 
     async def __aexit__(self, *_) -> None:

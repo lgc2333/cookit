@@ -1,5 +1,7 @@
 from datetime import timedelta
 
+import pytest
+
 
 def test_auto_convert_unit():
     from cookit import auto_convert_unit
@@ -50,6 +52,13 @@ def test_auto_convert_unit():
         )
         == "1.0 k/s"
     )
+
+
+def test_auto_convert_unit_rejects_out_of_range_unit_index():
+    from cookit import auto_convert_unit
+
+    with pytest.raises(ValueError, match="Wrong `unit_index`"):
+        auto_convert_unit(["b"], multiplier=1024, value=1, unit_index=1)
 
 
 td_full = timedelta(days=1, hours=2, minutes=3, seconds=4, milliseconds=5)

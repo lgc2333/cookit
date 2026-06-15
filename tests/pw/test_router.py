@@ -2,18 +2,19 @@ import re
 from pathlib import Path
 from typing import TYPE_CHECKING, cast
 
-from ..utils import mark_test
-from .utils import get_page
+import pytest
 
 if TYPE_CHECKING:
-    from playwright.async_api import Route
+    from playwright.async_api import Page, Route
     from yarl import URL
+
+
+pytestmark = pytest.mark.asyncio(loop_scope="session")
 
 ROUTE_BASE_URL = "https://cookit.route"
 
 
-@mark_test
-async def test_router_group_route():
+async def test_router_group_route(page: "Page"):
     from cookit.pw import RouterGroup
 
     router_group = RouterGroup()
@@ -41,36 +42,34 @@ async def test_router_group_route():
         last_matched = matched
         await route.fulfill(body=body_test2_re)
 
-    async with await get_page() as page:
-        await router_group.apply(page)
+    await router_group.apply(page)
 
-        resp = await page.goto(f"{ROUTE_BASE_URL}/")
-        assert resp
-        assert (await resp.body()).decode() == body_root
+    resp = await page.goto(f"{ROUTE_BASE_URL}/")
+    assert resp
+    assert (await resp.body()).decode() == body_root
 
-        resp = await page.goto(f"{ROUTE_BASE_URL}/test")
-        assert resp
-        assert (await resp.body()).decode() == body_test
+    resp = await page.goto(f"{ROUTE_BASE_URL}/test")
+    assert resp
+    assert (await resp.body()).decode() == body_test
 
-        resp = await page.goto(f"{ROUTE_BASE_URL}/test/test/test")
-        assert resp
-        assert (await resp.body()).decode() == body_test
+    resp = await page.goto(f"{ROUTE_BASE_URL}/test/test/test")
+    assert resp
+    assert (await resp.body()).decode() == body_test
 
-        resp = await page.goto(f"{ROUTE_BASE_URL}/test2")
-        assert resp
-        assert (await resp.body()).decode() == body_test2_re
-        assert last_matched
-        assert not last_matched[1]
+    resp = await page.goto(f"{ROUTE_BASE_URL}/test2")
+    assert resp
+    assert (await resp.body()).decode() == body_test2_re
+    assert last_matched
+    assert not last_matched[1]
 
-        resp = await page.goto(f"{ROUTE_BASE_URL}/test2/test")
-        assert resp
-        assert (await resp.body()).decode() == body_test2_re
-        assert last_matched
-        assert last_matched[1] == "/test"
+    resp = await page.goto(f"{ROUTE_BASE_URL}/test2/test")
+    assert resp
+    assert (await resp.body()).decode() == body_test2_re
+    assert last_matched
+    assert last_matched[1] == "/test"
 
 
-@mark_test
-async def test_real_path_router():
+async def test_real_path_router(page: "Page"):
     from cookit.pw import RouterGroup, make_real_path_router
 
     router_group = RouterGroup()
@@ -82,19 +81,17 @@ async def test_real_path_router():
     async def _(url: "URL", **_):
         return base_path.joinpath(url.path[1:])
 
-    async with await get_page() as page:
-        await router_group.apply(page)
+    await router_group.apply(page)
 
-        resp = await page.goto(f"{ROUTE_BASE_URL}/test.html")
-        assert resp
-        assert (await resp.body()) == (base_path / "test.html").read_bytes()
+    resp = await page.goto(f"{ROUTE_BASE_URL}/test.html")
+    assert resp
+    assert (await resp.body()) == (base_path / "test.html").read_bytes()
 
-        resp = await page.goto(f"{ROUTE_BASE_URL}/unknown_file.html")
-        assert resp
-        assert resp.status == 404
+    resp = await page.goto(f"{ROUTE_BASE_URL}/unknown_file.html")
+    assert resp
+    assert resp.status == 404
 
 
-@mark_test
 async def test_router_group_copy():
     from cookit.pw import RouterGroup
 

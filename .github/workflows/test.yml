@@ -13,9 +13,9 @@ jobs:
 
     strategy:
       matrix:
-        python-version: ['3.10', '3.11', '3.12', '3.13']
+        python-version: ["3.10", "3.11", "3.12", "3.13", "3.14"]
         os: [ubuntu-latest] # [ubuntu-latest, windows-latest, macos-latest]
-        pydantic-version: ['>=1.10,<2', '>=2.6']
+        pydantic-version: [">=1.10,<2", ">=2.6"]
       fail-fast: false
 
     runs-on: ${{ matrix.os }}
@@ -30,7 +30,7 @@ jobs:
       - name: Install uv
         uses: astral-sh/setup-uv@v5
 
-      - name: 'Set up Python'
+      - name: "Set up Python"
         uses: actions/setup-python@v5
         with:
           python-version: ${{ matrix.python-version }}
@@ -41,13 +41,8 @@ jobs:
           uv run playwright install chromium
 
       - name: Install Specific Version Pydantic (Bash)
-        if: runner.os != 'Windows'
+        shell: bash
         run: uv add "pydantic$PYDANTIC_VERSION"
-      - name: Install Specific Version Pydantic (PowerShell)
-        if: runner.os == 'Windows'
-        run: uv add "pydantic$env:PYDANTIC_VERSION"
 
       - name: Run Pytest
         run: uv run pytest
-      - name: Run standabone tests
-        run: uv run python -m tests_standalone

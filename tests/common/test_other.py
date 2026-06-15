@@ -63,6 +63,27 @@ async def test_race():
         await race(f1(), f2(), fe())
 
 
+async def test_race_can_keep_losing_tasks_alive():
+    from cookit import race
+
+    async def fast():
+        await aio.sleep(0)
+        return "fast"
+
+    slow_finished = aio.Event()
+
+    async def slow():
+        await aio.sleep(0.01)
+        slow_finished.set()
+        return "slow"
+
+    slow_task = aio.create_task(slow())
+
+    assert await race(fast(), slow_task, cancel=False) == "fast"
+    await slow_task
+    assert slow_finished.is_set()
+
+
 def test_auto_import():
     from cookit import auto_import
 
@@ -86,6 +107,21 @@ def test_auto_import():
     assert get_counter() == 5
 
 
+def test_auto_import_accepts_string_path():
+    from cookit import auto_import
+
+    modules = auto_import(
+        str(Path(__file__).parent / "auto_import"),
+        f"{__package__}.auto_import",
+    )
+
+    assert {x.__name__.rsplit(".", 1)[-1] for x in modules} == {
+        "base",
+        "module_1",
+        "module_2",
+    }
+
+
 def test_str_enum():
     from enum import auto
 
@@ -101,3 +137,29 @@ def test_str_enum():
     assert TestEnum1.B.value == "b"
     assert TestEnum1.A.name == "A"
     assert TestEnum1.B.name == "B"
+
+
+def test_copy_func_annotations_returns_runtime_function_unchanged():
+    from cookit import copy_func_annotations
+
+    def source(a: int, b: str) -> bool:
+        return bool(a and b)
+
+    @copy_func_annotations(source)
+    def target(*args, **kwargs):
+        return args, kwargs
+
+    assert target(1, b="x") == ((1,), {"b": "x"})
+
+
+def test_copy_func_arg_annotations_returns_runtime_function_unchanged():
+    from cookit import copy_func_arg_annotations
+
+    def source(a: int, b: str) -> None:  # noqa: ARG001
+        return None
+
+    @copy_func_arg_annotations(source)
+    def target(*args, **kwargs):
+        return args, kwargs
+
+    assert target(1, b="x") == ((1,), {"b": "x"})

@@ -80,3 +80,12 @@ async def test_exception_notify(app: "App"):
         ctx.should_call_send(cmd_ev, "paused")
         ctx.should_call_send(cmd_ev, "err")
         ctx.should_finished()
+
+
+async def test_exception_notify_passes_through_when_no_exception():
+    from cookit.nonebot.base.tools import exception_notify
+
+    async with exception_notify("err"):
+        result = "ok"
+
+    assert result == "ok"

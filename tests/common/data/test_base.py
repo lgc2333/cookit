@@ -125,6 +125,24 @@ def test_auto_delete():
     assert target3 == expected_result3
 
 
+def test_to_b64_url_uses_explicit_mime():
+    from cookit import to_b64_url
+
+    assert to_b64_url(b"hello", "text/plain") == "data:text/plain;base64,aGVsbG8="
+
+
+def test_to_b64_url_detects_mime_when_possible():
+    from cookit import to_b64_url
+
+    png_header = (
+        b"\x89PNG\r\n\x1a\n"
+        b"\x00\x00\x00\rIHDR"
+        b"\x00\x00\x00\x01\x00\x00\x00\x01\x08\x06\x00\x00\x00"
+    )
+
+    assert to_b64_url(png_header).startswith("data:image/png;base64,")
+
+
 def test_deep_merge():
     from cookit import deep_merge
 
