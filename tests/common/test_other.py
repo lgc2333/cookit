@@ -1,5 +1,6 @@
 import asyncio as aio
 from pathlib import Path
+from typing import Any
 
 import pytest
 
@@ -142,11 +143,13 @@ def test_str_enum():
 def test_copy_func_annotations_returns_runtime_function_unchanged():
     from cookit import copy_func_annotations
 
-    def source(a: int, b: str) -> bool:
-        return bool(a and b)
+    def source(a: int, b: str) -> tuple[tuple[object, ...], dict[str, object]]: ...
 
     @copy_func_annotations(source)
-    def target(*args, **kwargs):
+    def target(
+        *args: object,
+        **kwargs: object,
+    ) -> tuple[tuple[object, ...], dict[str, object]]:
         return args, kwargs
 
     assert target(1, b="x") == ((1,), {"b": "x"})
@@ -155,8 +158,7 @@ def test_copy_func_annotations_returns_runtime_function_unchanged():
 def test_copy_func_arg_annotations_returns_runtime_function_unchanged():
     from cookit import copy_func_arg_annotations
 
-    def source(a: int, b: str) -> None:  # noqa: ARG001
-        return None
+    def source(a: int, b: str) -> Any: ...
 
     @copy_func_arg_annotations(source)
     def target(*args, **kwargs):

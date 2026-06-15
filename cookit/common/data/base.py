@@ -98,7 +98,11 @@ def deep_merge(
         return ".".join(x)
 
     def merge_obj(*args: Any, current_path: str | None = None) -> Any:
-        if skip_merge_paths and (current_path in skip_merge_paths):
+        if (
+            skip_merge_paths
+            and current_path is not None
+            and current_path in skip_merge_paths
+        ):
             return args[-1]
 
         if all(isinstance(x, dict) for x in args):

@@ -1,4 +1,5 @@
 from collections.abc import Callable
+from typing import Any
 
 import pytest
 
@@ -76,7 +77,7 @@ def test_name_deco_collector():
 def test_name_deco_collector_rejects_unnamed_object():
     from cookit import NameDecoCollector
 
-    collector = NameDecoCollector[object]()
+    collector = NameDecoCollector[Any]()
 
     with pytest.raises(TypeError, match="'key' must be str"):
         collector(object())

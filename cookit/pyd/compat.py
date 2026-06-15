@@ -1,12 +1,5 @@
 from collections.abc import Callable
-from typing import (
-    TYPE_CHECKING,
-    Any,
-    Literal,
-    Protocol,
-    TypeVar,
-    overload,
-)
+from typing import TYPE_CHECKING, Any, Literal, Protocol, TypeVar, overload
 
 from pydantic import VERSION, BaseModel, ConfigDict
 
@@ -122,14 +115,9 @@ if PYDANTIC_V2:  # pragma: pydantic-v2
         field: str,
         *fields: str,
         mode: Literal["before", "after"] = "after",
-        check_fields: bool | None = ...,
+        check_fields: bool | None = None,
     ) -> Callable[[TFV], TFV]:
-        return v2_field_validator(
-            field,
-            *fields,
-            mode=mode,
-            check_fields=check_fields if check_fields is not None else True,
-        )
+        return v2_field_validator(field, *fields, mode=mode, check_fields=check_fields)
 
     def get_model_with_config(
         config: ConfigDict,
@@ -249,14 +237,14 @@ else:  # pragma: pydantic-v1
         field: str,
         *fields: str,
         mode: Literal["before", "after"] = "after",
-        check_fields: bool | None = ...,
+        check_fields: bool | None = None,
     ) -> Callable[[TFV], TFV]:
         return validator(
             field,
             *fields,
             pre=(mode == "before"),
             allow_reuse=True,
-            check_fields=check_fields if check_fields is not None else True,
+            check_fields=check_fields,
         )
 
     def get_model_with_config(

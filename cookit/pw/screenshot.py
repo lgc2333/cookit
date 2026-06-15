@@ -4,7 +4,9 @@ from typing import Any, Literal, TypeAlias
 from playwright.async_api import Page
 
 WaitFunction: TypeAlias = Callable[[Page], Awaitable[Any]]
-WaitForType: TypeAlias = Literal["domcontentloaded", "load", "networkidle"] | WaitFunction | None
+WaitForType: TypeAlias = (
+    Literal["domcontentloaded", "load", "networkidle"] | WaitFunction | None
+)
 
 
 async def _wait_for(page: Page, wait_type: WaitForType):

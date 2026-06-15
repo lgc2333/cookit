@@ -1,4 +1,5 @@
 from collections.abc import Callable
+from types import EllipsisType
 from typing import TYPE_CHECKING
 
 from loguru import logger
@@ -38,7 +39,7 @@ class LoggingContext:
     def should_log(
         self,
         *,
-        exception: BaseException | type[BaseException] | None = ...,
+        exception: BaseException | type[BaseException] | None | EllipsisType = ...,
         level_str: str | None = None,
         level_no: int | None = None,
         message: str | None = None,

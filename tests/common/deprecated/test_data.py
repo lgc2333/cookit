@@ -1,3 +1,5 @@
+from typing import Any, cast
+
 import pytest
 
 pytestmark = pytest.mark.filterwarnings("ignore::DeprecationWarning")
@@ -43,7 +45,7 @@ def test_append_obj_to_dict_deco_rejects_unnamed_object():
     from cookit.common.deprecated import append_obj_to_dict_deco
 
     with pytest.raises(TypeError, match="func_or_name must be str"):
-        append_obj_to_dict_deco({}, object())
+        append_obj_to_dict_deco({}, cast("Any", object()))
 
 
 def test_make_append_obj_to_dict_deco_preserves_options():

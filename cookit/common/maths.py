@@ -29,12 +29,7 @@ def auto_convert_unit(
             unit = x
             break
         value /= multiplier
-    return (
-        f"{value:.{round_n}f}"
-        f"{' ' if with_space else ''}"
-        f"{unit or units[-1]}"
-        f"{suffix}"
-    )
+    return f"{value:.{round_n}f}{' ' if with_space else ''}{unit or units[-1]}{suffix}"
 
 
 BYTE_UNITS = ["B", "K", "M", "G", "T", "P"]
