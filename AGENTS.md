@@ -23,8 +23,6 @@ uv run basedpyright
 
 ## Rules
 
-### Testing Rules
-
 - Add or update tests for changed public helpers.
 - Tests should make the helper's intended behavior obvious from the test name and assertions.
 - When touching tested code, check coverage with `uv run pytest --cov=cookit --cov-report=term-missing`.
@@ -32,10 +30,13 @@ uv run basedpyright
 
 ## Gotchas
 
-### Testing Gotchas
+## Playwright
 
 - `pytest-playwright-asyncio` needs session-scoped asyncio settings; keep `asyncio_default_fixture_loop_scope` and `asyncio_default_test_loop_scope` as `session`.
 - Playwright tests require browser binaries. Run `uv run playwright install chromium` if Chromium is missing.
+
+### NoneBot2
+
 - NoneBot plugin helper modules may require `require("plugin_name")` before import; use the `app` fixture when NoneBot must be initialized.
-- `UniMessage.of` may need a current bot/adapter; create a fake bot and set the current bot context instead of mocking it.
+- Alconna/UniMessage helpers may need `current_bot`, `current_event`, and `current_state`; exercise them inside a matcher with `app.test_matcher()` and `ctx.receive_event()` instead of mocking context.
 - Some coverage misses are expected in one runtime, such as Pydantic v1/v2 branches and Python-version fallbacks.
