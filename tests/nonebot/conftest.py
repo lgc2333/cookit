@@ -1,5 +1,9 @@
+from pathlib import Path
+
 import pytest
 from pytest_asyncio import is_async_test
+
+TEST_NB2_DIR = Path(__file__).parents[2] / "temp"
 
 
 def pytest_configure(config: pytest.Config) -> None:
@@ -7,6 +11,9 @@ def pytest_configure(config: pytest.Config) -> None:
 
     config.stash[NONEBOT_INIT_KWARGS] = {
         "driver": "~fastapi+~websockets+~httpx",
+        "localstore_cache_dir": TEST_NB2_DIR / "cache",
+        "localstore_config_dir": TEST_NB2_DIR / "config",
+        "localstore_data_dir": TEST_NB2_DIR / "data",
         "log_level": "DEBUG",
     }
 
