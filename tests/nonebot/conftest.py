@@ -9,13 +9,17 @@ TEST_NB2_DIR = Path(__file__).parents[2] / "temp"
 def pytest_configure(config: pytest.Config) -> None:
     from nonebug import NONEBOT_INIT_KWARGS
 
-    config.stash[NONEBOT_INIT_KWARGS] = {
-        "driver": "~fastapi+~websockets+~httpx",
-        "localstore_cache_dir": TEST_NB2_DIR / "cache",
-        "localstore_config_dir": TEST_NB2_DIR / "config",
-        "localstore_data_dir": TEST_NB2_DIR / "data",
-        "log_level": "DEBUG",
-    }
+    init_kwargs = dict(config.stash.get(NONEBOT_INIT_KWARGS, {}))
+    init_kwargs.update(
+        {
+            "driver": "~fastapi+~websockets+~httpx",
+            "localstore_cache_dir": TEST_NB2_DIR / "cache",
+            "localstore_config_dir": TEST_NB2_DIR / "config",
+            "localstore_data_dir": TEST_NB2_DIR / "data",
+            "log_level": "DEBUG",
+        }
+    )
+    config.stash[NONEBOT_INIT_KWARGS] = init_kwargs
 
 
 def pytest_collection_modifyitems(items: list[pytest.Item]):
