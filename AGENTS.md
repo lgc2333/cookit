@@ -4,6 +4,8 @@
 
 ## Commands
 
+NOTE: The following command are expected to be run under the plugin repo root rather than the workspace root.
+
 ```bash
 uv sync -U
 uv run pytest
@@ -23,10 +25,7 @@ uv run basedpyright
 
 ## Rules
 
-- Add or update tests for changed public helpers.
-- Tests should make the helper's intended behavior obvious from the test name and assertions.
-- When touching tested code, check coverage with `uv run pytest --cov=cookit --cov-report=term-missing`.
-- Code included in the current runtime's coverage scope should be covered unless it is version-specific, dependency-gated, or an intentional error path that is impractical to trigger safely.
+- Keep test coverage as high as possible to avoid dead code. Code included in the current runtime's coverage scope should be covered unless it is version-specific, dependency-gated, or an intentional error path that is impractical to trigger safely.
 
 ## Gotchas
 
