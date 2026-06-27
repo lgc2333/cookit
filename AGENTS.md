@@ -16,12 +16,14 @@ uv run basedpyright
 
 ## Structure
 
-- `common/`: General utilities, with no external dependencies.
-- `pyd/`: Pydantic v1 & v2 compatibility and helpers.
-- `jinja/`: Jinja helpers and filters.
-- `loguru/`: Loguru helpers.
-- `nonebot/`: NoneBot helpers.
-- `pw/`: Playwright helpers.
+Search before adding utilities: `rg -n "keyword|related_term" cookit`.
+
+- `common/`: General utilities, with no external dependencies; text, math/unit/time formatting, async helpers, signals, debug files, data helpers, decorator collectors.
+- `pyd/`: Pydantic v1 & v2 compatibility and helpers; validation, dump, config, validators, model decorators.
+- `jinja/`: Jinja helpers and filters; filters and filter registration.
+- `loguru/`: Loguru helpers; suppress/log exception helpers.
+- `nonebot/`: NoneBot helpers; plugin loading checks, command arg dependencies, localstore guard, Alconna recall/reply helpers.
+- `pw/`: Playwright helpers; screenshots, route groups, real-file routers, Jinja screenshot rendering.
 
 ## Rules
 

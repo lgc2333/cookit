@@ -23,6 +23,7 @@ def lazy_get(
     *args: P.args,
     **kwargs: P.kwargs,
 ) -> T:
+    """Return a value directly or call it lazily with the provided arguments."""
     return cast("T", val(*args, **kwargs) if callable(val) else val)
 
 
@@ -31,6 +32,8 @@ def qor(
     b: "LazyGetterType[TB, []]",
     none_val: N = None,
 ) -> TA | TB:
+    """Return the first value unless it equals the configured null sentinel."""
+
     def guard(x: TA | N) -> TypeGuard[TA]:
         return x is not none_val
 
@@ -38,15 +41,18 @@ def qor(
 
 
 def chunks(lst: Sequence[T], n: int) -> Iterator[list[T]]:
+    """Yield a sequence as fixed-size list chunks."""
     for i in range(0, len(lst), n):
         yield list(lst[i : i + n])
 
 
 def flatten(li: Iterable[Iterable[T]]) -> list[T]:
+    """Flatten one level of nested iterables into a list."""
     return [x for y in li for x in y]
 
 
 def set_default(target: dict[K, V], key: K, default: "LazyGetterType[V, []]") -> V:
+    """Set and return a dictionary default value, evaluating it lazily if needed."""
     if key in target:
         return target[key]
     default = lazy_get(default)
@@ -55,16 +61,23 @@ def set_default(target: dict[K, V], key: K, default: "LazyGetterType[V, []]") ->
 
 
 @overload
-def auto_delete(target: dict[K, V], transform: None = None) -> dict[K, V]: ...
+def auto_delete(target: dict[K, V], transform: None = None) -> dict[K, V]:
+    """Remove falsy dictionary values in place and return the remaining data."""
+
+
 @overload
 def auto_delete(
     target: dict[K, V],
     transform: Callable[[V], T | None],
-) -> dict[K, T]: ...
+) -> dict[K, T]:
+    """Transform dictionary values, remove falsy results, and return kept values."""
+
+
 def auto_delete(  # noqa: E302
     target: dict[K, V],
     transform: Callable[[V], T | None] | None = None,
 ) -> dict[K, Any]:
+    """Remove falsy dictionary values after an optional transform."""
     data: dict[K, V | T] = {}
     for k, v in tuple(target.items()):
         vt = transform(v) if transform else v
@@ -76,6 +89,7 @@ def auto_delete(  # noqa: E302
 
 
 def to_b64_url(data: bytes, mime: str | None = None) -> str:
+    """Encode bytes as a base64 data URL with an optional detected MIME type."""
     if mime is None:
         mime = ""
         with suppress(ImportError, IndexError):
@@ -90,6 +104,8 @@ def deep_merge(
     *args_input: Any,
     skip_merge_paths: Container[str] | None = None,
 ) -> Any:
+    """Deep-merge dictionaries and homogeneous lists or sets from left to right."""
+
     def merge_path(current: str | None, *paths: str) -> str:
         x = []
         if current:

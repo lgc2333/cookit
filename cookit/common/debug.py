@@ -7,14 +7,17 @@ from typing import Any
 
 class DebugFileWriter:
     def __init__(self, base_path: Path, *rest_path: str) -> None:
+        """Create a debug writer rooted at a conditional base path."""
         self.base_path = base_path
         self.full_path = base_path.joinpath(*rest_path)
 
     @property
     def enabled(self) -> bool:
+        """Report whether the debug base path exists."""
         return self.base_path.exists()
 
     def write(self, content: Any, filename: str):
+        """Write bytes, buffers, strings, or JSON-serializable data to a debug file."""
         filename = filename.format(time=round(time.time() * 1000))
         self.full_path.mkdir(parents=True, exist_ok=True)
         path = self.full_path / filename

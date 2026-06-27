@@ -21,13 +21,18 @@ if TYPE_CHECKING:
             log_stack: bool = True,
             debug_stack: bool = False,
             append_exc_msg: bool = False,
-        ): ...
+        ):
+            """Create a context manager that logs and suppresses selected exceptions."""
+            ...
+
         def __exit__(
             self,
             exc_type: type[BaseException] | None,
             exc_value: BaseException | None,
             traceback: TracebackType | None,
-        ) -> bool: ...
+        ) -> bool:
+            """Log a matching exception and decide whether it is suppressed."""
+            ...
 
 
 else:
@@ -41,6 +46,7 @@ else:
         debug_stack: bool = False,
         append_exc_msg: bool = False,
     ) -> Iterator[None]:
+        """Suppress matching exceptions after logging them with Loguru."""
         try:
             yield
         except Exception as e:
@@ -73,6 +79,7 @@ def log_exception_warning(
     msg: str,
     debug_stacktrace: bool = True,
 ):
+    """Log an exception summary as a warning with an optional debug stack trace."""
     logger.opt(depth=1).warning(f"{msg}: {type(e).__name__}: {e}")
     if debug_stacktrace:
         logger.opt(depth=1, exception=e).debug("Stacktrace")

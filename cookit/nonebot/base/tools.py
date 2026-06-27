@@ -12,6 +12,7 @@ async def exception_notify(
     types: tuple[type[BaseException]] | None = None,
     ignore_nb_exc: bool = True,
 ):
+    """Notify the current matcher and log when selected exceptions occur."""
     try:
         yield
     except Exception as e:

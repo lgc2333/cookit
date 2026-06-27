@@ -8,6 +8,7 @@ if TYPE_CHECKING:
 
 
 async def make_template_renderer(template: "Template", **template_kwargs):
+    """Render a Jinja template once and return a Playwright screenshot renderer."""
     html = await template.render_async(**template_kwargs)
 
     async def render(page: "Page", selector: str | None = None, **screenshot_kwargs):

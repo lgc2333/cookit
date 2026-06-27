@@ -9,6 +9,7 @@ from .util import AliasFuncType, model_with_alias_generator
 
 @deprecated("Use `model_with_alias_generator` instead.")
 def get_alias_model(alias_func: AliasFuncType) -> type[BaseModel]:
+    """Create a deprecated BaseModel subclass with an alias generator."""
     return get_model_with_config(ConfigDict(alias_generator=alias_func))
 
 

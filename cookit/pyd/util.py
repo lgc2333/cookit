@@ -10,6 +10,8 @@ AliasFuncType: TypeAlias = Callable[[str], str]
 
 
 def model_with_model_config(config: ConfigDict) -> Callable[[TTM], TTM]:
+    """Create a class decorator that applies a Pydantic model config."""
+
     def wrapper(base: TTM) -> TTM:
         m = get_model_with_config(config, base)
         return cast("TTM", m)
@@ -18,6 +20,8 @@ def model_with_model_config(config: ConfigDict) -> Callable[[TTM], TTM]:
 
 
 def model_with_alias_generator(alias_func: AliasFuncType) -> Callable[[TTM], TTM]:
+    """Create a model decorator that configures a Pydantic alias generator."""
+
     def wrapper(base: TTM) -> TTM:
         config = ConfigDict(alias_generator=alias_func)
         m = get_model_with_config(config, base)

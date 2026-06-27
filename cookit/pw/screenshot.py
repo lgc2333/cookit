@@ -10,6 +10,7 @@ WaitForType: TypeAlias = (
 
 
 async def _wait_for(page: Page, wait_type: WaitForType):
+    """Wait for a Playwright page load state or custom wait function."""
     if callable(wait_type):
         await wait_type(page)
     elif wait_type:
@@ -17,6 +18,7 @@ async def _wait_for(page: Page, wait_type: WaitForType):
 
 
 async def screenshot_selector(page: Page, selector: str, **kwargs) -> bytes:
+    """Capture a screenshot of a selected element."""
     elem = await page.query_selector(selector)
     if not elem:
         raise ValueError("Element not found")
@@ -30,6 +32,7 @@ async def screenshot_html(
     wait_type: WaitForType = "load",
     **kwargs,
 ) -> bytes:
+    """Render HTML in a page and capture either the page or a selector."""
     await page.set_content(html)
     await _wait_for(page, wait_type)
     if selector:

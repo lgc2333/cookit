@@ -8,4 +8,5 @@ if TYPE_CHECKING:
 
 
 def make_register_jinja_filter_deco(env: "Environment"):
+    """Create a decorator collector that registers filters on a Jinja environment."""
     return NameDecoCollector[Callable](env.filters)

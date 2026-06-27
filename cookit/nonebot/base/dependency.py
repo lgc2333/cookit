@@ -8,6 +8,8 @@ from ... import copy_func_arg_annotations
 
 
 def dep_command_arg_plaintext(strip: bool = True, allow_empty: bool = True):
+    """Create a dependency that extracts command arguments as plain text."""
+
     async def dep(arg: BaseMessage = CommandArg()) -> str:
         t = arg.extract_plain_text()
         if strip:
@@ -21,4 +23,5 @@ def dep_command_arg_plaintext(strip: bool = True, allow_empty: bool = True):
 
 @copy_func_arg_annotations(dep_command_arg_plaintext)
 def CommandArgPlaintext(*args, **kwargs) -> Any:  # noqa: N802
+    """Return a Depends marker for command argument plain text extraction."""
     return Depends(dep_command_arg_plaintext(*args, **kwargs))

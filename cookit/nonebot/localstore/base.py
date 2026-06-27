@@ -61,6 +61,7 @@ LOCALSTORE_DEFAULT_PATH_WARNING_MSG = (
 
 
 def ensure_localstore_path_config():
+    """Reject default nonebot-plugin-localstore paths unless explicitly allowed."""
     if not (
         localstore_config.localstore_use_cwd
         or localstore_config.localstore_cache_dir

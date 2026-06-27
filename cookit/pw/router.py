@@ -34,7 +34,9 @@ class CKRouterKwArgs(TypedDict):
 
 
 class CKRouterFunc(Protocol, Generic[T_co]):
-    def __call__(self, **kwds: Unpack[CKRouterKwArgs]) -> Awaitable[T_co]: ...
+    def __call__(self, **kwds: Unpack[CKRouterKwArgs]) -> Awaitable[T_co]:
+        """Handle a Playwright route with cookit router context."""
+        ...
 
 
 @dataclass
@@ -45,6 +47,8 @@ class CKRouterInfo:
 
 
 async def apply_router_to_page(page: Page, router: CKRouterInfo):
+    """Register one cookit router on a Playwright page."""
+
     async def wrapped(route: Route, request: Request):
         url = URL(request.url)
         matched = (
@@ -65,6 +69,7 @@ async def apply_router_to_page(page: Page, router: CKRouterInfo):
 
 class RouterGroup:
     def __init__(self, routers: Iterable[CKRouterInfo] | None = None) -> None:
+        """Create a prioritized group of Playwright route handlers."""
         self.routers: list[CKRouterInfo] = []
         if routers:
             self.routers.extend(routers)
@@ -75,6 +80,7 @@ class RouterGroup:
         pattern: CKRouterPattern,
         priority: int = 1,
     ):
+        """Register a route handler with a pattern and priority."""
         self.routers.append(CKRouterInfo(pattern, func, priority))
         # 低 priority 的 CKRouter 应最先运行，
         # 因为 playwright 后 route 的先运行，所以要反过来排序
@@ -85,6 +91,8 @@ class RouterGroup:
         pattern: CKRouterPattern,
         priority: int = 1,
     ):
+        """Create a decorator that registers a route handler."""
+
         def wrapper(func: TF) -> TF:
             self.register_router(func, pattern, priority)
             return func
@@ -92,15 +100,19 @@ class RouterGroup:
         return wrapper
 
     async def apply(self, page: Page):
+        """Apply all registered routers to a Playwright page."""
         for router in self.routers:
             await apply_router_to_page(page, router)
         return page
 
     def copy(self) -> "RouterGroup":
+        """Return a shallow copy of this router group."""
         return RouterGroup(self.routers)
 
 
 def make_real_path_router(path_extractor: CKRouterFunc["Path"]) -> CKRouterFunc:
+    """Create a router that fulfills requests from filesystem paths."""
+
     async def router(route: Route, matched: re.Match[str] | None, **add_kwds):
         path = await path_extractor(route=route, matched=matched, **add_kwds)
         if (not path.exists()) or (not path.is_file()):

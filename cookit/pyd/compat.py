@@ -13,15 +13,21 @@ TM_contra = TypeVar("TM_contra", bound=BaseModel, contravariant=True)
 
 
 class FieldValidator(Protocol):
-    def __call__(self, cls: Any, v: Any) -> Any: ...
+    def __call__(self, cls: Any, v: Any) -> Any:
+        """Validate and return a field value."""
+        ...
 
 
 class ModelBeforeValidator(Protocol):
-    def __call__(self, cls: Any, values: Any) -> dict[str, Any]: ...
+    def __call__(self, cls: Any, values: Any) -> dict[str, Any]:
+        """Validate raw model input before model construction."""
+        ...
 
 
 class ModelAfterValidator(Protocol):
-    def __call__(self, cls: Any, values: dict[str, Any]) -> dict[str, Any]: ...
+    def __call__(self, cls: Any, values: dict[str, Any]) -> dict[str, Any]:
+        """Validate model values after model construction."""
+        ...
 
 
 TFV = TypeVar("TFV", bound=FieldValidator)
@@ -41,6 +47,7 @@ if PYDANTIC_V2:  # pragma: pydantic-v2
         from pydantic.functional_validators import ModelWrapValidatorHandler
 
     def model_config(model: type[BaseModel]) -> ConfigDict:
+        """Return a model's Pydantic configuration."""
         return model.model_config
 
     def model_dump(
@@ -52,6 +59,7 @@ if PYDANTIC_V2:  # pragma: pydantic-v2
         exclude_defaults: bool = False,
         exclude_none: bool = False,
     ) -> dict[str, Any]:
+        """Dump a Pydantic model to a Python dictionary."""
         return model.model_dump(
             include=include,
             exclude=exclude,
@@ -62,6 +70,7 @@ if PYDANTIC_V2:  # pragma: pydantic-v2
         )
 
     def type_validate_python(type_: type[T], data: Any) -> T:
+        """Validate Python data against a type using Pydantic v2."""
         return (
             type_.model_validate(data)
             if type_ is BaseModel
@@ -69,6 +78,7 @@ if PYDANTIC_V2:  # pragma: pydantic-v2
         )
 
     def type_validate_json(type_: type[T], data: str | bytes) -> T:
+        """Validate JSON data against a type using Pydantic v2."""
         return (
             type_.model_validate_json(data)
             if type_ is BaseModel
@@ -79,16 +89,22 @@ if PYDANTIC_V2:  # pragma: pydantic-v2
     def model_validator(
         *,
         mode: Literal["before"],
-    ) -> Callable[[TMBV], TMBV]: ...
+    ) -> Callable[[TMBV], TMBV]:
+        """Create a before-model validator decorator."""
+
     @overload
     def model_validator(
         *,
         mode: Literal["after"] = "after",
-    ) -> Callable[[TMAV], TMAV]: ...
+    ) -> Callable[[TMAV], TMAV]:
+        """Create an after-model validator decorator."""
+
     def model_validator(
         *,
         mode: Literal["before", "after"] = "after",
     ) -> Callable[[Any], Any]:
+        """Create a model validator decorator compatible with Pydantic v1 style."""
+
         def deco(func: Any) -> Any:
             def wrapper(
                 cls: type[BaseModel],
@@ -117,6 +133,7 @@ if PYDANTIC_V2:  # pragma: pydantic-v2
         mode: Literal["before", "after"] = "after",
         check_fields: bool | None = None,
     ) -> Callable[[TFV], TFV]:
+        """Create a field validator decorator across Pydantic versions."""
         return v2_field_validator(field, *fields, mode=mode, check_fields=check_fields)
 
     def get_model_with_config(
@@ -124,9 +141,11 @@ if PYDANTIC_V2:  # pragma: pydantic-v2
         base: type[BaseModel] = BaseModel,
         type_name: str | None = None,
     ) -> type[BaseModel]:
+        """Create a Pydantic model subclass with the provided configuration."""
         return type(type_name or base.__name__, (base,), {"model_config": config})
 
     def __get_model_instance(data: object) -> BaseModel:
+        """Wrap arbitrary data in a Pydantic model instance when needed."""
         return (
             data if isinstance(data, BaseModel) else RootModel(Any).model_validate(data)
         )
@@ -140,6 +159,7 @@ if PYDANTIC_V2:  # pragma: pydantic-v2
         exclude_defaults: bool = False,
         exclude_none: bool = False,
     ) -> Any:
+        """Dump arbitrary Pydantic-compatible data to Python objects."""
         return __get_model_instance(data).model_dump(
             include=include,
             exclude=exclude,
@@ -158,6 +178,7 @@ if PYDANTIC_V2:  # pragma: pydantic-v2
         exclude_defaults: bool = False,
         exclude_none: bool = False,
     ) -> str:
+        """Dump arbitrary Pydantic-compatible data to JSON text."""
         return __get_model_instance(data).model_dump_json(
             include=include,
             exclude=exclude,
@@ -172,15 +193,18 @@ if PYDANTIC_V2:  # pragma: pydantic-v2
         update: dict[str, Any] | None = None,
         deep: bool = False,
     ) -> TM:
+        """Copy a Pydantic model with optional updates."""
         return model.model_copy(update=update, deep=deep)
 
     def model_fields_set(model: BaseModel) -> set[str]:
+        """Return the set of explicitly provided model fields."""
         return model.model_fields_set
 
 else:  # pragma: pydantic-v1
     from pydantic import parse_obj_as, parse_raw_as, root_validator, validator
 
     def model_config(model: type[BaseModel]) -> ConfigDict:
+        """Return a model's Pydantic configuration."""
         return (
             model.__config__
             if isinstance(model.__config__, dict)
@@ -202,6 +226,7 @@ else:  # pragma: pydantic-v1
         exclude_defaults: bool = False,
         exclude_none: bool = False,
     ) -> dict[str, Any]:
+        """Dump a Pydantic model to a Python dictionary."""
         return model.dict(
             include=include,
             exclude=exclude,
@@ -212,25 +237,32 @@ else:  # pragma: pydantic-v1
         )
 
     def type_validate_python(type_: type[T], data: Any) -> T:
+        """Validate Python data against a type using Pydantic v1."""
         return parse_obj_as(type_, data)
 
     def type_validate_json(type_: type[T], data: str | bytes) -> T:
+        """Validate JSON data against a type using Pydantic v1."""
         return parse_raw_as(type_, data)  # type: ignore
 
     @overload
     def model_validator(
         *,
         mode: Literal["before"],
-    ) -> Callable[[TMBV], TMBV]: ...
+    ) -> Callable[[TMBV], TMBV]:
+        """Create a before-model validator decorator."""
+
     @overload
     def model_validator(
         *,
         mode: Literal["after"] = "after",
-    ) -> Callable[[TMAV], TMAV]: ...
+    ) -> Callable[[TMAV], TMAV]:
+        """Create an after-model validator decorator."""
+
     def model_validator(
         *,
         mode: Literal["before", "after"] = "after",
     ) -> Callable[[Any], Any]:
+        """Create a model validator decorator across Pydantic versions."""
         return root_validator(pre=mode == "before", allow_reuse=True)
 
     def field_validator(
@@ -239,6 +271,7 @@ else:  # pragma: pydantic-v1
         mode: Literal["before", "after"] = "after",
         check_fields: bool | None = None,
     ) -> Callable[[TFV], TFV]:
+        """Create a field validator decorator across Pydantic versions."""
         return validator(
             field,
             *fields,
@@ -252,12 +285,14 @@ else:  # pragma: pydantic-v1
         base: type[BaseModel] = BaseModel,
         type_name: str | None = None,
     ) -> type[BaseModel]:
+        """Create a Pydantic model subclass with the provided configuration."""
         return type(type_name or base.__name__, (base,), {}, **config)
 
     class AnyRootModel(BaseModel):
         __root__: Any
 
     def __get_model_instance(data: object) -> BaseModel:
+        """Wrap arbitrary data in a Pydantic model instance when needed."""
         return data if isinstance(data, BaseModel) else AnyRootModel.parse_obj(data)
 
     def type_dump_python(
@@ -269,6 +304,7 @@ else:  # pragma: pydantic-v1
         exclude_defaults: bool = False,
         exclude_none: bool = False,
     ) -> Any:
+        """Dump arbitrary Pydantic-compatible data to Python objects."""
         dumped = __get_model_instance(data).dict(
             include=include,
             exclude=exclude,
@@ -290,6 +326,7 @@ else:  # pragma: pydantic-v1
         exclude_defaults: bool = False,
         exclude_none: bool = False,
     ) -> Any:
+        """Dump arbitrary Pydantic-compatible data to JSON text."""
         return __get_model_instance(data).json(
             include=include,
             exclude=exclude,
@@ -304,7 +341,9 @@ else:  # pragma: pydantic-v1
         update: dict[str, Any] | None = None,
         deep: bool = False,
     ) -> TM:
+        """Copy a Pydantic model with optional updates."""
         return model.copy(update=update, deep=deep)
 
     def model_fields_set(model: BaseModel) -> set[str]:
+        """Return the set of explicitly provided model fields."""
         return model.__fields_set__

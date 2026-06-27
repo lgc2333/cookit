@@ -8,6 +8,8 @@ if TYPE_CHECKING:
 
 
 def log_router_err(error_code: str | None = None):
+    """Create a decorator that logs router errors and aborts the route."""
+
     def deco(router: "CKRouterFunc") -> "CKRouterFunc":
         async def wrapper(**kwargs: Unpack["CKRouterKwArgs"]):
             try:

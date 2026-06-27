@@ -8,7 +8,9 @@ T = TypeVar("T")
 
 
 class PaginationCallable(Protocol, Generic[T]):
-    async def __call__(self, page_size: int, offset: int) -> list[T] | None: ...
+    async def __call__(self, page_size: int, offset: int) -> list[T] | None:
+        """Fetch one page of items for the pagination iterator."""
+        ...
 
 
 class IterPFKwargs(TypedDict):
@@ -25,6 +27,7 @@ class IterPFKwargs(TypedDict):
 
 
 def iter_pagination_func(**kwargs: Unpack[IterPFKwargs]):
+    """Decorate an async page-fetching function as an async item iterator."""
     page_size = kwargs.get("page_size", 100)
     offset = kwargs.get("offset", 0)
     delay = kwargs.get("delay", 0.0)

@@ -20,7 +20,9 @@ class FileCacheManager(MutableMapping[str, TF]):
         max_size: int | None = None,
         ttl: int | None = None,
         encoding: str = "utf-8",
-    ) -> None: ...
+    ) -> None:
+        """Create a text-mode file cache manager."""
+
     @overload
     def __init__(
         self: "FileCacheManager[bytes]",
@@ -29,7 +31,9 @@ class FileCacheManager(MutableMapping[str, TF]):
         text_mode: bool = False,
         max_size: int | None = None,
         ttl: int | None = None,
-    ) -> None: ...
+    ) -> None:
+        """Create a binary-mode file cache manager."""
+
     def __init__(
         self,
         cache_dir: str | Path,
@@ -39,6 +43,7 @@ class FileCacheManager(MutableMapping[str, TF]):
         ttl: int | None = None,
         encoding: str = "utf-8",
     ):
+        """Create a file-backed cache with optional size and age purging."""
         self.cache_dir = cache_dir if isinstance(cache_dir, Path) else Path(cache_dir)
         self.text_mode = text_mode
         self.max_size = max_size
@@ -46,6 +51,7 @@ class FileCacheManager(MutableMapping[str, TF]):
         self.encoding = encoding
 
     def purge(self):
+        """Delete cache files exceeding the configured size or TTL limits."""
         if (not self.cache_dir.exists()) or ((not self.max_size) and (not self.ttl)):
             return
 
@@ -72,6 +78,7 @@ class FileCacheManager(MutableMapping[str, TF]):
 
     @override
     def __getitem__(self, key: str) -> TF:
+        """Read a cached item by filename key."""
         self.purge()
         if (not (path := (self.cache_dir / key)).exists()) or (not path.is_file()):
             raise KeyError(key)
@@ -79,6 +86,7 @@ class FileCacheManager(MutableMapping[str, TF]):
 
     @override
     def __setitem__(self, key: str, value: TF) -> None:
+        """Write a cached item by filename key."""
         if not self.cache_dir.exists():
             self.cache_dir.mkdir(parents=True)
         path = self.cache_dir / key
@@ -91,20 +99,24 @@ class FileCacheManager(MutableMapping[str, TF]):
 
     @override
     def __delitem__(self, key: str) -> None:
+        """Delete a cached item by filename key if it exists."""
         (self.cache_dir / key).unlink(missing_ok=True)
 
     @override
     def __iter__(self) -> Iterator[str]:
+        """Iterate over cached filename keys."""
         self.purge()
         return (x.name for x in self.cache_dir.iterdir() if x.is_file())
 
     @override
     def __len__(self) -> int:
+        """Return the number of cached files."""
         self.purge()
         return len([x for x in self.cache_dir.iterdir() if x.is_file()])
 
     @override
     def __contains__(self, key: Any) -> bool:
+        """Check whether a string filename key exists in the cache."""
         if not isinstance(key, str):
             return False
         self.purge()

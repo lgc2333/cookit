@@ -3,6 +3,7 @@ from nonebot_plugin_alconna.uniseg import Reply, UniMessage
 
 
 def extract_reply_msg(msg: UniMessage) -> UniMessage | None:
+    """Extract a replied raw adapter message as a UniMessage when present."""
     if (
         Reply in msg
         and isinstance((reply_raw := msg[Reply, 0].msg), BaseMessage)

@@ -17,6 +17,7 @@ def auto_convert_unit(
     unit_index: int = 0,
     unit_threshold: int | None = None,
 ) -> str:
+    """Format a numeric value with automatically selected scaled units."""
     if unit_threshold is None:
         unit_threshold = multiplier
     units = units[unit_index:]
@@ -90,6 +91,7 @@ def format_timedelta(
     day_pad_num: int = 2,
     ms_num: int | None = 3,
 ) -> str:
+    """Format a timedelta into a configurable day/time string."""
     mm, ss = divmod(t.seconds, 60)
     hh, mm = divmod(mm, 60)
     ms = t.microseconds // 1000
