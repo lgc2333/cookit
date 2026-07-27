@@ -31,13 +31,10 @@ Search before adding utilities: `rg -n "keyword|related_term" cookit`.
 
 ## Gotchas
 
-## Playwright
+### Playwright
 
 - `pytest-playwright-asyncio` needs session-scoped asyncio settings; keep `asyncio_default_fixture_loop_scope` and `asyncio_default_test_loop_scope` as `session`.
-- Playwright tests require browser binaries. Run `uv run playwright install chromium` if Chromium is missing.
 
 ### NoneBot2
 
-- NoneBot plugin helper modules may require `require("plugin_name")` before import; use the `app` fixture when NoneBot must be initialized.
-- Alconna/UniMessage helpers may need `current_bot`, `current_event`, and `current_state`; exercise them inside a matcher with `app.test_matcher()` and `ctx.receive_event()` instead of mocking context.
 - Some coverage misses are expected in one runtime, such as Pydantic v1/v2 branches and Python-version fallbacks.
