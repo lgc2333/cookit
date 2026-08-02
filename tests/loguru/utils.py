@@ -39,7 +39,7 @@ class LoggingContext:
     def should_log(
         self,
         *,
-        exception: BaseException | type[BaseException] | None | EllipsisType = ...,
+        exception: BaseException | type[BaseException] | EllipsisType | None = ...,
         level_str: str | None = None,
         level_no: int | None = None,
         message: str | None = None,
