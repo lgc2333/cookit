@@ -3,7 +3,7 @@ name = "cookit"
 dynamic = ["version"]
 description = "A toolkit for self use."
 authors = [{ name = "LgCuwukii", email = "lgc2333@126.com" }]
-dependencies = ["typing-extensions>=4.14.1"]
+dependencies = ["typing-extensions>=4.16.0"]
 requires-python = ">=3.10,<4.0"
 readme = "README.md"
 license = { text = "MIT" }
@@ -19,14 +19,14 @@ jinja = ["jinja2>=3.1.6"]
 loguru = ["loguru>=0.7.3"]
 
 nonebot-base = ["nonebot2>=2.5.0"]
-nonebot-alconna = ["cookit[nonebot-base]", "nonebot-plugin-alconna>=0.62.0"]
+nonebot-alconna = ["cookit[nonebot-base]", "nonebot-plugin-alconna>=0.62.1"]
 nonebot-localstore = [
     "cookit[nonebot-base]",
     "nonebot-plugin-localstore>=0.7.4",
 ]
 nonebot = ["cookit[nonebot-alconna,nonebot-localstore]"]
 
-playwright = ["playwright>=1.60.0", "anyio>=4.13.0", "yarl>=1.24.2"]
+playwright = ["playwright>=1.62.0", "anyio>=4.14.2", "yarl>=1.24.5"]
 pw = ["cookit[playwright]"]
 
 pydantic = ["pydantic>=1.10.0,<3.0.0,!=2.5.0,!=2.5.1"]
@@ -37,7 +37,7 @@ all = ["cookit[common,jinja,loguru,nonebot,playwright,pydantic]"]
 [dependency-groups]
 dev = [
     "cookit[all]",
-    "pytest>=9.1.0",
+    "pytest>=9.1.1",
     "pytest-cov>=7.1.0",
     "pytest-asyncio>=1.4.0",
     "pytest-playwright-asyncio>=0.8.0",
