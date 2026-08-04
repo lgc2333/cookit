@@ -16,7 +16,7 @@ def test_logged_suppress():
         raise IndexError
 
     call_stack_check_kw: dict[str, Any] = {
-        "name": "tests",
+        "name": "tests_cookit",
         "function": "test_logged_suppress",
     }
 
@@ -120,7 +120,7 @@ def test_log_exception_warning():
         raise ValueError("val")
 
     call_stack_check_kw: dict[str, Any] = {
-        "name": "tests",
+        "name": "tests_cookit",
         "function": "test_log_exception_warning",
     }
 
