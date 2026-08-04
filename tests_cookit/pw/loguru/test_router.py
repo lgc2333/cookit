@@ -3,7 +3,7 @@ from typing import TYPE_CHECKING
 import pytest
 from playwright.async_api import Error as PWError
 
-from tests.loguru.utils import LoggingContext
+from ...loguru.utils import LoggingContext
 
 if TYPE_CHECKING:
     from playwright.async_api import Page

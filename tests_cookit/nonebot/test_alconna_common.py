@@ -2,7 +2,7 @@ from typing import TYPE_CHECKING
 
 from nonebot import on_message
 
-from tests.nonebot.utils import FakeMessage, make_fake_event
+from .utils import FakeMessage, make_fake_event
 
 if TYPE_CHECKING:
     from nonebug import App
