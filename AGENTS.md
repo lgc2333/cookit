@@ -7,12 +7,19 @@
 NOTE: The following command are expected to be run under the plugin repo root rather than the workspace root.
 
 ```bash
-uv sync -U
-uv run pytest
-uv run ruff check .
-uv run ruff format .
-uv run basedpyright
+uv sync -U  # install and update dependencies
+
+poe check [...]     # basedpyright
+poe lint [...]      # ruff check
+poe lint-fix [...]  # ruff check --fix --unsafe-fixes
+poe format [...]    # ruff format
+poe test [...]      # pytest
+poe coverage [...]  # pytest --cov=cookit --cov-report=term-missing
 ```
+
+If `poe` is not installed, ask user if we should install it: `uv tool install poethepoet`.
+
+Type check, lint concurrently then format after your work done with any code change.
 
 ## Structure
 
