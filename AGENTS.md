@@ -14,7 +14,7 @@ poe lint [...]      # ruff check
 poe lint-fix [...]  # ruff check --fix --unsafe-fixes
 poe format [...]    # ruff format
 poe test [...]      # pytest
-poe coverage [...]  # pytest --cov=cookit --cov-report=term-missing
+poe coverage [...]  # pytest (with branch coverage and terminal report)
 ```
 
 If `poe` is not installed, ask user if we should install it: `uv tool install poethepoet`.
