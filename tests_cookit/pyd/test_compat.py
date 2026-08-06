@@ -1,6 +1,7 @@
 import json
 from typing import Any
 
+import pytest
 from cookit.pyd import (
     field_validator,
     get_model_with_config,
@@ -61,6 +62,17 @@ def test_validate():
     data = {"nested": data}
     expected = TestModelNested(nested=expected)
     assert type_validate_python(TestModelNested, data) == expected
+
+
+def test_type_validate_python_preserves_matching_model_instances():
+    """Validation preserves an instance that already matches the target model."""
+
+    class TestModel(BaseModel):
+        value: str
+
+    model = TestModel(value="already validated")
+
+    assert type_validate_python(TestModel, model) is model
 
 
 # endregion
@@ -208,6 +220,48 @@ def test_model_validator():
     after_model = AfterModel(x=10, y=20)
     assert after_model.x == 20  # x被乘以2
     assert after_model.y == 20  # y保持不变
+
+
+def test_model_validator_after_receives_defaults_only_after_valid_fields():
+    """After validators receive defaults and skip models with invalid fields."""
+
+    received: list[dict[str, Any]] = []
+
+    class TestModel(BaseModel):
+        required: int
+        optional: str | None = None
+
+        @model_validator(mode="after")
+        def validate_after(cls, values: dict[str, Any]):  # noqa: N805
+            received.append(dict(values))
+            return values
+
+    TestModel(required=1)
+
+    assert received == [{"required": 1, "optional": None}]
+
+    with pytest.raises(ValueError, match="valid integer"):
+        TestModel(required="invalid")  # pyright: ignore[reportArgumentType]
+
+    assert received == [{"required": 1, "optional": None}]
+
+
+def test_model_validator_after_receives_allowed_extra_values():
+    """After validators receive permitted extra input alongside declared fields."""
+
+    received: list[dict[str, Any]] = []
+
+    class TestModel(get_model_with_config(ConfigDict(extra="allow"))):
+        required: int
+
+        @model_validator(mode="after")
+        def validate_after(cls, values: dict[str, Any]):  # noqa: N805
+            received.append(dict(values))
+            return values
+
+    TestModel(required=1, extra_value="extra")  # pyright: ignore[reportCallIssue]
+
+    assert received == [{"required": 1, "extra_value": "extra"}]
 
 
 def test_type_dump_python_advanced():

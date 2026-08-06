@@ -26,7 +26,7 @@ class ModelBeforeValidator(Protocol):
 
 class ModelAfterValidator(Protocol):
     def __call__(self, cls: Any, values: dict[str, Any]) -> dict[str, Any]:
-        """Validate model values after model construction."""
+        """Validate complete model values after model construction."""
         ...
 
 
@@ -116,8 +116,9 @@ if PYDANTIC_V2:  # pragma: pydantic-v2
                 validated = handler(data)
                 if mode == "after":
                     values = {
-                        x: getattr(validated, x) for x in validated.model_fields_set
+                        x: getattr(validated, x) for x in type(validated).model_fields
                     }
+                    values.update(validated.__pydantic_extra__ or {})
                     updated = func(cls, values)
                     for k, v in updated.items():
                         setattr(validated, k, v)
@@ -238,6 +239,12 @@ else:  # pragma: pydantic-v1
 
     def type_validate_python(type_: type[T], data: Any) -> T:
         """Validate Python data against a type using Pydantic v1."""
+        if (
+            isinstance(type_, type)
+            and issubclass(type_, BaseModel)
+            and isinstance(data, type_)
+        ):
+            return data
         return parse_obj_as(type_, data)
 
     def type_validate_json(type_: type[T], data: str | bytes) -> T:
@@ -263,7 +270,11 @@ else:  # pragma: pydantic-v1
         mode: Literal["before", "after"] = "after",
     ) -> Callable[[Any], Any]:
         """Create a model validator decorator across Pydantic versions."""
-        return root_validator(pre=mode == "before", allow_reuse=True)
+        return root_validator(
+            pre=mode == "before",
+            allow_reuse=True,
+            skip_on_failure=mode == "after",
+        )
 
     def field_validator(
         field: str,
